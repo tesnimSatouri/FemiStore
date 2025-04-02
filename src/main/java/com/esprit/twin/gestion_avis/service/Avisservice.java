@@ -5,8 +5,11 @@ import com.esprit.twin.gestion_avis.repository.Avisrepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +54,25 @@ public class Avisservice implements  Iserviceimpl {
             // Ou retourner une liste vide : return Collections.emptyList();
         }
         return avisrepository.findByNoteRange(minNote, maxNote);
+    }
+    // Méthode pour filtrer les avis et les classer en positifs et négatifs
+    @Override
+    public Map<String, List<Avis>> categorizeReviewsByPositivity(int positivityThreshold) {
+        // 1. Récupérer tous les avis (Attention: peut être inefficace si beaucoup d'avis)
+        List<Avis> allReviews = avisrepository.findAll();
+
+        // 2. Utiliser les Streams pour partitionner la liste
+        Map<Boolean, List<Avis>> partitionedReviews = allReviews.stream()
+                .collect(Collectors.partitioningBy(avis -> avis.getNote() >= positivityThreshold));
+        // partitioningBy crée une Map<Boolean, List<Avis>>
+        // Clé 'true' -> liste des éléments qui satisfont le prédicat (note >= seuil)
+        // Clé 'false' -> liste des éléments qui ne satisfont pas le prédicat
+
+        // 3. Créer la map de résultat avec des clés "positive" et "negative"
+        Map<String, List<Avis>> categorizedReviews = new HashMap<>();
+        categorizedReviews.put("positive", partitionedReviews.get(true));  // Avis positifs
+        categorizedReviews.put("negative", partitionedReviews.get(false)); // Avis négatifs
+
+        return categorizedReviews;
     }
 }

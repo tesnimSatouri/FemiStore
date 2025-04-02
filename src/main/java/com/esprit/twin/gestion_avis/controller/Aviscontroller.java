@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/avis")
 @RequiredArgsConstructor
@@ -44,4 +46,16 @@ public class Aviscontroller {
     }
 
 
+    @GetMapping("/categorized")
+    public ResponseEntity<Map<String, List<Avis>>> getCategorizedReviews(
+            // Paramètre pour le seuil, optionnel, défaut à 3
+            @RequestParam(defaultValue = "3") int threshold) {
+
+        if (threshold < 0) { // Ajout d'une validation simple
+            // Retourner une erreur Bad Request si le seuil est invalide
+            return ResponseEntity.badRequest().build(); // Ou retourner un message d'erreur plus explicite
+        }
+        Map<String, List<Avis>> categorizedReviews = avisservice.categorizeReviewsByPositivity(threshold);
+        return ResponseEntity.ok(categorizedReviews);
+    }
 }
