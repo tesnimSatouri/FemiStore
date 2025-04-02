@@ -43,5 +43,5 @@ public class Aviscontroller {
         return avisservice.getReviewsByNoteRange(min, max);
     }
 
-/*jgsdgsgdjsdh*/
+
 }
