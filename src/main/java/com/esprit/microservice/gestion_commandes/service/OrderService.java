@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -98,5 +99,24 @@ public class OrderService {
 
         return stats;
     }
+    public Map<Long, Integer> getMostOrderedProducts() {
+        List<Order> orders = orderRepository.findAll();
+
+        Map<Long, Integer> productCount = new HashMap<>();
+
+        for (Order order : orders) {
+            for (OrderItem item : order.getOrderItems()) {
+                productCount.put(item.getProductId(),
+                        productCount.getOrDefault(item.getProductId(), 0) + item.getQuantite());
+            }
+        }
+
+        // Trier et garder les 5 produits les plus commandés
+        return productCount.entrySet().stream()
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                .limit(5)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
 
 }

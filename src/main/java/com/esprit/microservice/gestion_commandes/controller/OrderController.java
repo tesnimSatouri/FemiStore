@@ -59,9 +59,15 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée avec l'ID : " + id);
         }
     }
+    //stats
     @GetMapping("/stats")
     public Map<String, Object> getOrderStatistics() {
         return orderService.getOrderStats();
+    }
+    //  obtenir les produits les plus commandés
+    @GetMapping("/top-products")
+    public Map<Long, Integer> getTopProducts() {
+        return orderService.getMostOrderedProducts();
     }
 
 }
