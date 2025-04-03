@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
@@ -58,4 +59,9 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée avec l'ID : " + id);
         }
     }
+    @GetMapping("/stats")
+    public Map<String, Object> getOrderStatistics() {
+        return orderService.getOrderStats();
+    }
+
 }

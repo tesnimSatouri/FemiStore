@@ -8,7 +8,9 @@ import com.esprit.microservice.gestion_commandes.repository.OrderItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -83,4 +85,18 @@ public class OrderService {
         }
         return false;
     }
+    public Map<String, Object> getOrderStats() {
+        List<Order> orders = orderRepository.findAll();
+
+        double totalRevenue = orders.stream().mapToDouble(Order::getTotalPrice).sum();
+        double averageOrderValue = orders.isEmpty() ? 0 : totalRevenue / orders.size();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("nombreCommandes", orders.size());
+        stats.put("revenuTotal", totalRevenue);
+        stats.put("valeurMoyenneCommande", averageOrderValue);
+
+        return stats;
+    }
+
 }
