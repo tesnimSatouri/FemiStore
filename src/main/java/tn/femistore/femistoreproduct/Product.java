@@ -17,11 +17,12 @@ import lombok.Setter;
 @Builder
 @ToString
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Product name is required")
+    @NotNull(message = "Product name is required !")
     private String name;
 
     private String description;

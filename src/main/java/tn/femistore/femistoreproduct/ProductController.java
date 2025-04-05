@@ -69,7 +69,7 @@ public class ProductController {
         product.setId(id);
         Product updatedProduct = productService.updateProduct(product);
         if (updatedProduct == null) {
-            System.out.println("Product with id " + id + " not found");
+            System.out.println("Product with id : " + id + " not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         System.out.println("Updated product: " + updatedProduct);

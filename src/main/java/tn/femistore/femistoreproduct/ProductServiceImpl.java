@@ -33,7 +33,7 @@ public class ProductServiceImpl  implements ProductService{
             return null; // Indicate that the product was not found
         }
 
-        // Fetch the existing product
+        // Fetch the existing productt
         Product existingProduct = productRepository.findById(product.getId()).orElse(null);
         if (existingProduct == null) {
             return null; // Shouldn't happen since existsById returned true, but added for safety
