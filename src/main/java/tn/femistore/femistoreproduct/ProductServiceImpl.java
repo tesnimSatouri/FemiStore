@@ -28,9 +28,27 @@ public class ProductServiceImpl  implements ProductService{
 
     @Override
     public Product updateProduct(Product product) {
-        return productRepository.save(product);
-    }
+        // Check if the product exists
+        if (!productRepository.existsById(product.getId())) {
+            return null; // Indicate that the product was not found
+        }
 
+        // Fetch the existing product
+        Product existingProduct = productRepository.findById(product.getId()).orElse(null);
+        if (existingProduct == null) {
+            return null; // Shouldn't happen since existsById returned true, but added for safety
+        }
+
+        // Update the fields of the existing product
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setStock(product.getStock());
+        existingProduct.setImageUrl(product.getImageUrl());
+
+        // Save the updated product
+        return productRepository.save(existingProduct);
+    }
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);

@@ -62,11 +62,19 @@ public class ProductController {
 
 
 
-    @PutMapping("/UpdateProduct")
-    public Product updateProduct(@RequestBody Product product) {
-        return productService.updateProduct(product);
+    @PutMapping("/UpdateProduct/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @Valid @RequestBody Product product) {
+        System.out.println("Updating product with id: " + id);
+        System.out.println("Received product: " + product);
+        product.setId(id);
+        Product updatedProduct = productService.updateProduct(product);
+        if (updatedProduct == null) {
+            System.out.println("Product with id " + id + " not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        System.out.println("Updated product: " + updatedProduct);
+        return ResponseEntity.ok(updatedProduct);
     }
-
     @DeleteMapping("/RemoveProduct/{id}")
     public void removeProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
