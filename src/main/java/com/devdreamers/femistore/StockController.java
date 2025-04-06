@@ -15,6 +15,7 @@ import java.util.Optional;
 @RequestMapping("/api/stock")
 @AllArgsConstructor
 public class StockController {
+    private NotificationService notificationService;
 
     private StockService stockService;
     private StockTrendApiClient stockTrendApiClient; // Injecter StockTrendApiClient pour l'analyse des tendances
@@ -23,6 +24,16 @@ public class StockController {
     @GetMapping
     public List<Stock> getAllStock() {
         return stockService.getAllStock();
+    }
+
+    @GetMapping("/test-email")
+    public ResponseEntity<String> testEmail() {
+        try {
+            notificationService.sendTestEmail();
+            return ResponseEntity.ok("Test email sent successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error sending email: " + e.getMessage());
+        }
     }
 
     // Récupérer un stock par productId
@@ -73,16 +84,35 @@ public class StockController {
     public Mono<ResponseEntity<Map<String, ? extends Serializable>>> getStockTrend(@PathVariable int productId) {
         Optional<Stock> stockOptional = stockService.getStockByProductId(productId);
         if (stockOptional.isEmpty()) {
+            System.out.println("Stock non trouvé pour le produit " + productId);
             return Mono.just(ResponseEntity.notFound().build());
         }
 
         Stock stock = stockOptional.get();
-        return stockTrendApiClient.analyzeStockTrend(stock.getProductId(), stock.getStockDisponible(), stock.getStock_minimum())
-                .map(trend -> {
-                    Map<String, Serializable> enrichedTrend = new HashMap<>(trend);
-                    enrichedTrend.put("stockDisponible", stock.getStockDisponible());
-                    enrichedTrend.put("stockMinimum", stock.getStock_minimum());
-                    return ResponseEntity.ok(enrichedTrend);
-                });
+        // Simulate a trend response (temporary workaround)
+        Map<String, Serializable> trend = new HashMap<>();
+        trend.put("trend", stock.getStockDisponible() < stock.getStock_minimum() ? "décroissant" : "stable");
+        trend.put("suggestedStock", stock.getStock_minimum() + 20);
+
+        Map<String, Serializable> enrichedTrend = new HashMap<>(trend);
+        double predictedDemand = stockService.predictDemand(productId);
+        enrichedTrend.put("predictedDemand", predictedDemand);
+        enrichedTrend.put("stockDisponible", stock.getStockDisponible());
+        enrichedTrend.put("stockMinimum", stock.getStock_minimum());
+
+        // Call analyzeStockTrend to trigger the notification logic
+        stockService.analyzeStockTrend(stock);
+
+        return Mono.just(ResponseEntity.ok((Map<String, ? extends Serializable>) enrichedTrend));
+    }
+    @GetMapping("/{productId}/demand-forecast")
+    public ResponseEntity<Double> getDemandForecast(@PathVariable int productId) {
+        Optional<Stock> stockOptional = stockService.getStockByProductId(productId);
+        if (stockOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        double predictedDemand = stockService.predictDemand(productId);
+        return ResponseEntity.ok(predictedDemand);
     }
 }
