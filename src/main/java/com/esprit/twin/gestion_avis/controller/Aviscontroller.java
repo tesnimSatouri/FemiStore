@@ -58,4 +58,36 @@ public class Aviscontroller {
         Map<String, List<Avis>> categorizedReviews = avisservice.categorizeReviewsByPositivity(threshold);
         return ResponseEntity.ok(categorizedReviews);
     }
+
+    // --- New Endpoints ---
+
+    /**
+     * Gets all reviews with the highest note value.
+     * Example URL: GET /avis/highest-rated
+     * @return ResponseEntity containing a list of Avis objects or an empty list.
+     */
+    @GetMapping("/highest-rated")
+    public ResponseEntity<List<Avis>> getHighestRatedReviews() {
+        List<Avis> reviews = avisservice.getReviewsWithHighestNote();
+        // You could return 204 No Content if the list is empty, but OK with empty list is also common.
+        // if (reviews.isEmpty()) {
+        //     return ResponseEntity.noContent().build();
+        // }
+        return ResponseEntity.ok(reviews);
+    }
+
+    /**
+     * Gets all reviews with the lowest note value.
+     * Example URL: GET /avis/lowest-rated
+     * @return ResponseEntity containing a list of Avis objects or an empty list.
+     */
+    @GetMapping("/lowest-rated")
+    public ResponseEntity<List<Avis>> getLowestRatedReviews() {
+        List<Avis> reviews = avisservice.getReviewsWithLowestNote();
+        // if (reviews.isEmpty()) {
+        //     return ResponseEntity.noContent().build();
+        // }
+        return ResponseEntity.ok(reviews);
+    }
+    // --- End New Endpoints ---
 }

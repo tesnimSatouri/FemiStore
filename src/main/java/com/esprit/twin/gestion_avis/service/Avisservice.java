@@ -75,4 +75,29 @@ public class Avisservice implements  Iserviceimpl {
 
         return categorizedReviews;
     }
+
+    // --- New Method Implementations ---
+
+    /**
+     * Retrieves all reviews that have the highest note value found in the database.
+     * Returns an empty list if no reviews exist.
+     * @return A list of Avis entities with the maximum note.
+     */
+    @Override
+    public List<Avis> getReviewsWithHighestNote() {
+        // The repository query handles finding the max note and filtering
+        return avisrepository.findReviewsWithMaxNote();
+    }
+
+    /**
+     * Retrieves all reviews that have the lowest note value found in the database.
+     * Returns an empty list if no reviews exist.
+     * @return A list of Avis entities with the minimum note.
+     */
+    @Override
+    public List<Avis> getReviewsWithLowestNote() {
+        // The repository query handles finding the min note and filtering
+        return avisrepository.findReviewsWithMinNote();
+    }
+    // --- End New Method Implementations ---
 }

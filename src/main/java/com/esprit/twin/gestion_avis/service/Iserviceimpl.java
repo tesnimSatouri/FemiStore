@@ -13,4 +13,8 @@ public interface Iserviceimpl {
      Avis updateReview(Long id, Avis a);
      List<Avis> getReviewsByNoteRange(int minNote, int maxNote);
      Map<String, List<Avis>> categorizeReviewsByPositivity(int positivityThreshold);
+
+     // New methods declarations
+     List<Avis> getReviewsWithHighestNote();
+     List<Avis> getReviewsWithLowestNote();
 }

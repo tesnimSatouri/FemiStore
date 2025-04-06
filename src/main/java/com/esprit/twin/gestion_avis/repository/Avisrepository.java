@@ -12,4 +12,13 @@ public interface Avisrepository extends JpaRepository<Avis, Long> {
     Double findAverageRatingByProductId(Long productId);
     @Query("SELECT a FROM Avis a WHERE a.note >= :minNote AND a.note <= :maxNote")
     List<Avis> findByNoteRange(@Param("minNote") int minNote, @Param("maxNote") int maxNote);
+
+    // New Query: Find reviews with the highest note
+    @Query("SELECT a FROM Avis a WHERE a.note = (SELECT MAX(a2.note) FROM Avis a2)")
+    List<Avis> findReviewsWithMaxNote();
+
+    // New Query: Find reviews with the lowest note
+    @Query("SELECT a FROM Avis a WHERE a.note = (SELECT MIN(a2.note) FROM Avis a2)")
+    List<Avis> findReviewsWithMinNote();
+
 }
