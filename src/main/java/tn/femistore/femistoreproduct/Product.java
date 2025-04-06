@@ -36,5 +36,15 @@ public class Product {
 
     private String imageUrl;
 
+    private Double discountPercentage; // e.g., 10 for 10% off
+
+    // Calculate the discounted price
+    public Double getDiscountedPrice() {
+        if (discountPercentage == null || discountPercentage <= 0) {
+            return price;
+        }
+        return price * (1 - discountPercentage / 100);
+    }
+
 
 }

@@ -8,4 +8,7 @@ public interface ProductService {
     Product createProduct(Product product);
     Product updateProduct(Product product);
     void deleteProduct(Long id);
+    // New advanced search method
+    // Updated search method to include useDiscountedPrice
+    List<Product> searchProducts(String name, Double minPrice, Double maxPrice, Integer minStock, boolean useDiscountedPrice);
 }
