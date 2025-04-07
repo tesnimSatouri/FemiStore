@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,8 @@ import java.util.Optional;
 public class CategoryController {
 
     private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
-
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private CategoryService categoryService;
 
@@ -55,7 +57,7 @@ public class CategoryController {
         return categoryService.searchCategories(name);
     }
 
-    @GetMapping("/external")
+  /*  @GetMapping("/external")
     public ResponseEntity<List<String>> getExternalCategories() {
         logger.info("Fetching external categories");
         List<String> categories = externalCategoryService.fetchExternalCategories();
@@ -64,15 +66,32 @@ public class CategoryController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(categories);
-    }
+    }*/
 
     @PostMapping
-    public CategorieEntite addCategory(@Valid @RequestBody CategorieEntite category) {
+    public ResponseEntity<CategorieEntite> addCategory(@Valid @RequestBody CategorieEntite category) {
         logger.info("Adding new category: {} with parent ID: {}",
                 category.getName(),
                 category.getParent() != null ? category.getParent().getId() : "none");
-        return categoryService.saveCategory(category);
+
+        try {
+            // Sauvegarde de la catégorie
+            CategorieEntite savedCategory = categoryService.saveCategory(category);
+
+            // Envoi de la notification par email
+            boolean isSubcategory = category.getParent() != null;
+            Long parentId = isSubcategory ? category.getParent().getId() : null;
+            emailService.sendCategoryAddedNotification(category.getName(), isSubcategory, parentId);
+
+            // Retourner une réponse HTTP avec la catégorie ajoutée
+            return ResponseEntity.ok(savedCategory);
+        } catch (Exception e) {
+            logger.error("Error while adding category: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
+
 
     @PutMapping("/{id}")
     public CategorieEntite updateCategory(@PathVariable Long id, @Valid @RequestBody CategorieEntite category) {
