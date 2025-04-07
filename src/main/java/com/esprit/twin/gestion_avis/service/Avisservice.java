@@ -3,11 +3,10 @@ package com.esprit.twin.gestion_avis.service;
 import com.esprit.twin.gestion_avis.entity.Avis;
 import com.esprit.twin.gestion_avis.repository.Avisrepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j; // <-- Import pour @Slf4j
-import org.springframework.beans.factory.annotation.Value; // <-- Import CORRECT pour @Value
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // <-- Import Spring préféré pour @Transactional
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +14,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor // Garde l'injection des constructeurs
-@Slf4j // <-- AJOUTÉ : Crée automatiquement l'objet 'log'
-public class Avisservice implements Iserviceimpl { // Assurez-vous que Iserviceimpl est bien implémenté si nécessaire
+@RequiredArgsConstructor
+@Slf4j
+public class Avisservice implements Iserviceimpl {
 
     private final Avisrepository avisrepository;
-    private final EmailService emailService; // Injection de EmailService
+    private final EmailService emailService;
 
     // Injection des valeurs de configuration
     @Value("${avis.alert.critical-threshold}")
@@ -29,7 +28,7 @@ public class Avisservice implements Iserviceimpl { // Assurez-vous que Iservicei
     @Value("${avis.alert.significant-drop}")
     private double significantDrop;
 
-    @Override // Ajout de @Override car c'est défini dans l'interface Iserviceimpl
+    @Override
     public List<Avis> getAllReviews() {
         return avisrepository.findAll();
     }
@@ -52,27 +51,24 @@ public class Avisservice implements Iserviceimpl { // Assurez-vous que Iservicei
         Double newAverage = avisrepository.findAverageRatingByProductId(productId);
         log.debug("Produit ID {}: Nouvelle moyenne = {}", productId, newAverage);
 
-        // Appel à checkAndSendAlert sans email spécifique
         checkAndSendAlert(productId, oldAverage, newAverage);
 
         return savedAvis;
     }
-    @Override // Ajout de @Override
-    @Transactional // Utilise maintenant l'import Spring (bonne pratique pour delete)
+    @Override
+    @Transactional
     public void deleteReview(Long id) {
-        // Optionnel: logique si la suppression doit affecter des moyennes/alertes
         avisrepository.deleteById(id);
         log.info("Avis supprimé avec ID : {}", id);
     }
 
-    @Override // Ajout de @Override
+    @Override
     public Double getAverageRating(Long productId) {
         return avisrepository.findAverageRatingByProductId(productId);
     }
 
     @Override
     @Transactional
-    // Signature originale
     public Avis updateReview(Long id, Avis a) {
         Optional<Avis> existingReview = avisrepository.findById(id);
         if (existingReview.isPresent()) {
@@ -87,7 +83,6 @@ public class Avisservice implements Iserviceimpl { // Assurez-vous que Iservicei
             } else {
                 log.warn("[UPDATE] Le ProductID a changé pour l'avis ID {}. La logique d'alerte simple ne s'applique pas directement.", id);
             }
-
             updatedReview.setNote(a.getNote());
             updatedReview.setCommentaire(a.getCommentaire());
             updatedReview.setDate(a.getDate());
@@ -98,7 +93,6 @@ public class Avisservice implements Iserviceimpl { // Assurez-vous que Iservicei
             if (!productIdChanged && productId != null) {
                 Double newAverageAfterUpdate = avisrepository.findAverageRatingByProductId(productId);
                 log.debug("[UPDATE] Produit ID {}: Moyenne après mise à jour = {}", productId, newAverageAfterUpdate);
-                // Appel à checkAndSendAlert sans email spécifique
                 checkAndSendAlert(productId, oldAverageBeforeUpdate, newAverageAfterUpdate);
             }
 
@@ -109,7 +103,6 @@ public class Avisservice implements Iserviceimpl { // Assurez-vous que Iservicei
         }
     }
 
-    // Signature originale, sans le paramètre alertEmail
     private void checkAndSendAlert(Long productId, Double oldAverage, Double newAverage) {
         if (newAverage == null) {
             log.warn("checkAndSendAlert appelée avec newAverage null pour produit ID {}", productId);
@@ -135,7 +128,7 @@ public class Avisservice implements Iserviceimpl { // Assurez-vous que Iservicei
     }
 
 
-    @Override // Ajout de @Override
+    @Override
     public List<Avis> getReviewsByNoteRange(int minNote, int maxNote) {
         if (minNote > maxNote) {
             throw new IllegalArgumentException("minNote cannot be greater than maxNote");
@@ -143,7 +136,7 @@ public class Avisservice implements Iserviceimpl { // Assurez-vous que Iservicei
         return avisrepository.findByNoteRange(minNote, maxNote);
     }
 
-    @Override // Ajout de @Override
+    @Override
     public Map<String, List<Avis>> categorizeReviewsByPositivity(int positivityThreshold) {
         List<Avis> allReviews = avisrepository.findAll();
         Map<Boolean, List<Avis>> partitionedReviews = allReviews.stream()
@@ -156,14 +149,13 @@ public class Avisservice implements Iserviceimpl { // Assurez-vous que Iservicei
         return categorizedReviews;
     }
 
-    @Override // Ajout de @Override
+    @Override
     public List<Avis> getReviewsWithHighestNote() {
         return avisrepository.findReviewsWithMaxNote();
     }
 
-    @Override // Ajout de @Override
+    @Override
     public List<Avis> getReviewsWithLowestNote() {
         return avisrepository.findReviewsWithMinNote();
     }
-    // --- End New Method Implementations ---
 }
