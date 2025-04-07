@@ -18,6 +18,8 @@ public class Order {
 
     private LocalDate dateCommande; // Pour affichage classique
     private LocalDateTime createdAt; // Pour gestion du temps réel (ex: paniers abandonnés)
+    // Champ email pour envoyer la confirmation
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus statut;
@@ -38,9 +40,10 @@ public class Order {
     // 🔹 Constructeurs
     public Order() {}
 
-    public Order(Long userId, double totalPrice, List<OrderItem> orderItems) {
+    public Order(Long userId, double totalPrice, List<OrderItem> orderItems, String email) {
         this.userId = userId;
         this.totalPrice = totalPrice;
+        this.email = email; // Initialisation de l'email
         this.dateCommande = LocalDate.now();
         this.createdAt = LocalDateTime.now();
         this.statut = OrderStatus.PENDING;
@@ -68,4 +71,11 @@ public class Order {
 
     public List<OrderItem> getOrderItems() { return orderItems; }
     public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

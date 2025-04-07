@@ -21,11 +21,14 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final EmailService emailService;  // Ajout de l'injection de dépendance
 
     // ✅ Injection de dépendance via constructeur
-    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
+    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, EmailService emailService) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
+        this.emailService = emailService;
+
     }
 
     // ✅ Récupérer toutes les commandes
@@ -50,7 +53,13 @@ public class OrderService {
         order.setStatut(OrderStatus.PENDING); // Statut par défaut
 
         // Sauvegarde en cascade grâce à `CascadeType.ALL` sur OrderItems
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+
+        // Envoi de l'email de confirmation
+        emailService.sendOrderConfirmationEmail(order.getEmail(), savedOrder.getId(), savedOrder.getTotalPrice());
+
+        return savedOrder;
+
     }
 
     // ✅ Mettre à jour une commande existante
