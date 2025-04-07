@@ -10,6 +10,7 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByStatut(OrderStatus status);
     List<Order> findByStatutAndCreatedAtBefore(OrderStatus statut, LocalDateTime cutoffTime);
+    List<Order> findByUserId(Long userId); // ✅ Recherche par userId
 
 
 }

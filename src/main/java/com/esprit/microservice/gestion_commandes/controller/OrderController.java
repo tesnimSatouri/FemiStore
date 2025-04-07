@@ -91,6 +91,11 @@ public class OrderController {
         return ResponseEntity.ok(abandonedOrders);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Long userId) {
+        List<Order> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
+    }
 
 
 

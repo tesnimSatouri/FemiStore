@@ -148,4 +148,8 @@ public class OrderService {
             orderRepository.save(order);
         }
     }
+    public List<Order> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
 }
