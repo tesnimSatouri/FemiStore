@@ -17,19 +17,19 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    // ✅ Injection de dépendances via constructeur
+
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    // ✅ Récupérer toutes les commandes
+
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
-    // ✅ Créer une nouvelle commande
+
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         try {
@@ -40,7 +40,7 @@ public class OrderController {
         }
     }
 
-    // ✅ Mettre à jour une commande
+    // Mettre à jour une commande
     @PutMapping("/{id}")
     public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order updatedOrder) {
         try {
@@ -51,7 +51,7 @@ public class OrderController {
         }
     }
 
-    // ✅ Supprimer une commande
+    // Supprimer une commande
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrder(@PathVariable Long id) {
         boolean deleted = orderService.deleteOrder(id);

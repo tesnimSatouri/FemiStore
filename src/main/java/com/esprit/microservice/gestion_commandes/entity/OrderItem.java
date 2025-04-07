@@ -19,7 +19,7 @@ public class OrderItem {
     @JsonIgnore // Empêche la récursion infinie lors du retour JSON
     private Order order;
 
-    // 🔹 Constructeurs
+    // Constructeurs
     public OrderItem() {
     }
 
@@ -30,7 +30,7 @@ public class OrderItem {
         this.order = order;
     }
 
-    // 🔹 Getters et Setters
+    // Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

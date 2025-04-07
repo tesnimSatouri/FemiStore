@@ -21,9 +21,9 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final EmailService emailService;  // Ajout de l'injection de dépendance
+    private final EmailService emailService;
 
-    // ✅ Injection de dépendance via constructeur
+    // Injection de dépendance via constructeur
     public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, EmailService emailService) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
@@ -31,12 +31,10 @@ public class OrderService {
 
     }
 
-    // ✅ Récupérer toutes les commandes
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
 
-    // ✅ Créer une commande avec ses OrderItems
     @Transactional
     public Order createOrder(Order order) {
         if (order == null || order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
@@ -62,7 +60,7 @@ public class OrderService {
 
     }
 
-    // ✅ Mettre à jour une commande existante
+    // Mettre à jour une commande existante
     @Transactional
     public Order updateOrder(Long id, Order updatedOrder) {
         return orderRepository.findById(id).map(order -> {
@@ -88,7 +86,6 @@ public class OrderService {
         }).orElseThrow(() -> new RuntimeException("Commande non trouvée avec l'ID : " + id));
     }
 
-    // ✅ Supprimer une commande avec gestion des OrderItems
     @Transactional
     public boolean deleteOrder(Long id) {
         if (orderRepository.existsById(id)) {

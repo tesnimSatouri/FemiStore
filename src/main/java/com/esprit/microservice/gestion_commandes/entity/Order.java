@@ -17,8 +17,8 @@ public class Order {
     private double totalPrice;
 
     private LocalDate dateCommande; // Pour affichage classique
-    private LocalDateTime createdAt; // Pour gestion du temps réel (ex: paniers abandonnés)
-    // Champ email pour envoyer la confirmation
+    private LocalDateTime createdAt; // Pour gestion du temps réel
+
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -27,7 +27,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
-    // 🔹 Initialisation automatique
+    // Initialisation automatique
     @PrePersist
     protected void onCreate() {
         this.dateCommande = LocalDate.now();
@@ -37,7 +37,7 @@ public class Order {
         }
     }
 
-    // 🔹 Constructeurs
+    //Constructeurs
     public Order() {}
 
     public Order(Long userId, double totalPrice, List<OrderItem> orderItems, String email) {

@@ -1,6 +1,5 @@
 package com.esprit.microservice.gestion_commandes.service;
 
-// Import necessary logging classes
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
