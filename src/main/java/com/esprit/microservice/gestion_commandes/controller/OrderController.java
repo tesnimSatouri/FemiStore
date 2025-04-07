@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -84,6 +85,12 @@ public class OrderController {
         List<Order> orders = orderService.getOrdersByStatus(status);
         return ResponseEntity.ok(orders);
     }
+    @GetMapping("/abandoned")
+    public ResponseEntity<List<Order>> getAbandonedOrders(@RequestParam(defaultValue = "30") long minutes) {
+        List<Order> abandonedOrders = orderService.getAbandonedOrders(Duration.ofMinutes(minutes));
+        return ResponseEntity.ok(abandonedOrders);
+    }
+
 
 
 

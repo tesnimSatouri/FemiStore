@@ -2,6 +2,7 @@ package com.esprit.microservice.gestion_commandes.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,8 @@ public class Order {
     private Long userId;
     private double totalPrice;
 
-    private LocalDate dateCommande;
+    private LocalDate dateCommande; // Pour affichage classique
+    private LocalDateTime createdAt; // Pour gestion du temps réel (ex: paniers abandonnés)
 
     @Enumerated(EnumType.STRING)
     private OrderStatus statut;
@@ -23,21 +25,29 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
-    // 🔹 Constructeurs
-    public Order() {
-        this.dateCommande = LocalDate.now(); // Définit automatiquement la date actuelle
-        this.statut = OrderStatus.PENDING; // Statut par défaut
+    // 🔹 Initialisation automatique
+    @PrePersist
+    protected void onCreate() {
+        this.dateCommande = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
+        if (this.statut == null) {
+            this.statut = OrderStatus.PENDING;
+        }
     }
+
+    // 🔹 Constructeurs
+    public Order() {}
 
     public Order(Long userId, double totalPrice, List<OrderItem> orderItems) {
         this.userId = userId;
         this.totalPrice = totalPrice;
         this.dateCommande = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
         this.statut = OrderStatus.PENDING;
         this.orderItems = orderItems;
     }
 
-    // 🔹 Getters et Setters
+    // 🔹 Getters / Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,6 +59,9 @@ public class Order {
 
     public LocalDate getDateCommande() { return dateCommande; }
     public void setDateCommande(LocalDate dateCommande) { this.dateCommande = dateCommande; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public OrderStatus getStatut() { return statut; }
     public void setStatut(OrderStatus statut) { this.statut = statut; }

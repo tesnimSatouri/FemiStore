@@ -5,9 +5,12 @@ import com.esprit.microservice.gestion_commandes.entity.OrderItem;
 import com.esprit.microservice.gestion_commandes.entity.OrderStatus;
 import com.esprit.microservice.gestion_commandes.repository.OrderRepository;
 import com.esprit.microservice.gestion_commandes.repository.OrderItemRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,5 +132,20 @@ public class OrderService {
         return orderRepository.findByStatut(status);
     }
 
+    public List<Order> getAbandonedOrders(Duration delay) {
+        LocalDateTime cutoff = LocalDateTime.now().minus(delay);
+        return orderRepository.findByStatutAndCreatedAtBefore(OrderStatus.PENDING, cutoff);
+    }
 
+    @Scheduled(fixedRate = 3600000) // toutes les heures
+    @Transactional
+    public void expireAbandonedOrders() {
+        LocalDateTime cutoff = LocalDateTime.now().minusMinutes(30); // délai de 30 minutes
+        List<Order> abandonedOrders = orderRepository.findByStatutAndCreatedAtBefore(OrderStatus.PENDING, cutoff);
+
+        for (Order order : abandonedOrders) {
+            order.setStatut(OrderStatus.EXPIRED);
+            orderRepository.save(order);
+        }
+    }
 }
