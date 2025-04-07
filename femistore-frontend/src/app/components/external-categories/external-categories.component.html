@@ -1,0 +1,7 @@
+<div class="container mt-4">
+    <h2>External Fashion Categories</h2>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let category of externalCategories">{{ category }}</li>
+    </ul>
+    <button mat-raised-button color="primary" [routerLink]="['']" class="mt-3">Back to Main Categories</button>
+  </div>
