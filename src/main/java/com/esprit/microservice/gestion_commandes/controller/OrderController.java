@@ -1,6 +1,7 @@
 package com.esprit.microservice.gestion_commandes.controller;
 
 import com.esprit.microservice.gestion_commandes.entity.Order;
+import com.esprit.microservice.gestion_commandes.entity.OrderStatus;
 import com.esprit.microservice.gestion_commandes.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,5 +70,21 @@ public class OrderController {
     public Map<Long, Integer> getTopProducts() {
         return orderService.getMostOrderedProducts();
     }
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
+        try {
+            Order updatedOrder = orderService.updateOrderStatus(id, status);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/status")
+    public ResponseEntity<List<Order>> getOrdersByStatus(@RequestParam OrderStatus status) {
+        List<Order> orders = orderService.getOrdersByStatus(status);
+        return ResponseEntity.ok(orders);
+    }
+
+
 
 }

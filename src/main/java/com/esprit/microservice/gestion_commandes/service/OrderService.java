@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -116,6 +115,18 @@ public class OrderService {
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(5)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public Order updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        return orderRepository.findById(orderId)
+                .map(order -> {
+                    order.setStatut(newStatus);
+                    return orderRepository.save(order);
+                })
+                .orElseThrow(() -> new RuntimeException("Commande non trouvée avec l'ID : " + orderId));
+    }
+    public List<Order> getOrdersByStatus(OrderStatus status) {
+        return orderRepository.findByStatut(status);
     }
 
 
