@@ -1,0 +1,42 @@
+<div class="container mt-4">
+  <h2>{{ categoryId ? 'Edit Category' : 'Add Category' }}</h2>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-100 mb-3">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter category name" required>
+      <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-100 mb-3">
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description" placeholder="Enter description" required>
+      <mat-error *ngIf="categoryForm.get('description')?.hasError('required')">
+        Description is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-100 mb-3">
+      <mat-label>Parent Category</mat-label>
+      <mat-select formControlName="parentId">
+        <mat-option [value]="null">None</mat-option>
+        <mat-option *ngFor="let category of mainCategories" [value]="category.id">
+          {{ category.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="d-flex justify-content-end">
+      <button mat-raised-button color="primary" type="submit" [disabled]="categoryForm.invalid" class="me-2">
+        {{ categoryId ? 'Update' : 'Add' }}
+      </button>
+      <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>
