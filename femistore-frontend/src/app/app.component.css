@@ -1,3 +1,23 @@
 .spacer {
-    flex: 1 1 auto;
-  }
+  flex: 1 1 auto; /* This pushes the links to the right */
+}
+
+mat-toolbar {
+  display: flex;
+  align-items: center;
+}
+
+a[mat-button], button[mat-button] {
+  margin-left: 10px; /* Add some spacing between the links */
+  color: white; /* Ensure the links are visible on the primary background */
+  text-decoration: none; /* Remove underline from links */
+}
+
+a[mat-button]:hover, button[mat-button]:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Add a hover effect */
+}
+
+mat-icon {
+  margin-right: 8px; /* Space between icon and text */
+  vertical-align: middle; /* Align icons with text */
+}

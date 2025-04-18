@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Page } from '../../models/page';
 
 @Component({
   selector: 'app-category-form',
@@ -14,6 +16,7 @@ export class CategoryFormComponent implements OnInit {
   categoryId: number | null = null;
   parentId: number | null = null;
   mainCategories: Category[] = [];
+  errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -24,39 +27,42 @@ export class CategoryFormComponent implements OnInit {
     this.categoryForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
-      parentId: [null] // Add parentId field
+      parentId: [null]
     });
   }
 
   ngOnInit(): void {
-    // Fetch main categories for the dropdown
-    this.categoryService.getAllMainCategories().subscribe({
-      next: (categories: Category[]) => {
-        this.mainCategories = categories;
+    // Fetch main categories with pagination (e.g., first page with a large size)
+    this.categoryService.getMainCategories(0, 100, 'name,asc').subscribe({
+      next: (pageData: Page<Category>) => {
+        this.mainCategories = pageData.content; // Extract categories from the Page object
       },
-      error: (err: any) => console.error('Error loading main categories:', err)
+      error: (err: HttpErrorResponse) => {
+        console.error('Error loading main categories:', err);
+        this.errorMessage = 'Error loading main categories. Please try again.';
+      }
     });
 
-    // Check if we're editing a category or adding a subcategory
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       const parentId = params.get('parentId');
 
       if (id) {
-        // Editing an existing category
         this.categoryId = +id;
         this.categoryService.getCategoryById(this.categoryId).subscribe({
-          next: (category: Category) => { // Explicitly type 'category'
+          next: (category: Category) => {
             this.categoryForm.patchValue({
               name: category.name,
               description: category.description,
               parentId: category.parent ? category.parent.id : null
             });
           },
-          error: (err: any) => console.error('Error loading category:', err) // Explicitly type 'err'
+          error: (err: HttpErrorResponse) => {
+            console.error('Error loading category:', err);
+            this.errorMessage = 'Error loading category. Please try again.';
+          }
         });
       } else if (parentId) {
-        // Adding a subcategory with a preselected parent
         this.parentId = +parentId;
         this.categoryForm.patchValue({ parentId: this.parentId });
       }
@@ -70,6 +76,7 @@ export class CategoryFormComponent implements OnInit {
 
     const formValue = this.categoryForm.value;
     const category: Category = {
+      id: this.categoryId || undefined, // Include id for updates
       name: formValue.name,
       description: formValue.description,
       parent: formValue.parentId ? { id: formValue.parentId } as Category : undefined
@@ -78,17 +85,23 @@ export class CategoryFormComponent implements OnInit {
     if (this.categoryId) {
       this.categoryService.updateCategory(this.categoryId, category).subscribe({
         next: () => this.router.navigate(['/']),
-        error: (err: any) => console.error('Error updating category:', err)
+        error: (err: HttpErrorResponse) => {
+          console.error('Error updating category:', err);
+          this.errorMessage = 'Error updating category. Please try again.';
+        }
       });
     } else {
       this.categoryService.addCategory(category).subscribe({
         next: () => this.router.navigate(['/']),
-        error: (err: any) => console.error('Error adding category:', err)
+        error: (err: HttpErrorResponse) => {
+          console.error('Error adding category:', err);
+          this.errorMessage = 'Error adding category. Please try again.';
+        }
       });
     }
   }
 
   cancel(): void {
-    this.router.navigate(['']);
+    this.router.navigate(['/']);
   }
 }

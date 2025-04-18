@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-external-categories',
@@ -8,13 +9,12 @@ import { CategoryService } from '../../services/category.service';
 })
 export class ExternalCategoriesComponent implements OnInit {
   externalCategories: string[] = [];
+  errorMessage: string | null = null;
 
   constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
-    this.categoryService.getExternalCategories().subscribe({
-      next: (categories) => this.externalCategories = categories,
-      error: (err) => console.error('Error loading external categories:', err)
-    });
+    
+
   }
 }

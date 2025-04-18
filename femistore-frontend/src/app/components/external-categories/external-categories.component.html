@@ -1,7 +1,13 @@
 <div class="container mt-4">
-    <h2>External Fashion Categories</h2>
-    <ul class="list-group">
-      <li class="list-group-item" *ngFor="let category of externalCategories">{{ category }}</li>
-    </ul>
-    <button mat-raised-button color="primary" [routerLink]="['']" class="mt-3">Back to Main Categories</button>
+  <h2>External Categories</h2>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
   </div>
+  <ul *ngIf="externalCategories.length > 0; else noCategories">
+    <li *ngFor="let category of externalCategories">{{ category }}</li>
+  </ul>
+  <ng-template #noCategories>
+    <p>No external categories found.</p>
+  </ng-template>
+  <button button.mat-raised-button color="primary" [routerLink]="['/']" class="mt-3">Back to Main Categories</button>
+</div>
