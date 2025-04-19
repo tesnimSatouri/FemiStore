@@ -1,0 +1,268 @@
+/* Variables de couleur pour une maintenance facile */
+:host { /* Si vous utilisez ce CSS dans le fichier .scss/.css du composant avec ViewEncapsulation */
+    --pink-primary: #E91E63;   /* Un rose vif mais élégant */
+    --pink-light: #FCE4EC;    /* Un rose très pâle pour les fonds/bordures */
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #eee;
+    --background-color: #fff;
+  }
+  
+  /* Style pour le conteneur principal des avis */
+  .avis-section-container { /* Ajoutez cette classe au premier div *ngIf="productId" */
+    background-color: var(--background-color);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px; /* Espace sous la section avis */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police moderne */
+  }
+  
+  /* Style pour le titre principal */
+  .avis-section-container h2 {
+    color: var(--pink-primary); /* Titre en rose */
+    font-size: 1.8em; /* Taille de police plus grande */
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--pink-light); /* Ligne de séparation rose pâle */
+    font-weight: 600; /* Un peu plus gras */
+  }
+  
+  /* Style pour la section de la note moyenne */
+  .average-rating-container { /* Ajoutez cette classe au div *ngIf="(averageRating$ | async)..." */
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    color: var(--text-light);
+  }
+  
+  .average-rating-container p {
+    margin: 0;
+  }
+  
+  .average-rating-container strong {
+    font-size: 1.4em; /* Note plus grande */
+    font-weight: 700; /* Note bien en évidence */
+    color: var(--pink-primary); /* Note en rose */
+    margin-left: 5px; /* Petit espace avant la note */
+  }
+  
+  /* Style pour les messages de chargement */
+  .loading-message { /* Ajoutez cette classe aux <p> dans #loadingAvg et dans le div *ngIf="!productId" */
+    color: var(--text-light);
+    font-style: italic;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  /* Style pour les lignes de séparation */
+  .avis-section-container hr {
+    border: none;
+    border-top: 1px solid var(--pink-light); /* Séparateur rose très pâle */
+    margin: 30px 0; /* Plus d'espace autour des séparateurs */
+  }
+  
+  /* Style pour le sous-titre "Liste des Avis" */
+  .avis-section-container h3 {
+    color: var(--text-dark);
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  /* Espacement pour les composants enfants (Formulaire et Liste) */
+  .avis-section-container app-avis-form,
+  .avis-section-container app-avis-list {
+    display: block; /* Assure qu'ils prennent la largeur */
+    margin-top: 20px;
+  }
+  
+  /* Style pour le conteneur quand l'ID produit est manquant */
+  .no-product-id-container { /* Ajoutez cette classe au div *ngIf="!productId" */
+    padding: 20px;
+    background-color: var(--pink-light); /* Fond rose pâle pour le message d'erreur/attente */
+    border: 1px solid var(--pink-primary);
+    border-radius: 5px;
+    text-align: center;
+  }
+  /* Réutilisation de .loading-message pour le paragraphe ici est aussi possible */
+  .no-product-id-container p {
+      color: var(--pink-primary); /* Texte en rose */
+      font-weight: 500;
+  }
+  /* Style pour le bouton "Ajouter votre avis" */
+.button-add-review {
+  padding: 10px 25px;
+  background-color: var(--pink-primary, #E91E63); /* Utilise la variable si définie */
+  color: var(--button-text-color, #fff);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  display: inline-block; /* Nécessaire pour centrer avec text-align */
+}
+
+.button-add-review:hover {
+  background-color: #C2185B; /* Rose un peu plus foncé */
+}
+
+.button-add-review:active {
+    transform: scale(0.98); /* Léger effet d'enfoncement au clic */
+}
+
+/* Optionnel: Style pour un bouton Annuler générique si ajouté dans ce template */
+/* .button-cancel-add { ... } */
+
+/* Dans product-reviews.component.css */
+
+/* Optionnel : Définir les variables si elles ne sont pas globales */
+:host {
+  --pink-primary: #E91E63;
+  --pink-light: #FCE4EC;
+  --text-dark: #333;
+  --text-light: #666;
+  --border-color: #ccc;
+  --error-color: #D32F2F;
+  --input-background: #fff;
+  --button-text-color: #fff;
+  --secondary-button-bg: #f4f4f4; /* Variable pour le fond */
+  --secondary-button-text: #555;  /* Variable pour le texte */
+  --secondary-button-border: #ddd;/* Variable pour la bordure */
+}
+
+/* Style de base pour les boutons (si non défini globalement) */
+/* Assurez-vous que ce style s'applique aussi à .button-secondary */
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  transition: background-color 0.3s ease, opacity 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-sizing: border-box; /* Bonne pratique */
+}
+
+/* Style spécifique pour le bouton secondaire (Annuler) */
+.button-secondary {
+  background-color: var(--secondary-button-bg, #f4f4f4); /* Fond gris clair */
+  color: var(--secondary-button-text, #555);           /* Texte foncé */
+  border: 1px solid var(--secondary-button-border, #ddd);/* Bordure grise */
+}
+
+.button-secondary:hover {
+  background-color: #e9e9e9; /* Légèrement plus foncé au survol */
+  border-color: #ccc;
+}
+
+.button-secondary:focus {
+ outline: none;
+ box-shadow: 0 0 0 3px rgba(200, 200, 200, 0.5); /* Exemple d'outline au focus */
+}
+
+
+/* Style pour le conteneur du bouton Annuler (pour l'ajout) */
+/* Permet de l'aligner ou d'ajouter de la marge */
+.form-actions-cancel {
+margin-top: 15px; /* Espace au-dessus du bouton Annuler */
+margin-bottom: 10px; /* Espace en dessous */
+/* Alignement:
+   Si vous voulez l'aligner avec les boutons du formulaire qui sont peut-être
+   dans un flex container à gauche: */
+/* display: flex; */
+/* justify-content: flex-start; */
+
+/* Ou si vous voulez le centrer : */
+text-align: center;
+
+/* Ou le mettre à droite: */
+/* text-align: right; */
+}
+
+/* ... (styles existants) ... */
+
+/* Style pour la section des filtres */
+.filter-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9; /* Fond légèrement différent */
+  border-radius: 5px;
+  border: 1px solid var(--border-color, #eee);
+  display: flex; /* Pour aligner label et select */
+  align-items: center;
+  gap: 10px; /* Espace entre label et select */
+  flex-wrap: wrap; /* Permet le retour à la ligne sur petits écrans */
+}
+
+.filter-section label {
+  font-weight: 500;
+  color: var(--text-dark, #333);
+}
+
+.filter-section select {
+  padding: 8px 10px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 4px;
+  min-width: 150px; /* Largeur minimale */
+}
+
+/* Style pour les contrôles de pagination */
+.pagination-controls {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid var(--pink-light, #FCE4EC);
+  display: flex;
+  justify-content: space-between; /* Infos à gauche, boutons à droite */
+  align-items: center;
+  flex-wrap: wrap; /* Retour à la ligne */
+  gap: 15px; /* Espace entre les éléments */
+}
+
+.pagination-controls span {
+  color: var(--text-light, #666);
+  font-size: 0.9em;
+}
+
+.pagination-controls div { /* Conteneur pour les boutons */
+   display: flex;
+   gap: 5px; /* Espace réduit entre les boutons de pagination */
+}
+
+.pagination-controls button {
+  padding: 6px 12px; /* Boutons légèrement plus petits */
+  font-size: 0.9em;
+  background-color: var(--secondary-button-bg, #f4f4f4);
+  color: var(--secondary-button-text, #555);
+  border: 1px solid var(--secondary-button-border, #ddd);
+  /* Utilise le style .button-secondary pour la base */
+}
+
+.pagination-controls button:hover:not(:disabled) {
+   background-color: #e9e9e9;
+   border-color: #ccc;
+}
+
+.pagination-controls button:disabled {
+   background-color: #f8f8f8;
+   color: #bbb;
+   border-color: #eee;
+   cursor: not-allowed;
+   opacity: 0.7;
+}
+
+/* Message d'erreur spécifique au chargement */
+.error-message-box {
+    color: var(--error-color, #D32F2F);
+    background-color: #ffebee;
+    border: 1px solid var(--error-color, #D32F2F);
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    text-align: center;
+}

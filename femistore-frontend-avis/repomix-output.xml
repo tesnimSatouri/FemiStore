@@ -1,0 +1,1608 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+.editorconfig
+.gitignore
+angular.json
+package.json
+README.md
+src/app/app-routing.module.ts
+src/app/app.component.html
+src/app/app.component.spec.ts
+src/app/app.component.ts
+src/app/app.module.ts
+src/app/components/avis-form/avis-form.component.css
+src/app/components/avis-form/avis-form.component.html
+src/app/components/avis-form/avis-form.component.spec.ts
+src/app/components/avis-form/avis-form.component.ts
+src/app/components/avis-list/avis-list.component.css
+src/app/components/avis-list/avis-list.component.html
+src/app/components/avis-list/avis-list.component.spec.ts
+src/app/components/avis-list/avis-list.component.ts
+src/app/models/avis.model.ts
+src/app/pages/product-reviews/product-reviews.component.css
+src/app/pages/product-reviews/product-reviews.component.html
+src/app/pages/product-reviews/product-reviews.component.spec.ts
+src/app/pages/product-reviews/product-reviews.component.ts
+src/app/services/avis.service.spec.ts
+src/app/services/avis.service.ts
+src/environments/environment.prod.ts
+src/environments/environment.ts
+src/index.html
+src/main.ts
+src/styles.css
+tsconfig.app.json
+tsconfig.json
+tsconfig.spec.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="src/app/components/avis-form/avis-form.component.css">
+/* Réutiliser les variables si définies globalement ou dans :host */
+/* Assurez-vous que ces variables sont accessibles */
+:host { /* Ou :root si dans un fichier global */
+    --pink-primary: #E91E63;
+    --pink-light: #FCE4EC;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #ccc; /* Un gris plus neutre pour les bordures d'input */
+    --error-color: #D32F2F; /* Rouge standard pour les erreurs */
+    --input-background: #fff;
+    --button-text-color: #fff;
+    --secondary-button-bg: #f4f4f4;
+    --secondary-button-text: #555;
+    --secondary-button-border: #ddd;
+  }
+  
+  /* Conteneur principal du formulaire */
+  .avis-form-container { /* Ajoutez cette classe à la balise <form> */
+    background-color: var(--input-background);
+    padding: 20px;
+    border-radius: 8px;
+    /* Optionnel: Ajouter une légère bordure rose pâle */
+    /* border: 1px solid var(--pink-light); */
+    /* Optionnel: Ombre légère */
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.05); */
+    margin-top: 20px; /* Espace par rapport au titre/séparateur au-dessus */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Titre du formulaire */
+  .avis-form-container h3 {
+    color: var(--pink-primary);
+    font-size: 1.6em;
+    margin-bottom: 25px;
+    font-weight: 600;
+    text-align: center; /* Centrer le titre peut être sympa */
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--pink-light);
+  }
+  
+  /* Style pour chaque groupe de champ (label + input + erreur) */
+  .form-group { /* Ajoutez cette classe à chaque div contenant label/input/erreur */
+    margin-bottom: 18px;
+  }
+  
+  /* Labels */
+  .form-group label {
+    display: block; /* Label au-dessus de l'input */
+    margin-bottom: 6px;
+    color: var(--text-dark);
+    font-weight: 500; /* Un peu plus de poids */
+    font-size: 0.95em;
+  }
+  
+  /* Inputs (text, number) et Textarea */
+  .form-group input[type="number"],
+  .form-group input[type="text"], /* Au cas où vous en ajouteriez */
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--text-dark);
+    box-sizing: border-box; /* Inclut padding/border dans la largeur/hauteur */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Style spécifique pour textarea */
+  .form-group textarea {
+    resize: vertical; /* Permet le redimensionnement vertical */
+    min-height: 100px; /* Hauteur minimale */
+    font-family: inherit; /* Hérite la police du reste du formulaire */
+  }
+  
+  /* Focus sur les inputs/textarea */
+  .form-group input[type="number"]:focus,
+  .form-group input[type="text"]:focus,
+  .form-group textarea:focus {
+    border-color: var(--pink-primary); /* Bordure rose au focus */
+    outline: none; /* Supprime l'outline par défaut */
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15); /* Ombre portée rose pâle discrète */
+  }
+  
+  /* Style pour les inputs en lecture seule (ex: productId) */
+  .form-group input[readonly] {
+    background-color: #f8f8f8; /* Fond légèrement grisé */
+    cursor: not-allowed; /* Curseur indiquant non modifiable */
+    border-color: #e0e0e0;
+  }
+  
+  /* Messages d'erreur de validation */
+  .error-message { /* Ajoutez cette classe aux divs *ngIf pour les erreurs */
+    color: var(--error-color);
+    font-size: 0.85em;
+    margin-top: 5px;
+    /* padding-left: 5px; */ /* Petit décalage optionnel */
+  }
+  
+  /* Conteneur pour les boutons (optionnel mais aide à l'alignement) */
+  .form-actions { /* Ajoutez un div autour des boutons avec cette classe */
+    margin-top: 25px;
+    display: flex;
+    gap: 10px; /* Espace entre les boutons */
+    justify-content: flex-start; /* Ou center, flex-end */
+  }
+  
+  /* Style général des boutons */
+  .avis-form-container button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    text-transform: uppercase; /* Lettres capitales pour les boutons */
+    letter-spacing: 0.5px;
+  }
+  
+  /* Bouton principal (Submit) */
+  .avis-form-container button[type="submit"] {
+    background-color: var(--pink-primary);
+    color: var(--button-text-color);
+  }
+  
+  .avis-form-container button[type="submit"]:hover:not(:disabled) {
+    background-color: #C2185B; /* Rose un peu plus foncé au survol */
+  }
+  
+  /* Bouton secondaire (Annuler l'édition) */
+  .avis-form-container button.button-secondary { /* Ajoutez la classe "button-secondary" au bouton Annuler */
+    background-color: var(--secondary-button-bg);
+    color: var(--secondary-button-text);
+    border: 1px solid var(--secondary-button-border);
+  }
+  
+  .avis-form-container button.button-secondary:hover {
+    background-color: #e9e9e9; /* Légèrement plus foncé au survol */
+  }
+  
+  /* Style pour les boutons désactivés */
+  .avis-form-container button:disabled {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+</file>
+
+<file path="src/app/components/avis-form/avis-form.component.html">
+<h3>{{ isEditMode ? 'Modifier l\'avis' : 'Ajouter un nouvel avis' }}</h3>
+<!-- Ajoutez la classe au formulaire -->
+<form [formGroup]="avisForm" (ngSubmit)="onSubmit()" class="avis-form-container">
+  <!-- Champ caché pour l'ID en mode édition -->
+  <input type="hidden" formControlName="id">
+
+  <!-- Ajoutez la classe .form-group à chaque div de champ -->
+  <div class="form-group">
+    <label for="userId">ID Utilisateur:</label>
+    <input type="number" id="userId" formControlName="userId">
+    <!-- Ajoutez la classe .error-message à la div d'erreur -->
+    <div *ngIf="avisForm.controls['userId'].invalid && avisForm.controls['userId'].touched" class="error-message">
+      User ID requis.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="productId">ID Produit:</label>
+    <input type="number" id="productId" formControlName="productId" [readonly]="productId !== undefined">
+    <div *ngIf="avisForm.controls['productId'].invalid && avisForm.controls['productId'].touched" class="error-message">
+      Product ID requis.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="note">Note (1-5):</label>
+    <input type="number" id="note" formControlName="note" min="1" max="5">
+    <div *ngIf="avisForm.controls['note'].invalid && avisForm.controls['note'].touched" class="error-message">
+      Note requise (entre 1 et 5).
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="commentaire">Commentaire:</label>
+    <textarea id="commentaire" formControlName="commentaire" rows="4"></textarea>
+    <div *ngIf="avisForm.controls['commentaire'].invalid && avisForm.controls['commentaire'].touched" class="error-message">
+      Commentaire requis.
+    </div>
+  </div>
+
+  <!-- Ajoutez la classe .form-actions autour des boutons -->
+  <div class="form-actions">
+    <button type="submit" [disabled]="avisForm.invalid">
+      {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+    </button>
+    <!-- Ajoutez la classe .button-secondary au bouton Annuler -->
+    <button type="button" (click)="resetForm()" *ngIf="isEditMode" class="button-secondary">
+      Annuler l'édition
+    </button>
+  </div>
+</form>
+</file>
+
+<file path="src/app/components/avis-form/avis-form.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { AvisFormComponent } from './avis-form.component';
+
+describe('AvisFormComponent', () => {
+  let component: AvisFormComponent;
+  let fixture: ComponentFixture<AvisFormComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [AvisFormComponent]
+    });
+    fixture = TestBed.createComponent(AvisFormComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="src/app/components/avis-form/avis-form.component.ts">
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Avis } from '../../models/avis.model';
+
+
+@Component({
+  selector: 'app-avis-form',
+  templateUrl: './avis-form.component.html',
+  styleUrls: ['./avis-form.component.css']
+})
+export class AvisFormComponent implements OnInit, OnChanges {
+  @Input() avisToEdit: Avis | null = null; // Reçoit l'avis à éditer (si modification)
+  @Input() productId?: number; // Peut recevoir l'ID du produit du parent
+  @Output() avisSubmit = new EventEmitter<Avis>(); // Émet l'avis soumis (nouveau ou modifié)
+
+  avisForm: FormGroup;
+  isEditMode = false;
+
+  constructor(private fb: FormBuilder) {
+    this.avisForm = this.fb.group({
+      id: [null], // Caché ou non présent dans le form HTML, mais utile pour l'update
+      userId: ['', Validators.required], // À adapter : comment récupérez-vous l'userId ?
+      productId: ['', Validators.required],
+      note: ['', [Validators.required, Validators.min(1), Validators.max(5)]], // Exemple: note de 1 à 5
+      commentaire: ['', Validators.required]
+      // La date est généralement gérée par le backend
+    });
+  }
+
+  ngOnInit(): void {
+     if (this.productId) {
+       this.avisForm.patchValue({ productId: this.productId });
+     }
+  }
+
+  // Détecte si un avis à éditer est passé en entrée
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['avisToEdit'] && this.avisToEdit) {
+      this.isEditMode = true;
+      this.avisForm.patchValue(this.avisToEdit); // Pré-remplit le formulaire
+    } else if (changes['avisToEdit'] && !this.avisToEdit) {
+        this.isEditMode = false;
+        this.resetForm(); // Réinitialise si on passe de edit à create
+    }
+    // Met à jour le productId si l'input change
+    if(changes['productId'] && this.productId){
+         this.avisForm.patchValue({ productId: this.productId });
+    }
+  }
+
+  onSubmit(): void {
+    if (this.avisForm.valid) {
+      // Crée une copie de l'objet form pour éviter les modifs directes
+      const submittedAvis: Avis = { ...this.avisForm.value };
+      this.avisSubmit.emit(submittedAvis);
+      if (!this.isEditMode) { // Reset seulement si c'est une création
+        this.resetForm();
+      }
+    } else {
+      // Marquer les champs comme touchés pour afficher les erreurs
+      this.avisForm.markAllAsTouched();
+      console.error("Formulaire invalide");
+    }
+  }
+
+  resetForm(): void {
+     this.avisForm.reset();
+     // Remet le productId s'il était fourni
+     if (this.productId) {
+       this.avisForm.patchValue({ productId: this.productId });
+     }
+     this.isEditMode = false;
+     this.avisToEdit = null;
+  }
+}
+</file>
+
+<file path="src/app/components/avis-list/avis-list.component.css">
+/* Assurez-vous que les variables de couleur sont accessibles ici */
+/* Elles peuvent être définies dans :host, :root, ou héritées */
+:host { /* Ou :root si dans un fichier global */
+  --pink-primary: #E91E63;
+  --pink-light: #FCE4EC;
+  --text-dark: #333;
+  --text-light: #666;
+  --border-color-light: #eee; /* Bordure plus légère pour les items */
+  --background-color: #fff;
+  --button-text-color: #fff;
+  --secondary-button-bg: #f4f4f4;
+  --secondary-button-text: #555;
+  --secondary-button-border: #ddd;
+  --delete-button-bg: #f8f8f8; /* Fond neutre pour supprimer */
+  --delete-button-text: var(--error-color, #D32F2F); /* Utilise la variable erreur si dispo, sinon rouge */
+  --delete-button-border: #e0e0e0;
+}
+
+/* Style pour le message "Aucun avis" */
+.no-avis-message { /* Ajoutez cette classe au <p> dans le *ngIf vide */
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--text-light);
+  font-style: italic;
+  background-color: var(--pink-light); /* Fond rose pâle */
+  border-radius: 8px;
+  border: 1px dashed var(--pink-primary); /* Bordure pointillée rose */
+  margin: 20px 0; /* Espace autour */
+}
+
+/* Conteneur de la liste (ul) */
+.avis-list-container { /* Ajoutez cette classe à la balise <ul> */
+  list-style: none; /* Supprime les puces */
+  padding: 0;
+  margin: 0; /* Supprime la marge par défaut */
+}
+
+/* Style pour chaque élément d'avis (li) */
+.avis-item {
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color-light); /* Bordure légère */
+  border-left: 4px solid var(--pink-primary); /* Bordure gauche rose pour l'accent */
+  border-radius: 5px;
+  padding: 15px 20px;
+  margin-bottom: 15px; /* Espace entre les avis */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06); /* Ombre discrète */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: box-shadow 0.3s ease;
+}
+
+.avis-item:hover {
+   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.09); /* Ombre un peu plus prononcée au survol */
+}
+
+/* En-tête de l'avis (IDs, Note) */
+.avis-header {
+  display: flex;
+  justify-content: space-between; /* ID à gauche, Note à droite */
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  color: var(--text-light);
+  flex-wrap: wrap; /* Permet le retour à la ligne si manque de place */
+  gap: 10px; /* Espace si retour à la ligne */
+}
+
+/* Note dans l'en-tête */
+.avis-note {
+  font-weight: bold;
+  color: var(--pink-primary); /* Note en rose */
+  font-size: 1.2em; /* Met en valeur la note */
+  white-space: nowrap; /* Evite que "Note: X/5" se casse */
+}
+
+/* Commentaire de l'avis */
+.avis-comment {
+  margin-top: 8px;
+  margin-bottom: 15px;
+  color: var(--text-dark);
+  line-height: 1.6; /* Bonne lisibilité */
+  font-size: 1em;
+  /* white-space: pre-wrap; */ /* Optionnel: conserve les sauts de ligne du commentaire */
+}
+
+/* Pied de l'avis (Date, Boutons) */
+.avis-footer {
+  display: flex;
+  justify-content: space-between; /* Date à gauche, boutons à droite */
+  align-items: center;
+  margin-top: 15px;
+  border-top: 1px solid var(--border-color-light); /* Séparateur léger */
+  padding-top: 10px;
+  flex-wrap: wrap; /* Permet le retour à la ligne */
+  gap: 10px; /* Espace en cas de retour à la ligne */
+}
+
+/* Date de l'avis */
+.avis-date {
+  font-size: 0.85em;
+  color: var(--text-light);
+}
+
+/* Conteneur des boutons d'action */
+.avis-actions { /* Ajoutez cette classe au div contenant les boutons */
+  display: flex;
+  gap: 10px; /* Espace entre les boutons */
+}
+
+/* Style de base des boutons d'action (plus petits) */
+.avis-footer button {
+  padding: 5px 10px; /* Plus petits que les boutons de formulaire */
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Bouton Modifier */
+.avis-footer button.button-edit { /* Ajoutez la classe .button-edit */
+  background-color: var(--pink-primary);
+  color: var(--button-text-color);
+  border: 1px solid var(--pink-primary);
+}
+
+.avis-footer button.button-edit:hover {
+  background-color: #C2185B; /* Rose plus foncé */
+  border-color: #C2185B;
+}
+
+/* Bouton Supprimer */
+.avis-footer button.button-delete { /* Ajoutez la classe .button-delete */
+  background-color: var(--delete-button-bg);
+  color: var(--delete-button-text);
+  border: 1px solid var(--delete-button-border);
+}
+
+.avis-footer button.button-delete:hover {
+  background-color: #ffebee; /* Fond très léger rouge/rose pâle */
+  border-color: var(--delete-button-text);
+  color: #B71C1C; /* Rouge plus foncé au survol */
+}
+</file>
+
+<file path="src/app/components/avis-list/avis-list.component.html">
+<div *ngIf="!avisList || avisList.length === 0">
+  <!-- Ajoutez la classe ici -->
+  <p class="no-avis-message">Aucun avis à afficher pour le moment.</p>
+</div>
+
+<!-- Ajoutez la classe ici -->
+<ul *ngIf="avisList && avisList.length > 0" class="avis-list-container">
+  <!-- La classe avis-item est déjà présente, c'est bien -->
+  <li *ngFor="let avis of avisList" class="avis-item">
+    <div class="avis-header">
+      <!-- Les spans internes héritent du style, pas besoin de classe sauf si style spécifique -->
+      <span>Produit ID: {{ avis.productId }} | Utilisateur ID: {{ avis.userId }}</span>
+      <!-- La classe avis-note est déjà présente, c'est bien -->
+      <span class="avis-note">Note: {{ avis.note }}/5</span>
+    </div>
+    <!-- La classe avis-comment est déjà présente, c'est bien -->
+    <p class="avis-comment">{{ avis.commentaire }}</p>
+    <div class="avis-footer">
+      <!-- La classe avis-date est déjà présente, c'est bien -->
+      <span class="avis-date">{{ avis.date | date:'dd/MM/yyyy' }}</span>
+      <!-- Ajoutez un div avec la classe .avis-actions autour des boutons -->
+      <div class="avis-actions">
+        <!-- Ajoutez les classes button-edit et button-delete -->
+        <button (click)="onEdit(avis)" class="button-edit">Modifier</button>
+        <button (click)="onDelete(avis.id)" class="button-delete">Supprimer</button>
+      </div>
+    </div>
+  </li>
+</ul>
+</file>
+
+<file path="src/app/components/avis-list/avis-list.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { AvisListComponent } from './avis-list.component';
+
+describe('AvisListComponent', () => {
+  let component: AvisListComponent;
+  let fixture: ComponentFixture<AvisListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [AvisListComponent]
+    });
+    fixture = TestBed.createComponent(AvisListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="src/app/components/avis-list/avis-list.component.ts">
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Avis } from '../../models/avis.model';
+
+@Component({
+  selector: 'app-avis-list',
+  templateUrl: './avis-list.component.html',
+  styleUrls: ['./avis-list.component.css'] // ou .scss
+})
+export class AvisListComponent {
+  @Input() avisList: Avis[] = []; // Reçoit la liste des avis du parent
+  @Output() deleteRequest = new EventEmitter<number>(); // Émet l'ID à supprimer
+  @Output() editRequest = new EventEmitter<Avis>();     // Émet l'avis à éditer
+
+  onDelete(id: number | undefined): void {
+    if (id !== undefined) {
+      this.deleteRequest.emit(id);
+    }
+  }
+
+  onEdit(avis: Avis): void {
+    this.editRequest.emit(avis);
+  }
+}
+</file>
+
+<file path="src/app/models/avis.model.ts">
+// src/app/models/avis.model.ts
+export interface Avis {
+    id?: number; // L'ID est optionnel car il n'existe pas avant la création
+    userId: number;
+    productId: number;
+    note: number;       // Évaluation/Note
+    commentaire: string; // Commentaire
+    date?: string;      // La date peut être une string si Spring la sérialise ainsi (LocalDate -> ISO String)
+                        // Ou un objet Date si vous préférez la parser côté front. String est souvent plus simple.
+  }
+</file>
+
+<file path="src/app/pages/product-reviews/product-reviews.component.css">
+/* Variables de couleur pour une maintenance facile */
+:host { /* Si vous utilisez ce CSS dans le fichier .scss/.css du composant avec ViewEncapsulation */
+    --pink-primary: #E91E63;   /* Un rose vif mais élégant */
+    --pink-light: #FCE4EC;    /* Un rose très pâle pour les fonds/bordures */
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #eee;
+    --background-color: #fff;
+  }
+  
+  /* Style pour le conteneur principal des avis */
+  .avis-section-container { /* Ajoutez cette classe au premier div *ngIf="productId" */
+    background-color: var(--background-color);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px; /* Espace sous la section avis */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police moderne */
+  }
+  
+  /* Style pour le titre principal */
+  .avis-section-container h2 {
+    color: var(--pink-primary); /* Titre en rose */
+    font-size: 1.8em; /* Taille de police plus grande */
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--pink-light); /* Ligne de séparation rose pâle */
+    font-weight: 600; /* Un peu plus gras */
+  }
+  
+  /* Style pour la section de la note moyenne */
+  .average-rating-container { /* Ajoutez cette classe au div *ngIf="(averageRating$ | async)..." */
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    color: var(--text-light);
+  }
+  
+  .average-rating-container p {
+    margin: 0;
+  }
+  
+  .average-rating-container strong {
+    font-size: 1.4em; /* Note plus grande */
+    font-weight: 700; /* Note bien en évidence */
+    color: var(--pink-primary); /* Note en rose */
+    margin-left: 5px; /* Petit espace avant la note */
+  }
+  
+  /* Style pour les messages de chargement */
+  .loading-message { /* Ajoutez cette classe aux <p> dans #loadingAvg et dans le div *ngIf="!productId" */
+    color: var(--text-light);
+    font-style: italic;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  /* Style pour les lignes de séparation */
+  .avis-section-container hr {
+    border: none;
+    border-top: 1px solid var(--pink-light); /* Séparateur rose très pâle */
+    margin: 30px 0; /* Plus d'espace autour des séparateurs */
+  }
+  
+  /* Style pour le sous-titre "Liste des Avis" */
+  .avis-section-container h3 {
+    color: var(--text-dark);
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  /* Espacement pour les composants enfants (Formulaire et Liste) */
+  .avis-section-container app-avis-form,
+  .avis-section-container app-avis-list {
+    display: block; /* Assure qu'ils prennent la largeur */
+    margin-top: 20px;
+  }
+  
+  /* Style pour le conteneur quand l'ID produit est manquant */
+  .no-product-id-container { /* Ajoutez cette classe au div *ngIf="!productId" */
+    padding: 20px;
+    background-color: var(--pink-light); /* Fond rose pâle pour le message d'erreur/attente */
+    border: 1px solid var(--pink-primary);
+    border-radius: 5px;
+    text-align: center;
+  }
+  /* Réutilisation de .loading-message pour le paragraphe ici est aussi possible */
+  .no-product-id-container p {
+      color: var(--pink-primary); /* Texte en rose */
+      font-weight: 500;
+  }
+  /* Style pour le bouton "Ajouter votre avis" */
+.button-add-review {
+  padding: 10px 25px;
+  background-color: var(--pink-primary, #E91E63); /* Utilise la variable si définie */
+  color: var(--button-text-color, #fff);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  display: inline-block; /* Nécessaire pour centrer avec text-align */
+}
+
+.button-add-review:hover {
+  background-color: #C2185B; /* Rose un peu plus foncé */
+}
+
+.button-add-review:active {
+    transform: scale(0.98); /* Léger effet d'enfoncement au clic */
+}
+
+/* Optionnel: Style pour un bouton Annuler générique si ajouté dans ce template */
+/* .button-cancel-add { ... } */
+
+/* Dans product-reviews.component.css */
+
+/* Optionnel : Définir les variables si elles ne sont pas globales */
+:host {
+  --pink-primary: #E91E63;
+  --pink-light: #FCE4EC;
+  --text-dark: #333;
+  --text-light: #666;
+  --border-color: #ccc;
+  --error-color: #D32F2F;
+  --input-background: #fff;
+  --button-text-color: #fff;
+  --secondary-button-bg: #f4f4f4; /* Variable pour le fond */
+  --secondary-button-text: #555;  /* Variable pour le texte */
+  --secondary-button-border: #ddd;/* Variable pour la bordure */
+}
+
+/* Style de base pour les boutons (si non défini globalement) */
+/* Assurez-vous que ce style s'applique aussi à .button-secondary */
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  transition: background-color 0.3s ease, opacity 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-sizing: border-box; /* Bonne pratique */
+}
+
+/* Style spécifique pour le bouton secondaire (Annuler) */
+.button-secondary {
+  background-color: var(--secondary-button-bg, #f4f4f4); /* Fond gris clair */
+  color: var(--secondary-button-text, #555);           /* Texte foncé */
+  border: 1px solid var(--secondary-button-border, #ddd);/* Bordure grise */
+}
+
+.button-secondary:hover {
+  background-color: #e9e9e9; /* Légèrement plus foncé au survol */
+  border-color: #ccc;
+}
+
+.button-secondary:focus {
+ outline: none;
+ box-shadow: 0 0 0 3px rgba(200, 200, 200, 0.5); /* Exemple d'outline au focus */
+}
+
+
+/* Style pour le conteneur du bouton Annuler (pour l'ajout) */
+/* Permet de l'aligner ou d'ajouter de la marge */
+.form-actions-cancel {
+margin-top: 15px; /* Espace au-dessus du bouton Annuler */
+margin-bottom: 10px; /* Espace en dessous */
+/* Alignement:
+   Si vous voulez l'aligner avec les boutons du formulaire qui sont peut-être
+   dans un flex container à gauche: */
+/* display: flex; */
+/* justify-content: flex-start; */
+
+/* Ou si vous voulez le centrer : */
+text-align: center;
+
+/* Ou le mettre à droite: */
+/* text-align: right; */
+}
+</file>
+
+<file path="src/app/pages/product-reviews/product-reviews.component.html">
+<div *ngIf="productId" class="avis-section-container">
+  <h2>Avis pour le Produit #{{ productId }}</h2>
+
+  <!-- Affichage de la note moyenne -->
+  <div *ngIf="(averageRating$ | async) as avgRate; else loadingAvg" class="average-rating-container">
+    <p>Note moyenne: <strong>{{ avgRate | number:'1.1-2' }} / 5</strong></p>
+  </div>
+  <ng-template #loadingAvg>
+    <p class="loading-message">Chargement de la note moyenne...</p>
+  </ng-template>
+
+  <hr> <!-- Séparateur optionnel -->
+
+  <h3>Liste des Avis</h3>
+  <!-- Affichage de la liste des avis -->
+  <app-avis-list
+     [avisList]="(reviews$ | async) || []"
+     (deleteRequest)="handleDeleteRequest($event)"
+     (editRequest)="handleEditRequest($event)">
+  </app-avis-list>
+
+  <!-- Bouton pour afficher le formulaire d'ajout -->
+  <!-- On affiche ce bouton SEULEMENT si le formulaire n'est PAS déjà visible -->
+  <div *ngIf="!showAddForm && !avisToEdit" style="margin-top: 20px; text-align: center;">
+      <button (click)="displayAddForm()" class="button-add-review">
+          Ajouter votre avis
+      </button>
+  </div>
+
+  <!-- Condition pour afficher le formulaire :
+       - Soit on a cliqué sur "Ajouter votre avis" (showAddForm === true)
+       - Soit on a cliqué sur "Modifier" un avis (avisToEdit !== null)
+  -->
+  <div *ngIf="showAddForm || avisToEdit">
+      <hr> <!-- Séparateur avant le formulaire -->
+      <!-- Formulaire d'ajout/modification -->
+      <app-avis-form
+         [productId]="productId"
+         [avisToEdit]="avisToEdit"
+         (avisSubmit)="handleAvisSubmit($event)"
+     
+         >
+       </app-avis-form>
+       <!-- Optionnel: Ajouter un bouton Annuler ici si vous ne le gérez pas dans AvisFormComponent -->
+       <div *ngIf="showAddForm && !avisToEdit" class="form-actions form-actions-cancel">
+        <!-- Ajoutez la classe 'button-secondary' ici -->
+        <button type="button" (click)="hideForm()" class="button-secondary">
+            Annuler
+        </button>
+    </div>       <hr> <!-- Séparateur après le formulaire -->
+  </div>
+
+</div>
+
+<div *ngIf="!productId" class="no-product-id-container">
+  <p class="loading-message">Chargement ou ID produit manquant...</p>
+</div>
+
+<!-- Ajoutez un style pour le bouton (dans product-reviews.component.css) -->
+</file>
+
+<file path="src/app/pages/product-reviews/product-reviews.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ProductReviewsComponent } from './product-reviews.component';
+
+describe('ProductReviewsComponent', () => {
+  let component: ProductReviewsComponent;
+  let fixture: ComponentFixture<ProductReviewsComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ProductReviewsComponent]
+    });
+    fixture = TestBed.createComponent(ProductReviewsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="src/app/pages/product-reviews/product-reviews.component.ts">
+import { Component, OnInit, ViewChild } from '@angular/core'; // Importer ViewChild
+import { ActivatedRoute } from '@angular/router';
+import { AvisService } from '../../services/avis.service';
+import { Avis } from '../../models/avis.model';
+import { Observable, switchMap, tap, catchError, of, BehaviorSubject } from 'rxjs';
+import { AvisFormComponent } from '../../components/avis-form/avis-form.component'; // Importer AvisFormComponent
+
+@Component({
+  selector: 'app-product-reviews',
+  templateUrl: './product-reviews.component.html',
+  styleUrls: ['./product-reviews.component.css']
+})
+export class ProductReviewsComponent implements OnInit {
+
+  productId!: number;
+  reviews$: Observable<Avis[]> | undefined;
+  averageRating$: Observable<number | null> | undefined;
+  avisToEdit: Avis | null = null;
+  showAddForm: boolean = false; // Nouvelle variable pour contrôler l'affichage du formulaire d'ajout
+
+  // Référence au composant enfant pour pouvoir appeler sa méthode resetForm
+  @ViewChild(AvisFormComponent) avisFormComponent: AvisFormComponent | undefined;
+
+  private refreshReviews = new BehaviorSubject<void>(undefined);
+
+  constructor(
+    private route: ActivatedRoute,
+    private avisService: AvisService
+  ) { }
+
+  ngOnInit(): void {
+    this.route.paramMap.pipe(
+      tap(params => {
+        const id = params.get('productId');
+        if (id) {
+          this.productId = +id;
+          this.loadData();
+        } else {
+          console.error("Product ID manquant dans l'URL");
+        }
+      })
+    ).subscribe();
+
+     this.reviews$ = this.refreshReviews.pipe(
+       // Assurez-vous que productId est défini avant de charger
+       switchMap(() => this.productId ? this.loadReviewsForProduct(this.productId) : of([]))
+     );
+  }
+
+  loadData(): void {
+    if (!this.productId) return;
+    this.averageRating$ = this.avisService.getAverageRating(this.productId).pipe(
+      catchError(err => {
+        console.error("Erreur chargement note moyenne:", err);
+        return of(null);
+      })
+    );
+    this.refreshReviews.next();
+  }
+
+  loadReviewsForProduct(productId: number): Observable<Avis[]> {
+     // Adaptez ceci si vous implémentez l'appel API spécifique `/avis/product/{id}`
+     return this.avisService.getAllReviews().pipe(
+        map(allReviews => allReviews.filter(avis => avis.productId === productId)), // Utilisez map de RxJS
+        catchError(err => {
+             console.error("Erreur chargement avis:", err);
+             return of([]);
+        })
+     );
+  }
+
+  // Nouvelle fonction pour afficher le formulaire d'ajout
+  displayAddForm(): void {
+    this.avisToEdit = null; // Assure qu'on n'est pas en mode édition
+    this.showAddForm = true; // Active l'affichage
+    // Réinitialise le formulaire enfant au cas où il contenait des données précédentes
+    // Utilise setTimeout pour s'assurer que le formulaire est rendu avant d'appeler reset
+    setTimeout(() => this.avisFormComponent?.resetForm(), 0);
+     // Optionnel: Scroll vers le formulaire
+     setTimeout(() => document.querySelector('app-avis-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+
+  // Fonction pour cacher le formulaire (appelée après soumission ou annulation)
+  hideForm(): void {
+      this.showAddForm = false;
+      this.avisToEdit = null;
+  }
+
+  handleAvisSubmit(avis: Avis): void {
+    const operation$ = avis.id
+      ? this.avisService.updateReview(avis.id, avis) // Mise à jour
+      : this.avisService.addReview({ ...avis, productId: this.productId }); // Création (assure productId)
+
+    operation$.subscribe({
+      next: (result) => {
+        console.log(avis.id ? "Avis mis à jour !" : "Avis ajouté !");
+        this.hideForm(); // Cache le formulaire après succès
+        this.refreshReviews.next(); // Rafraîchir la liste
+      },
+      error: (err) => {
+        console.error(avis.id ? "Erreur MàJ avis:" : "Erreur ajout avis:", err);
+        // Peut-être afficher un message d'erreur à l'utilisateur ici
+      }
+    });
+  }
+
+
+  handleDeleteRequest(id: number): void {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet avis ?")) {
+      this.avisService.deleteReview(id).subscribe({
+        next: () => {
+          console.log("Avis supprimé !");
+          this.refreshReviews.next();
+           // Si l'avis supprimé était celui en cours d'édition, annuler l'édition
+           if (this.avisToEdit?.id === id) {
+                this.hideForm();
+           }
+        },
+        error: (err) => console.error("Erreur suppression avis:", err)
+      });
+    }
+  }
+
+  handleEditRequest(avis: Avis): void {
+     this.showAddForm = false; // Assure qu'on n'est pas en mode ajout explicite
+     this.avisToEdit = { ...avis };
+     // Le *ngIf s'activera car avisToEdit n'est pas null
+     setTimeout(() => document.querySelector('app-avis-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+
+  // Si AvisFormComponent émet un événement 'cancel' (voir suggestion précédente)
+  handleCancel(): void {
+      this.hideForm();
+      // Le formulaire enfant devrait idéalement se réinitialiser lui-même via son bouton Annuler/Cancel
+      // mais on peut forcer ici si besoin:
+      // this.avisFormComponent?.resetForm();
+  }
+}
+
+// N'oubliez pas d'importer map de rxjs
+import { map } from 'rxjs/operators';
+</file>
+
+<file path="src/app/services/avis.service.spec.ts">
+import { TestBed } from '@angular/core/testing';
+
+import { AvisService } from './avis.service';
+
+describe('AvisService', () => {
+  let service: AvisService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(AvisService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});
+</file>
+
+<file path="src/app/services/avis.service.ts">
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+// import { environment } from '../../environments/environment';
+import { Avis } from '../models/avis.model'; // Importez votre modèle
+
+@Injectable({
+  providedIn: 'root' // Service disponible globalement
+})
+export class AvisService {
+
+  private apiUrl = 'http://localhost:8089/avis'; // Utilise l'URL de l'environnement
+  ; // Utilise l'URL de l'environnementy
+  constructor(private http: HttpClient) { }
+
+  // GET /avis
+  getAllReviews(): Observable<Avis[]> {
+    return this.http.get<Avis[]>(this.apiUrl);
+  }
+
+  // POST /avis
+  addReview(avis: Avis): Observable<Avis> {
+    // Assurez-vous que l'objet avis contient userId, productId, note, commentaire
+    // L'ID sera généré par le backend
+    return this.http.post<Avis>(this.apiUrl, avis);
+  }
+
+  // DELETE /avis/{id}
+  deleteReview(id: number): Observable<void> { // Pas de contenu retourné (void)
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // GET /avis/average/{productId}
+  getAverageRating(productId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/average/${productId}`);
+  }
+
+  // PUT /avis/{id}
+  updateReview(id: number, avis: Avis): Observable<Avis> {
+    return this.http.put<Avis>(`${this.apiUrl}/${id}`, avis);
+  }
+
+  // GET /avis/filter?min={min}&max={max}
+  getReviewsByNoteRange(min: number, max: number): Observable<Avis[]> {
+    let params = new HttpParams()
+      .set('min', min.toString())
+      .set('max', max.toString());
+    return this.http.get<Avis[]>(`${this.apiUrl}/filter`, { params });
+  }
+
+  // GET /avis/categorized?threshold={threshold}
+  // Définissons une interface pour la réponse
+  getCategorizedReviews(threshold: number): Observable<{ positive: Avis[], negative: Avis[] }> {
+     let params = new HttpParams().set('threshold', threshold.toString());
+     return this.http.get<{ positive: Avis[], negative: Avis[] }>(`${this.apiUrl}/categorized`, { params });
+  }
+
+  // GET /avis/highest-rated
+  getHighestRatedReviews(): Observable<Avis[]> {
+    return this.http.get<Avis[]>(`${this.apiUrl}/highest-rated`);
+  }
+
+  // GET /avis/lowest-rated
+  getLowestRatedReviews(): Observable<Avis[]> {
+    return this.http.get<Avis[]>(`${this.apiUrl}/lowest-rated`);
+  }
+
+  // BONUS: Méthode pour récupérer les avis d'un produit spécifique (si nécessaire)
+  // Le backend ne l'a pas, donc on filtre côté client ou on adapte le backend
+  // Exemple de filtrage côté client (moins performant si beaucoup d'avis):
+  // getReviewsByProductId(productId: number): Observable<Avis[]> {
+  //   return this.getAllReviews().pipe(
+  //     map(avisList => avisList.filter(avis => avis.productId === productId))
+  //   );
+  // }
+}
+</file>
+
+<file path="src/environments/environment.prod.ts">
+export const environment = {
+    production: true,
+    apiUrl: 'URL_DE_VOTRE_API_EN_PROD/avis' // À adapter pour la production
+  };
+</file>
+
+<file path="src/environments/environment.ts">
+export const environment = {
+    production: false,
+    apiUrl: 'http://localhost:8089/avis' // URL de base de votre API Avis
+  };
+</file>
+
+<file path=".editorconfig">
+# Editor configuration, see https://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.ts]
+quote_type = single
+
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+</file>
+
+<file path=".gitignore">
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+</file>
+
+<file path="angular.json">
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "gestion_avis-frontend": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/gestion_avis-frontend",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "gestion_avis-frontend:build:production"
+            },
+            "development": {
+              "browserTarget": "gestion_avis-frontend:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "gestion_avis-frontend:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "abf70ba5-d602-436a-877f-dd5e1f25088c"
+  }
+}
+</file>
+
+<file path="package.json">
+{
+  "name": "gestion-avis-frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^16.2.0",
+    "@angular/common": "^16.2.0",
+    "@angular/compiler": "^16.2.0",
+    "@angular/core": "^16.2.0",
+    "@angular/forms": "^16.2.0",
+    "@angular/platform-browser": "^16.2.0",
+    "@angular/platform-browser-dynamic": "^16.2.0",
+    "@angular/router": "^16.2.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.13.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^16.2.15",
+    "@angular/cli": "^16.2.15",
+    "@angular/compiler-cli": "^16.2.0",
+    "@types/jasmine": "~4.3.0",
+    "jasmine-core": "~4.6.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.1.3"
+  }
+}
+</file>
+
+<file path="README.md">
+# GestionAvisFrontend
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.15.
+
+## Development server
+
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+
+## Code scaffolding
+
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+## Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+</file>
+
+<file path="src/app/app-routing.module.ts">
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ProductReviewsComponent } from './pages/product-reviews/product-reviews.component';
+import { AvisListComponent } from './components/avis-list/avis-list.component';
+import { AvisFormComponent } from './components/avis-form/avis-form.component';
+
+
+const routes: Routes = [
+
+  { path: 'products/:productId/reviews', component: ProductReviewsComponent },
+  { path: 'a', component: AvisListComponent },
+  { path: 'avis', component: AvisFormComponent },
+
+
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+</file>
+
+<file path="src/app/app.component.html">
+<router-outlet></router-outlet> <!-- Les composants routés s'afficheront ici -->
+</file>
+
+<file path="src/app/app.component.spec.ts">
+import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AppComponent } from './app.component';
+
+describe('AppComponent', () => {
+  beforeEach(() => TestBed.configureTestingModule({
+    imports: [RouterTestingModule],
+    declarations: [AppComponent]
+  }));
+
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+
+  it(`should have as title 'gestion_avis-frontend'`, () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.title).toEqual('gestion_avis-frontend');
+  });
+
+  it('should render title', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.content span')?.textContent).toContain('gestion_avis-frontend app is running!');
+  });
+});
+</file>
+
+<file path="src/app/app.component.ts">
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'gestion_avis-frontend';
+}
+</file>
+
+<file path="src/app/app.module.ts">
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { HttpClientModule } from '@angular/common/http'; // Importez ceci
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Utile pour les 
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AvisListComponent } from './components/avis-list/avis-list.component';
+import { AvisFormComponent } from './components/avis-form/avis-form.component';
+import { ProductReviewsComponent } from './pages/product-reviews/product-reviews.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    AvisListComponent,
+    AvisFormComponent,
+    ProductReviewsComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule, 
+    FormsModule,        
+    ReactiveFormsModule 
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+</file>
+
+<file path="src/index.html">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GestionAvisFrontend</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+</file>
+
+<file path="src/main.ts">
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+</file>
+
+<file path="src/styles.css">
+/* You can add global styles to this file, and also import other style files */
+</file>
+
+<file path="tsconfig.app.json">
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": []
+  },
+  "files": [
+    "src/main.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}
+</file>
+
+<file path="tsconfig.json">
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "useDefineForClassFields": false,
+    "lib": [
+      "ES2022",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}
+</file>
+
+<file path="tsconfig.spec.json">
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": [
+      "jasmine"
+    ]
+  },
+  "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
+  ]
+}
+</file>
+
+</files>

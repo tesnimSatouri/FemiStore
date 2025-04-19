@@ -1,0 +1,111 @@
+<div *ngIf="productId" class="avis-section-container">
+  <h2>Avis pour le Produit #{{ productId }}</h2>
+
+  <!-- Note moyenne -->
+  <div *ngIf="(averageRating$ | async) as avgRate; else loadingAvg" class="average-rating-container">
+    <p>Note moyenne: <strong>{{ avgRate !== null ? (avgRate | number:'1.1-2') + ' / 5' : 'N/A' }}</strong></p>
+  </div>
+  <ng-template #loadingAvg>
+    <p class="loading-message">Chargement de la note moyenne...</p>
+  </ng-template>
+
+  <hr>
+
+  <h3>Liste des Avis</h3>
+
+  <!-- Section Filtres -->
+  <div class="filter-section">
+    <label for="noteFilter">Filtrer par note :</label>
+    <select id="noteFilter" (change)="applyFilter($any($event.target).value)" [ngModel]="currentFilterNote === null ? 'null' : currentFilterNote">
+       <!-- L'option avec [ngValue]="null" est préférable si possible, sinon utiliser une string 'null' -->
+       <option value="null">Toutes les notes</option>
+       <option value="5">5 étoiles</option>
+       <option value="4">4 étoiles</option>
+       <option value="3">3 étoiles</option>
+       <option value="2">2 étoiles</option>
+       <option value="1">1 étoile</option>
+    </select>
+    <!-- Ajouter ici d'autres filtres ou options de tri si besoin -->
+  </div>
+
+
+  <!-- Indicateur de chargement / Erreur -->
+  <div *ngIf="isLoading" class="loading-message">Chargement des avis...</div>
+  <div *ngIf="loadError && !isLoading" class="error-message-box">{{ loadError }}</div>
+
+  <!-- Liste des avis (utilise la page actuelle) -->
+  <!-- Utilise les données du BehaviorSubject reviewsPage$ -->
+  <ng-container *ngIf="(reviewsPage$ | async) as reviewsPage; else noReviewsOrLoading">
+      <app-avis-list
+         *ngIf="!isLoading && reviewsPage.content.length > 0"
+         [avisList]="reviewsPage.content"
+         (deleteRequest)="handleDeleteRequest($event)"
+         (editRequest)="handleEditRequest($event)">
+      </app-avis-list>
+
+       <!-- Message si aucun avis ne correspond au filtre -->
+      <div *ngIf="!isLoading && reviewsPage.content.length === 0 && reviewsPage.totalElements === 0 && currentFilterNote !== null">
+           <p class="no-avis-message">Aucun avis ne correspond à votre filtre.</p>
+      </div>
+      <!-- Message si aucun avis du tout pour ce produit -->
+       <div *ngIf="!isLoading && reviewsPage.content.length === 0 && reviewsPage.totalElements === 0 && currentFilterNote === null">
+            <p class="no-avis-message">Soyez le premier à laisser un avis !</p>
+       </div>
+
+
+       <!-- Contrôles de Pagination -->
+       <div *ngIf="!isLoading && reviewsPage.totalPages > 1" class="pagination-controls">
+          <span>Page {{ reviewsPage.number + 1 }} sur {{ reviewsPage.totalPages }} ({{ reviewsPage.totalElements }} avis)</span>
+          <div>
+              <button (click)="goToPage(0)" [disabled]="reviewsPage.first">
+                  << Première
+              </button>
+              <button (click)="previousPage()" [disabled]="reviewsPage.first">
+                  < Précédente
+              </button>
+              <!-- Optionnel: Afficher les numéros de page -->
+              <!-- <span> ... </span> -->
+              <button (click)="nextPage()" [disabled]="reviewsPage.last">
+                  Suivante >
+              </button>
+               <button (click)="goToPage(reviewsPage.totalPages - 1)" [disabled]="reviewsPage.last">
+                   Dernière >>
+               </button>
+          </div>
+       </div>
+  </ng-container>
+
+   <!-- Template alternatif pendant le chargement initial ou si reviewsPage est null -->
+   <ng-template #noReviewsOrLoading>
+        <div *ngIf="!isLoading && !loadError">
+            <!-- Ce cas ne devrait pas arriver souvent si l'appel initial réussit -->
+            <!-- <p class="no-avis-message">Aucun avis à afficher.</p> -->
+        </div>
+   </ng-template>
+
+
+  <!-- Bouton Ajouter Avis -->
+  <div *ngIf="!showAddForm && !avisToEdit" style="margin-top: 20px; text-align: center;">
+      <button (click)="displayAddForm()" class="button-add-review">Ajouter votre avis</button>
+  </div>
+
+  <!-- Formulaire Ajout/Modification -->
+  <div *ngIf="showAddForm || avisToEdit">
+      <hr>
+      <app-avis-form
+         [productId]="productId"
+         [avisToEdit]="avisToEdit"
+         (avisSubmit)="handleAvisSubmit($event)">
+       </app-avis-form>
+      <div *ngIf="showAddForm && !avisToEdit" class="form-actions form-actions-cancel">
+        <button type="button" (click)="hideForm()" class="button-secondary">Annuler</button>
+      </div>
+       <hr>
+  </div>
+
+</div>
+
+<!-- Produit ID Manquant -->
+<div *ngIf="!productId && !isLoading" class="no-product-id-container">
+  <p class="loading-message">{{ loadError ? loadError : 'Chargement ou ID produit manquant...' }}</p>
+</div>
