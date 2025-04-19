@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-product-list',
@@ -19,9 +20,16 @@ export class ProductListComponent implements OnInit {
 
   loadProducts(): void {
     this.productService.getAllProducts().subscribe({
-      next: (data) => this.products = data,
-      error: (err) => console.error('Error fetching products:', err)
+      next: (data) => {
+        console.log('Products received:', data);
+        this.products = data;
+      },
+      error: (err) => console.error('Error fetching products in component:', err)
     });
+  }
+
+  getImageUrl(imagePath: string): string {
+    return `${environment.productServiceUrl}${imagePath}`; // e.g., http://localhost:8083/prd/product/images/filename
   }
 
   editProduct(id?: number): void {
@@ -39,7 +47,6 @@ export class ProductListComponent implements OnInit {
     }
   }
 
-  // Add this method to handle navigation to the add product page
   navigateToAdd(): void {
     this.router.navigate(['/products/add']);
   }

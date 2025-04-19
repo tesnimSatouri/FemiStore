@@ -18,10 +18,17 @@
         <input type="number" class="form-control" id="stock" [(ngModel)]="product.stock" required>
       </div>
       <div class="mb-3">
-        <label for="imageUrl" class="form-label">Image URL</label>
-        <input type="text" class="form-control" id="imageUrl" [(ngModel)]="product.imageUrl">
+        <label for="discountPercentage" class="form-label">Discount Percentage (%)</label>
+        <input type="number" class="form-control" id="discountPercentage" [(ngModel)]="product.discountPercentage">
+      </div>
+      <div class="mb-3">
+        <label for="image" class="form-label">Product Image</label>
+        <input type="file" class="form-control" id="image" (change)="onImageSelected($event)" accept="image/*">
+        <div *ngIf="product.imageUrl" class="mt-2">
+          <img [src]="getImageUrl(product.imageUrl)" alt="Product Image" style="max-width: 200px; max-height: 200px;">
+        </div>
       </div>
       <button class="btn btn-primary" (click)="saveProduct()">Save</button>
       <button class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
     </div>
-</div>
+  </div>
