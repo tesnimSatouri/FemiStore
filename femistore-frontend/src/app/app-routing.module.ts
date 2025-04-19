@@ -7,6 +7,8 @@ const routes: Routes = [
     path: "inventory",
     loadChildren: () => import("./features/inventory/inventory.module").then((m) => m.InventoryModule),
   },
+  { path: 'products', loadChildren: () => import('./features/products/products.module').then(m => m.ProductsModule) },
+  { path: 'products', loadChildren: () => import('./features/products/products.module').then(m => m.ProductsModule) },
   { path: "**", redirectTo: "/inventory" },
 ]
 

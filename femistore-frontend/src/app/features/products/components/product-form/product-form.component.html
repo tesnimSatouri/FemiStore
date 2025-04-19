@@ -1,0 +1,27 @@
+<div class="container mt-4">
+    <h2>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
+    <div class="card p-4">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" [(ngModel)]="product.name" required>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" [(ngModel)]="product.description"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input type="number" class="form-control" id="price" [(ngModel)]="product.price" required>
+      </div>
+      <div class="mb-3">
+        <label for="stock" class="form-label">Stock</label>
+        <input type="number" class="form-control" id="stock" [(ngModel)]="product.stock" required>
+      </div>
+      <div class="mb-3">
+        <label for="imageUrl" class="form-label">Image URL</label>
+        <input type="text" class="form-control" id="imageUrl" [(ngModel)]="product.imageUrl">
+      </div>
+      <button class="btn btn-primary" (click)="saveProduct()">Save</button>
+      <button class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+    </div>
+</div>
