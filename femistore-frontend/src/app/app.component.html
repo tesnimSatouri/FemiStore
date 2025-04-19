@@ -1,23 +1,25 @@
-<div class="container-fluid">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">FemiStore</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/inventory" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">Inventory</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/products" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">Products</a>
-          </li>
-          <!-- Other navigation links can be added later -->
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <router-outlet></router-outlet>
-</div>
+<mat-toolbar color="primary">
+  <img src="../../assets/images/logofemistore.png" alt="FemiStore Logo" class="logo" style="height: 50px;">
+  <span class="spacer"></span>
+  <a mat-button routerLink="/categoris/">
+    <mat-icon>home</mat-icon> Home
+  </a>
+  <!-- Liens pour utilisateur déconnecté -->
+  <a mat-button routerLink="/users/register" *ngIf="!isLoggedIn">
+    <mat-icon>person_add</mat-icon> Inscription
+  </a>
+  <a mat-button routerLink="/users/login" *ngIf="!isLoggedIn">
+    <mat-icon>login</mat-icon> Connexion
+  </a>
+  <!-- Liens pour utilisateur connecté -->
+  <a mat-button routerLink="/users/profile" *ngIf="isLoggedIn">
+    <mat-icon>account_circle</mat-icon> Profil
+  </a>
+  <a mat-button routerLink="/users/users" *ngIf="isLoggedIn">
+    <mat-icon>group</mat-icon> Utilisateurs
+  </a>
+  <button mat-button (click)="logout()" *ngIf="isLoggedIn">
+    <mat-icon>logout</mat-icon> Déconnexion
+  </button>
+</mat-toolbar>
+<router-outlet></router-outlet>

@@ -9,6 +9,8 @@ const routes: Routes = [
   },
   { path: 'products', loadChildren: () => import('./features/products/products.module').then(m => m.ProductsModule) },
   { path: 'products', loadChildren: () => import('./features/products/products.module').then(m => m.ProductsModule) },
+  {path:'categoris', loadChildren: () => import('./features/category/category.module').then(m => m.CategorisModule)},
+  {path:'users', loadChildren: () => import('./features/user/user.module').then(m => m.UserModule)},
   { path: "**", redirectTo: "/inventory" },
 ]
 
