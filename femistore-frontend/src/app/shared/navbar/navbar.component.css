@@ -1,0 +1,95 @@
+/* Feminine Navbar Styles */
+mat-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: linear-gradient(to right, #f8bbd0, #f48fb1, #f06292);
+  color: white;
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  box-shadow: 0 6px 12px rgba(233, 30, 99, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: fadeSlideDown 0.6s ease-out;
+}
+
+/* Logo */
+mat-toolbar img.logo {
+  height: 48px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+  transition: transform 0.3s ease;
+}
+
+mat-toolbar img.logo:hover {
+  transform: scale(1.1);
+}
+
+/* Navigation Links */
+a[mat-button], button[mat-button] {
+  margin: 0 10px;
+  font-weight: 500;
+  color: white;
+  position: relative;
+  text-transform: capitalize;
+  font-size: 16px;
+  transition: color 0.3s ease;
+  text-decoration: none !important;
+}
+
+a[mat-button]::after, button[mat-button]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(to right, #ffe3ec, #f8bbd0, #f48fb1);
+  border-radius: 1px;
+  transition: width 0.3s ease;
+}
+
+a[mat-button]:hover::after, button[mat-button]:hover::after {
+  width: 100%;
+}
+
+a[mat-button]:hover, button[mat-button]:hover {
+  color: #fffde7;
+}
+
+/* Icons */
+mat-icon {
+  margin-right: 6px;
+  vertical-align: middle;
+  font-size: 20px;
+}
+
+/* Spacer to push items to the right */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Animation */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optional: Add blur background on scroll effect */
+mat-toolbar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  backdrop-filter: blur(8px);
+  z-index: -1;
+}
