@@ -21,6 +21,9 @@
     <a mat-button routerLink="/products" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
       <mat-icon>shopping_bag</mat-icon> Products
     </a>
+    <a mat-button routerLink="admin/reviews" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+      <mat-icon>feedback</mat-icon> Feedbacks
+    </a>
   
     <a mat-button routerLink="/users/profile" *ngIf="isLoggedIn">
       <mat-icon>account_circle</mat-icon> Profil

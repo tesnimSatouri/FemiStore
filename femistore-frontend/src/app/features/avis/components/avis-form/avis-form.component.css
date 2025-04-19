@@ -1,0 +1,148 @@
+/* Réutiliser les variables si définies globalement ou dans :host */
+/* Assurez-vous que ces variables sont accessibles */
+:host { /* Ou :root si dans un fichier global */
+    --pink-primary: #E91E63;
+    --pink-light: #FCE4EC;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #ccc; /* Un gris plus neutre pour les bordures d'input */
+    --error-color: #D32F2F; /* Rouge standard pour les erreurs */
+    --input-background: #fff;
+    --button-text-color: #fff;
+    --secondary-button-bg: #f4f4f4;
+    --secondary-button-text: #555;
+    --secondary-button-border: #ddd;
+  }
+  
+  /* Conteneur principal du formulaire */
+  .avis-form-container { /* Ajoutez cette classe à la balise <form> */
+    background-color: var(--input-background);
+    padding: 20px;
+    border-radius: 8px;
+    /* Optionnel: Ajouter une légère bordure rose pâle */
+    /* border: 1px solid var(--pink-light); */
+    /* Optionnel: Ombre légère */
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.05); */
+    margin-top: 20px; /* Espace par rapport au titre/séparateur au-dessus */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Titre du formulaire */
+  .avis-form-container h3 {
+    color: var(--pink-primary);
+    font-size: 1.6em;
+    margin-bottom: 25px;
+    font-weight: 600;
+    text-align: center; /* Centrer le titre peut être sympa */
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--pink-light);
+  }
+  
+  /* Style pour chaque groupe de champ (label + input + erreur) */
+  .form-group { /* Ajoutez cette classe à chaque div contenant label/input/erreur */
+    margin-bottom: 18px;
+  }
+  
+  /* Labels */
+  .form-group label {
+    display: block; /* Label au-dessus de l'input */
+    margin-bottom: 6px;
+    color: var(--text-dark);
+    font-weight: 500; /* Un peu plus de poids */
+    font-size: 0.95em;
+  }
+  
+  /* Inputs (text, number) et Textarea */
+  .form-group input[type="number"],
+  .form-group input[type="text"], /* Au cas où vous en ajouteriez */
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--text-dark);
+    box-sizing: border-box; /* Inclut padding/border dans la largeur/hauteur */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Style spécifique pour textarea */
+  .form-group textarea {
+    resize: vertical; /* Permet le redimensionnement vertical */
+    min-height: 100px; /* Hauteur minimale */
+    font-family: inherit; /* Hérite la police du reste du formulaire */
+  }
+  
+  /* Focus sur les inputs/textarea */
+  .form-group input[type="number"]:focus,
+  .form-group input[type="text"]:focus,
+  .form-group textarea:focus {
+    border-color: var(--pink-primary); /* Bordure rose au focus */
+    outline: none; /* Supprime l'outline par défaut */
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15); /* Ombre portée rose pâle discrète */
+  }
+  
+  /* Style pour les inputs en lecture seule (ex: productId) */
+  .form-group input[readonly] {
+    background-color: #f8f8f8; /* Fond légèrement grisé */
+    cursor: not-allowed; /* Curseur indiquant non modifiable */
+    border-color: #e0e0e0;
+  }
+  
+  /* Messages d'erreur de validation */
+  .error-message { /* Ajoutez cette classe aux divs *ngIf pour les erreurs */
+    color: var(--error-color);
+    font-size: 0.85em;
+    margin-top: 5px;
+    /* padding-left: 5px; */ /* Petit décalage optionnel */
+  }
+  
+  /* Conteneur pour les boutons (optionnel mais aide à l'alignement) */
+  .form-actions { /* Ajoutez un div autour des boutons avec cette classe */
+    margin-top: 25px;
+    display: flex;
+    gap: 10px; /* Espace entre les boutons */
+    justify-content: flex-start; /* Ou center, flex-end */
+  }
+  
+  /* Style général des boutons */
+  .avis-form-container button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    text-transform: uppercase; /* Lettres capitales pour les boutons */
+    letter-spacing: 0.5px;
+  }
+  
+  /* Bouton principal (Submit) */
+  .avis-form-container button[type="submit"] {
+    background-color: var(--pink-primary);
+    color: var(--button-text-color);
+  }
+  
+  .avis-form-container button[type="submit"]:hover:not(:disabled) {
+    background-color: #C2185B; /* Rose un peu plus foncé au survol */
+  }
+  
+  /* Bouton secondaire (Annuler l'édition) */
+  .avis-form-container button.button-secondary { /* Ajoutez la classe "button-secondary" au bouton Annuler */
+    background-color: var(--secondary-button-bg);
+    color: var(--secondary-button-text);
+    border: 1px solid var(--secondary-button-border);
+  }
+  
+  .avis-form-container button.button-secondary:hover {
+    background-color: #e9e9e9; /* Légèrement plus foncé au survol */
+  }
+  
+  /* Style pour les boutons désactivés */
+  .avis-form-container button:disabled {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }

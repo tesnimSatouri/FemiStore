@@ -1,0 +1,286 @@
+/* src/app/pages/admin-review-search/admin-review-search.component.css */
+
+/* Variables de couleur (optionnel mais pratique) */
+:host {
+    --pink-primary: #E91E63;   /* Rose vif principal */
+    --pink-light: #FCE4EC;    /* Rose très pâle pour fonds/bordures légères */
+    --pink-dark: #C2185B;     /* Rose plus foncé pour hover/active */
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #ccc;
+    --border-color-light: #eee;
+    --background-color: #fff;
+    --error-color-text: #c51162;  /* Un rouge/rose foncé pour le texte d'erreur */
+    --error-color-bg: var(--pink-light); /* Fond rose pâle pour l'erreur */
+    --button-secondary-bg: #f4f4f4;
+    --button-secondary-text: #555;
+    --button-secondary-border: #ddd;
+  }
+  
+  /* Conteneur principal de la page admin */
+  .admin-review-search-container {
+    max-width: 960px; /* Limite la largeur sur grand écran */
+    margin: 30px auto; /* Centre et ajoute de l'espace vertical */
+    padding: 25px 30px; /* Espace intérieur généreux */
+    background-color: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07); /* Ombre douce */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Titre principal */
+  .admin-review-search-container h2 {
+    color: var(--pink-primary); /* Titre en rose */
+    font-size: 2em; /* Taille de police affirmée */
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--pink-light); /* Ligne de séparation rose pâle */
+    font-weight: 600;
+  }
+  
+  /* Section du formulaire de recherche */
+  .search-form {
+    display: flex;
+    align-items: center; /* Aligner verticalement label, input, boutons */
+    gap: 15px; /* Espace entre les éléments */
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Permet le retour à la ligne sur petits écrans */
+  }
+  
+  /* Label pour l'input */
+  .search-form label {
+    font-weight: 600; /* Un peu plus gras */
+    color: var(--text-dark);
+    margin-bottom: 0; /* Annule marge si héritée */
+  }
+  
+  /* Champ de saisie numérique */
+  .search-form input[type="number"] {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    min-width: 150px; /* Évite qu'il soit trop petit */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Style du champ au focus */
+  .search-form input[type="number"]:focus {
+    outline: none; /* Supprime l'outline par défaut */
+    border-color: var(--pink-primary); /* Bordure rose au focus */
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15); /* Ombre portée rose pâle discrète */
+  }
+  
+  /* Style général des boutons dans le formulaire */
+  .search-form button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.1s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap; /* Empêche le texte du bouton de passer à la ligne */
+  }
+  
+  /* Bouton principal "Rechercher" */
+  .search-form button:not(.button-secondary) {
+    background-color: var(--pink-primary);
+    color: white;
+  }
+  
+  .search-form button:not(.button-secondary):hover:not(:disabled) {
+    background-color: var(--pink-dark); /* Rose plus foncé au survol */
+  }
+  
+  .search-form button:not(.button-secondary):active:not(:disabled) {
+      transform: scale(0.98); /* Léger effet d'enfoncement */
+  }
+  
+  
+  /* Bouton secondaire "Effacer" */
+  .search-form button.button-secondary {
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+    border: 1px solid var(--button-secondary-border);
+  }
+  
+  .search-form button.button-secondary:hover {
+    background-color: #e9e9e9; /* Légèrement plus foncé */
+  }
+  .search-form button.button-secondary:active {
+      transform: scale(0.98);
+  }
+  
+  /* Style pour les boutons désactivés */
+  .search-form button:disabled {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  /* Boîte pour les messages d'erreur */
+  .error-message-box {
+    color: var(--error-color-text); /* Texte en rose foncé/rouge */
+    background-color: var(--error-color-bg); /* Fond rose très pâle */
+    border: 1px solid var(--error-color-text); /* Bordure assortie */
+    padding: 12px 15px;
+    margin: 20px 0 30px 0; /* Espace autour */
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  /* Ligne de séparation horizontale */
+  .admin-review-search-container hr {
+    border: none;
+    border-top: 1px solid var(--pink-light); /* Séparateur rose très pâle */
+    margin: 30px 0; /* Espace vertical autour */
+  }
+  
+  /* Conteneur pour les résultats (le composant app-product-reviews) */
+  .results-container {
+    margin-top: 20px; /* Espace après la recherche ou le hr */
+  }
+  
+  /* Message affiché avant la première recherche */
+  .placeholder-message {
+    padding: 40px 20px; /* Plus d'espace vertical */
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    background-color: #fdfdfe; /* Fond presque blanc mais légèrement distinct */
+    border: 1px dashed var(--pink-primary); /* Bordure pointillée rose */
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+  
+  .placeholder-message p {
+      margin: 0;
+      font-size: 1.1em;
+  }
+  /* ... (styles existants pour .admin-review-search-container, .search-form, etc.) ... */
+
+/* Conteneur pour la vue spécifique au produit */
+.product-specific-view h3 {
+    color: var(--pink-dark, #C2185B); /* Couleur légèrement différente pour distinguer */
+    margin-bottom: 15px;
+  }
+  
+  /* Conteneur pour la vue de tous les avis */
+  .all-reviews-view h3 {
+    color: var(--text-dark);
+    margin-bottom: 15px;
+  }
+  
+  /* Avertissement pagination */
+  .pagination-warning {
+      background-color: #fff3e0; /* Jaune très pâle */
+      color: #e65100; /* Orange foncé */
+      border: 1px solid #ffcc80; /* Bordure orange pâle */
+      padding: 10px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 0.9em;
+      text-align: center;
+  }
+  
+  /* Indicateur de chargement (si non stylé globalement) */
+  .loading-message {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-light);
+    font-style: italic;
+  }
+  
+  /* Conteneur pour le formulaire d'édition global */
+  .global-edit-form-container {
+      margin-top: 20px;
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: #f9f9f9; /* Fond légèrement différent */
+      border: 1px solid var(--border-color-light, #eee);
+      border-radius: 8px;
+  }
+  
+  .global-edit-form-container h4 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: var(--pink-primary, #E91E63);
+  }
+  
+  .global-edit-form-container hr {
+      margin: 20px 0;
+      border-color: var(--border-color-light, #eee);
+  }
+  
+  /* S'assurer que le bouton secondaire (Annuler) est stylé */
+  .global-edit-form-container .button-secondary {
+      padding: 8px 15px; /* Taille peut-être un peu plus petite */
+      background-color: var(--button-secondary-bg, #f4f4f4);
+      color: var(--button-secondary-text, #555);
+      border: 1px solid var(--button-secondary-border, #ddd);
+      cursor: pointer;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-size: 0.9em;
+  }
+  .global-edit-form-container .button-secondary:hover {
+      background-color: #e9e9e9;
+  }
+  /* src/app/pages/admin-review-search/admin-review-search.component.css */
+
+/* ... (styles existants) ... */
+
+/* Style pour les contrôles de pagination (copié/adapté de product-reviews) */
+.pagination-controls {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid var(--pink-light, #FCE4EC); /* Utilise var ou fallback */
+    display: flex;
+    justify-content: space-between; /* Infos à gauche, boutons à droite */
+    align-items: center;
+    flex-wrap: wrap; /* Retour à la ligne si nécessaire */
+    gap: 15px; /* Espace entre les éléments */
+  }
+  
+  .pagination-controls span {
+    color: var(--text-light, #666);
+    font-size: 0.9em;
+    white-space: nowrap; /* Empêche le texte de l'info de passer à la ligne */
+  }
+  
+  .pagination-controls div { /* Conteneur pour les boutons */
+     display: flex;
+     gap: 5px; /* Espace réduit entre les boutons de pagination */
+  }
+  
+  .pagination-controls button {
+    padding: 6px 12px; /* Boutons légèrement plus petits */
+    font-size: 0.9em;
+    background-color: var(--secondary-button-bg, #f4f4f4);
+    color: var(--secondary-button-text, #555);
+    border: 1px solid var(--secondary-button-border, #ddd);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    /* Vous pouvez ajouter d'autres styles de base de bouton si nécessaire */
+  }
+  
+  .pagination-controls button:hover:not(:disabled) {
+     background-color: #e9e9e9;
+     border-color: #ccc;
+  }
+  
+  .pagination-controls button:disabled {
+     background-color: #f8f8f8;
+     color: #bbb;
+     border-color: #eee;
+     cursor: not-allowed;
+     opacity: 0.7;
+  }
+  
+  /* ... (autres styles existants) ... */
