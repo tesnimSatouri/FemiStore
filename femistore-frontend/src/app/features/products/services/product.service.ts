@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Product } from '../models/product.model';
@@ -32,6 +32,25 @@ export class ProductService {
     );
   }
 
+  getAllProductsInCurrency(currency: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/GetAllProductsInCurrency`, { params: { currency } }).pipe(
+      catchError(this.handleError<Product[]>('getAllProductsInCurrency', []))
+    );
+  }
+
+  searchProducts(params: { name?: string, minPrice?: number, maxPrice?: number, minStock?: number, useDiscountedPrice?: boolean }): Observable<Product[]> {
+    let httpParams = new HttpParams();
+    if (params.name) httpParams = httpParams.set('name', params.name);
+    if (params.minPrice !== undefined) httpParams = httpParams.set('minPrice', params.minPrice.toString());
+    if (params.maxPrice !== undefined) httpParams = httpParams.set('maxPrice', params.maxPrice.toString());
+    if (params.minStock !== undefined) httpParams = httpParams.set('minStock', params.minStock.toString());
+    if (params.useDiscountedPrice !== undefined) httpParams = httpParams.set('useDiscountedPrice', params.useDiscountedPrice.toString());
+    
+    return this.http.get<Product[]>(`${this.apiUrl}/search`, { params: httpParams }).pipe(
+      catchError(this.handleError<Product[]>('searchProducts', []))
+    );
+  }
+
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/GetById/${id}`).pipe(
       catchError(this.handleError<Product>(`getProductById id=${id}`))
@@ -51,7 +70,6 @@ export class ProductService {
 
   updateProduct(id: number, product: Product, imageFile?: File): Observable<Product> {
     const formData = new FormData();
-    // Ensure all required fields are included in the product object
     const productToSend = {
         id: id,
         name: product.name,
@@ -59,17 +77,17 @@ export class ProductService {
         price: product.price,
         stock: product.stock,
         discountPercentage: product.discountPercentage || 0,
-        imageUrl: product.imageUrl || '' // Include current imageUrl to avoid overwriting
+        imageUrl: product.imageUrl || ''
     };
     formData.append('product', JSON.stringify(productToSend));
     if (imageFile) {
         formData.append('image', imageFile);
     }
-    console.log('Updating product with FormData:', formData); // Debug
+    console.log('Updating product with FormData:', formData);
     return this.http.put<Product>(`${this.apiUrl}/UpdateProduct/${id}`, formData).pipe(
         catchError(this.handleError<Product>(`updateProduct id=${id}`))
     );
-}
+  }
 
   deleteProduct(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/RemoveProduct/${id}`).pipe(

@@ -4,6 +4,6 @@ export interface Product {
     description?: string;
     price: number;
     stock: number;
+    discountPercentage?: number;
     imageUrl?: string;
-    discountPercentage?: number; // Add this to match the backend
-  }
+}
