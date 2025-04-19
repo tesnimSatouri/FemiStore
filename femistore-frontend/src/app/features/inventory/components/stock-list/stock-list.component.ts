@@ -1,12 +1,12 @@
 import { Component, OnInit } from "@angular/core"; // Removed 'type' for OnInit
 import { Router } from "@angular/router"
-import type { Stock } from "../../models/stock.model"
+import { Stock } from "../../models/stock.model"
 import { StockService } from "../../services/stock.service"
 
 @Component({
   selector: "app-stock-list",
   templateUrl: "./stock-list.component.html",
-  styleUrls: ["./stock-list.component.css"],
+  styleUrls: ["./stock-list.component.css" ],
 })
 export class StockListComponent implements OnInit {
   stocks: Stock[] = []

@@ -1,8 +1,8 @@
-import { Component, type OnInit } from "@angular/core"
-import { ActivatedRoute, Router } from "@angular/router"
-import type { Stock, StockTrend } from "../../models/stock.model"
-
-import { StockService } from "../../services/stock.service"
+import { Component, OnInit } from "@angular/core"
+import  { ActivatedRoute, Router } from "@angular/router"
+import { Stock, StockTrend } from "../../models/stock.model"
+import {  FormBuilder,  FormGroup, Validators } from "@angular/forms"
+import  { StockService } from "../../services/stock.service"
 
 @Component({
   selector: "app-stock-detail",
@@ -16,14 +16,19 @@ export class StockDetailComponent implements OnInit {
   loading = false
   trendLoading = false
   error = ""
+  saleForm!: FormGroup
+  saleSuccess = false
+  saleError = ""
 
   constructor(
     private stockService: StockService,
     private route: ActivatedRoute,
     private router: Router,
+    private fb: FormBuilder,
   ) {}
 
   ngOnInit(): void {
+    this.initSaleForm()
     this.route.params.subscribe((params) => {
       if (params["id"]) {
         const productId = +params["id"]
@@ -31,6 +36,12 @@ export class StockDetailComponent implements OnInit {
         this.loadStockTrend(productId)
         this.loadDemandForecast(productId)
       }
+    })
+  }
+
+  initSaleForm(): void {
+    this.saleForm = this.fb.group({
+      quantity: [1, [Validators.required, Validators.min(1), Validators.max(1000)]],
     })
   }
 
@@ -78,6 +89,37 @@ export class StockDetailComponent implements OnInit {
     return this.stock ? this.stock.stockDisponible <= this.stock.stock_minimum : false
   }
 
+  // New method to process a sale
+  processSale(): void {
+    if (this.saleForm.invalid || !this.stock) {
+      return
+    }
+
+    const quantity = this.saleForm.value.quantity
+    this.saleSuccess = false
+    this.saleError = ""
+    this.loading = true
+
+    // First check if stock is sufficient (this will also reduce stock if sufficient)
+    this.stockService.isStockSufficient(this.stock.productId, quantity).subscribe({
+      next: (isSufficient) => {
+        if (isSufficient) {
+          // If sufficient, reload stock details to show updated quantity
+          this.saleSuccess = true
+          this.loadStockDetails(this.stock!.productId)
+        } else {
+          this.saleError = `Insufficient stock. Only ${this.stock!.stockDisponible} available.`
+          this.loading = false
+        }
+      },
+      error: (err) => {
+        this.saleError = "Error processing sale"
+        console.error(err)
+        this.loading = false
+      },
+    })
+  }
+
   editStock(): void {
     if (this.stock) {
       this.router.navigate(["/inventory/edit", this.stock.productId])
@@ -92,5 +134,25 @@ export class StockDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(["/inventory"])
+  }
+
+  // Helper method to calculate days of inventory based on predicted demand
+  getDaysOfInventory(): number {
+    if (!this.stock || !this.predictedDemand || this.predictedDemand === 0) {
+      return 0
+    }
+    // Predicted demand is for 7 days, so calculate daily demand
+    const dailyDemand = this.predictedDemand / 7
+    return dailyDemand > 0 ? Math.round(this.stock.stockDisponible / dailyDemand) : 0
+  }
+  viewStockTrend(id: number) {
+    this.router.navigate(['/inventory/trend', id]);
+  }
+  // Helper to get status class based on days of inventory
+  getInventoryStatusClass(): string {
+    const days = this.getDaysOfInventory()
+    if (days <= 7) return "text-danger"
+    if (days <= 14) return "text-warning"
+    return "text-success"
   }
 }

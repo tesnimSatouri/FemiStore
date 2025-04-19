@@ -1,7 +1,7 @@
-import { Component, OnInit } from "@angular/core"; // Removed 'type' for OnInit
-import { FormBuilder, FormGroup, Validators } from "@angular/forms"
-import { ActivatedRoute, Router } from "@angular/router"
-import type { Stock } from "../../models/stock.model"
+import { Component, OnInit } from "@angular/core"
+import { FormBuilder,  FormGroup, Validators } from "@angular/forms"
+import  { ActivatedRoute, Router } from "@angular/router"
+import  { Stock, Product, Supplier } from "../../models/stock.model"
 import { StockService } from "../../services/stock.service"
 
 @Component({
@@ -17,8 +17,8 @@ export class StockFormComponent implements OnInit {
   loading = false
   error = ""
   submitted = false
-  products: any[] = []
-  suppliers: any[] = []
+  products: Product[] = []
+  suppliers: Supplier[] = []
 
   constructor(
     private fb: FormBuilder,
@@ -32,7 +32,6 @@ export class StockFormComponent implements OnInit {
     this.loadProducts()
     this.loadSuppliers()
 
-    // Check if we're in edit mode
     this.route.params.subscribe((params) => {
       if (params["id"]) {
         this.isEditMode = true
@@ -44,10 +43,11 @@ export class StockFormComponent implements OnInit {
 
   initForm(): void {
     this.stockForm = this.fb.group({
-      productId: ["", Validators.required],
+      productId: [{ value: "", disabled: this.isEditMode }, Validators.required],
       stockDisponible: ["", [Validators.required, Validators.min(0)]],
-      stock_minimum: ["", [Validators.required, Validators.min(0)]],
-      fournisseur_id: ["", Validators.required],
+      stock_minimum: [{ value: "", disabled: this.isEditMode }, [Validators.required, Validators.min(0)]],
+      fournisseur_id: [{ value: "", disabled: this.isEditMode }, Validators.required],
+      reason: ["", this.isEditMode ? [Validators.required, Validators.minLength(3)] : []],
     })
   }
 
@@ -84,6 +84,10 @@ export class StockFormComponent implements OnInit {
           stock_minimum: stock.stock_minimum,
           fournisseur_id: stock.fournisseur_id,
         })
+        // Disable fields in edit mode
+        this.stockForm.get("productId")?.disable()
+        this.stockForm.get("stock_minimum")?.disable()
+        this.stockForm.get("fournisseur_id")?.disable()
         this.error = ""
         this.loading = false
       },
@@ -95,6 +99,7 @@ export class StockFormComponent implements OnInit {
     })
   }
 
+  // Modify the onSubmit method to work with the existing backend
   onSubmit(): void {
     this.submitted = true
 
@@ -105,13 +110,16 @@ export class StockFormComponent implements OnInit {
     this.loading = true
 
     const stockData: Stock = {
-      ...this.stockForm.value,
+      ...this.stockForm.getRawValue(), // Use getRawValue to include disabled fields
     }
 
     if (this.isEditMode && this.productId) {
-      // For edit mode, we use the updateStock method which requires productId and quantity
-      this.stockService.updateStock(this.productId, stockData.stockDisponible).subscribe({
-        next: () => {
+      // For edit mode, just update the stock
+      // The backend will record the history internally
+      const newQuantity = stockData.stockDisponible
+
+      this.stockService.updateStock(this.productId, newQuantity).subscribe({
+        next: (updatedStock) => {
           this.error = ""
           this.loading = false
           this.router.navigate(["/inventory"])
@@ -123,6 +131,8 @@ export class StockFormComponent implements OnInit {
         },
       })
     } else {
+      // For new stock, just add it
+      // The backend will record the initial history internally
       this.stockService.addStock(stockData).subscribe({
         next: () => {
           this.error = ""
@@ -138,7 +148,6 @@ export class StockFormComponent implements OnInit {
     }
   }
 
-  // Helper getter for form controls
   get f() {
     return this.stockForm.controls
   }
@@ -146,6 +155,12 @@ export class StockFormComponent implements OnInit {
   getProductName(id: number): string {
     const product = this.products.find((p) => p.id === id)
     return product ? product.name : ""
+  }
+
+  navigateToInventory(): void {
+    // Logic to navigate to the inventory page
+    console.log('Navigating to inventory...');
+    this.router.navigate(["/inventory"]);
   }
 
   getSupplierName(id: number): string {

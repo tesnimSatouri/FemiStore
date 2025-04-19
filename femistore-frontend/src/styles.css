@@ -3,6 +3,9 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
+/* styles.css */
+@import './app/features/inventory/inventory-theme.css';
+
 .table-responsive {
   overflow-x: auto;
 }

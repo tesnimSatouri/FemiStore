@@ -1,88 +1,178 @@
-<div class="container mt-4">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3>Stock Details</h3>
-        <button class="btn btn-secondary" (click)="goBack()">Back to List</button>
+<div class="inventory-container inventory-mt-3">
+  <div class="inventory-card">
+    <div class="inventory-header inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+      <h2>Stock Details</h2>
+      <div>
+        <button class="inventory-btn inventory-btn-primary me-2" (click)="editStock()">Edit</button>
+        <button class="inventory-btn inventory-btn-info me-2" (click)="viewStockHistory()">History</button>
+        <button class="inventory-btn inventory-btn-secondary" (click)="goBack()">Back</button>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <div *ngIf="loading" class="inventory-text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
       
-      <div class="card-body">
-        <div *ngIf="loading" class="text-center my-3">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-  
-        <div *ngIf="error" class="alert alert-danger">
-          {{ error }}
-        </div>
-  
-        <div *ngIf="stock && !loading">
-          <div class="row mb-4">
-            <div class="col-md-6">
-              <h4>{{ stock.productName }}</h4>
-              <p class="text-muted">Product ID: {{ stock.productId }}</p>
+      <div *ngIf="error" class="inventory-alert inventory-alert-error">{{ error }}</div>
+      
+      <!-- Stock Details -->
+      <div *ngIf="stock" class="row">
+        <div class="col-md-6">
+          <div class="inventory-card inventory-mb-3">
+            <div class="inventory-header">
+              <h4>Basic Information</h4>
             </div>
-            <div class="col-md-6 text-md-end">
-              <span class="badge" [ngClass]="isLowStock() ? 'bg-danger' : 'bg-success'">
-                {{ isLowStock() ? 'Low Stock' : 'In Stock' }}
-              </span>
-            </div>
-          </div>
-  
-          <div class="row">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <h5>Stock Information</h5>
-                <table class="table">
-                  <tbody>
-                    <tr>
-                      <th>Available Stock:</th>
-                      <td>{{ stock.stockDisponible }}</td>
-                    </tr>
-                    <tr>
-                      <th>Minimum Stock:</th>
-                      <td>{{ stock.stock_minimum }}</td>
-                    </tr>
-                    <tr>
-                      <th>Supplier:</th>
-                      <td>{{ stock.supplierName }}</td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div class="card-body">
+              <p><strong>Product:</strong> {{ stock.productName }}</p>
+              <p><strong>Supplier:</strong> {{ stock.supplierName }}</p>
+              <p>
+                <strong>Current Stock:</strong> 
+                <span [ngClass]="isLowStock() ? 'text-danger' : 'text-success'">
+                  {{ stock.stockDisponible }}
+                </span>
+              </p>
+              <p><strong>Minimum Stock:</strong> {{ stock.stock_minimum }}</p>
+              <div *ngIf="isLowStock()" class="inventory-alert inventory-alert-warning">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Low stock alert! Current stock is below minimum level.
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <h5>Stock Status</h5>
-                <div class="progress mb-2">
-                  <div class="progress-bar" role="progressbar" 
-                       [ngClass]="isLowStock() ? 'bg-danger' : 'bg-success'"
-                       [style.width.%]="(stock.stockDisponible / (stock.stock_minimum * 2)) * 100">
-                    {{ stock.stockDisponible }}
-                  </div>
-                </div>
-                <small class="text-muted">Minimum threshold: {{ stock.stock_minimum }}</small>
-              </div>
-  
-              <div *ngIf="stockTrend" class="mb-3">
-                <h5>Stock Analysis</h5>
-                <div class="card">
-                  <div class="card-body">
-                    <p><strong>Trend:</strong> <span class="badge" [ngClass]="stockTrend.trend === 'croissant' ? 'bg-success' : (stockTrend.trend === 'décroissant' ? 'bg-danger' : 'bg-warning')">{{ stockTrend.trend }}</span></p>
-                    <p><strong>Suggested Stock:</strong> {{ stockTrend.suggestedStock }}</p>
-                    <p *ngIf="predictedDemand"><strong>Predicted Demand (7 days):</strong> {{ predictedDemand }}</p>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <!-- Demand Forecast Card -->
+          <div class="inventory-card inventory-mb-3">
+            <div class="inventory-header">
+              <h4>Demand Forecast</h4>
+            </div>
+            <div class="card-body">
+              <div *ngIf="predictedDemand !== undefined">
+                <p><strong>Predicted 7-Day Demand:</strong> {{ predictedDemand | number:'1.0-0' }}</p>
+                <p>
+                  <strong>Days of Inventory:</strong> 
+                  <span [ngClass]="getInventoryStatusClass()">
+                    {{ getDaysOfInventory() }} days
+                  </span>
+                </p>
+                <div class="progress inventory-mb-3">
+                  <div 
+                    class="progress-bar" 
+                    [ngClass]="{
+                      'bg-danger': getDaysOfInventory() <= 7,
+                      'bg-warning': getDaysOfInventory() > 7 && getDaysOfInventory() <= 14,
+                      'bg-success': getDaysOfInventory() > 14
+                    }"
+                    [style.width.%]="getDaysOfInventory() > 30 ? 100 : (getDaysOfInventory() / 30) * 100">
+                    {{ getDaysOfInventory() }} days
                   </div>
                 </div>
               </div>
+              <div *ngIf="predictedDemand === undefined">
+                <p>Loading demand forecast...</p>
+              </div>
             </div>
           </div>
-  
-          <div class="d-flex justify-content-between mt-4">
-            <button class="btn btn-warning" (click)="editStock()">Edit Stock</button>
-            <button class="btn btn-info" (click)="viewStockHistory()">View History</button>
+          
+          <!-- Process Sale Card -->
+          <div class="inventory-card">
+            <div class="inventory-header">
+              <h4>Process Sale</h4>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="saleForm" (ngSubmit)="processSale()">
+                <div class="inventory-form-group">
+                  <label for="quantity" class="inventory-form-label">Quantity</label>
+                  <input 
+                    type="number" 
+                    class="inventory-form-control" 
+                    id="quantity" 
+                    formControlName="quantity"
+                    [max]="stock?.stockDisponible || 1">
+                  <div *ngIf="saleForm.get('quantity')?.invalid && saleForm.get('quantity')?.touched" class="text-danger">
+                    <div *ngIf="saleForm.get('quantity')?.errors?.['required']">Quantity is required</div>
+                    <div *ngIf="saleForm.get('quantity')?.errors?.['min']">Quantity must be at least 1</div>
+                    <div *ngIf="saleForm.get('quantity')?.errors?.['max']">Quantity cannot exceed 1000</div>
+                  </div>
+                </div>
+                
+                <button 
+                  type="submit" 
+                  class="inventory-btn inventory-btn-success" 
+                  [disabled]="saleForm.invalid || loading || !stock || stock.stockDisponible === 0">
+                  Process Sale
+                </button>
+              </form>
+              
+              <div *ngIf="saleSuccess" class="inventory-alert inventory-alert-success inventory-mt-3">
+                Sale processed successfully!
+              </div>
+              
+              <div *ngIf="saleError" class="inventory-alert inventory-alert-error inventory-mt-3">
+                {{ saleError }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Stock Trend -->
+      <div *ngIf="stock && stockTrend" class="inventory-mt-3">
+        <div class="inventory-card">
+          <div class="inventory-header inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+            <h4>Stock Trend Analysis</h4>
+            <button class="inventory-btn inventory-btn-info" (click)="viewStockTrend(stock.productId)">View Full Analysis</button>
+          </div>
+          <div class="card-body">
+            <div *ngIf="trendLoading" class="inventory-text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            
+            <div *ngIf="!trendLoading" class="row">
+              <div class="col-md-4">
+                <div class="inventory-card">
+                  <div class="card-body inventory-text-center">
+                    <h5 class="card-title">Trend</h5>
+                    <span class="inventory-badge fs-6"
+                      [ngClass]="{
+                        'inventory-badge-danger': stockTrend.trend === 'décroissant',
+                        'inventory-badge-warning': stockTrend.trend === 'stable',
+                        'inventory-badge-success': stockTrend.trend === 'croissant'
+                      }">
+                      {{ stockTrend.trend === 'décroissant' ? 'Decreasing' : 
+                         stockTrend.trend === 'stable' ? 'Stable' : 
+                         stockTrend.trend === 'croissant' ? 'Increasing' : stockTrend.trend }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="inventory-card">
+                  <div class="card-body inventory-text-center">
+                    <h5 class="card-title">Suggested Stock</h5>
+                    <p class="fs-4">{{ stockTrend.suggestedStock }}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="inventory-card">
+                  <div class="card-body inventory-text-center">
+                    <h5 class="card-title">Predicted Demand</h5>
+                    <p class="fs-4">{{ stockTrend.predictedDemand | number:'1.0-0' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

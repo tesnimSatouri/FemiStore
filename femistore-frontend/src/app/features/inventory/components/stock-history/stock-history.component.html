@@ -1,51 +1,105 @@
-<div class="container mt-4">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3>Stock History</h3>
-        <button class="btn btn-secondary" (click)="goBack()">Back to Details</button>
+<div class="inventory-container inventory-mt-3">
+  <div class="inventory-card">
+    <div class="inventory-header inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+      <h2>Stock History for {{ stock?.productName || 'Product' }}</h2>
+      <div>
+        <button class="inventory-btn inventory-btn-primary me-2" (click)="toggleAddForm()">
+          {{ showAddForm ? 'Cancel' : 'Add Entry' }}
+        </button>
+        <button class="inventory-btn inventory-btn-secondary" (click)="goBack()">Back</button>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <div *ngIf="loading" class="inventory-text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
       
-      <div class="card-body">
-        <div *ngIf="loading" class="text-center my-3">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
+      <div *ngIf="error" class="inventory-alert inventory-alert-error">{{ error }}</div>
+      
+      <!-- Add History Form -->
+      <div *ngIf="showAddForm" class="inventory-mb-3">
+        <div class="inventory-card">
+          <div class="inventory-header">Add Stock History Entry</div>
+          <div class="card-body">
+            <form [formGroup]="historyForm" (ngSubmit)="addHistoryEntry()">
+              <div class="inventory-form-group">
+                <label for="quantityChange" class="inventory-form-label">Quantity Change</label>
+                <input 
+                  type="number" 
+                  class="inventory-form-control" 
+                  id="quantityChange" 
+                  formControlName="quantityChange"
+                  placeholder="Enter positive value for additions, negative for removals">
+                <div *ngIf="historyForm.get('quantityChange')?.invalid && historyForm.get('quantityChange')?.touched" class="text-danger">
+                  Quantity change is required
+                </div>
+              </div>
+              
+              <div class="inventory-form-group">
+                <label for="reason" class="inventory-form-label">Reason</label>
+                <input 
+                  type="text" 
+                  class="inventory-form-control" 
+                  id="reason" 
+                  formControlName="reason"
+                  placeholder="e.g., Restock, Sale, Inventory adjustment">
+                <div *ngIf="historyForm.get('reason')?.invalid && historyForm.get('reason')?.touched" class="text-danger">
+                  Reason is required (3-100 characters)
+                </div>
+              </div>
+              
+              <button type="submit" class="inventory-btn inventory-btn-success" [disabled]="historyForm.invalid">Save Entry</button>
+            </form>
           </div>
         </div>
-  
-        <div *ngIf="error" class="alert alert-danger">
-          {{ error }}
-        </div>
-  
-        <div *ngIf="stock && !loading">
-          <div class="mb-4">
-            <h4>{{ stock.productName }}</h4>
-            <p class="text-muted">Current stock: {{ stock.stockDisponible }}</p>
-          </div>
-  
-          <div class="table-responsive" *ngIf="history.length > 0">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Quantity Change</th>
-                  <th>Reason</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let entry of history">
-                  <td>{{ entry.timestamp | date:'medium' }}</td>
-                  <td>{{ entry.quantityChange }}</td>
-                  <td>{{ entry.reason }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-  
-          <div *ngIf="history.length === 0 && !loading" class="alert alert-info">
-            No history records found for this stock item.
+      </div>
+      
+      <!-- Stock Info Summary -->
+      <div *ngIf="stock" class="inventory-mb-3">
+        <div class="inventory-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Product:</strong> {{ stock.productName }}</p>
+                <p><strong>Supplier:</strong> {{ stock.supplierName }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Current Stock:</strong> {{ stock.stockDisponible }}</p>
+                <p><strong>Minimum Stock:</strong> {{ stock.stock_minimum }}</p>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+      
+      <!-- History Table -->
+      <div *ngIf="!loading && history.length > 0">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Quantity Change</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of history">
+              <td>{{ formatDate(entry.timestamp) }}</td>
+              <td [ngClass]="getQuantityChangeClass(entry.quantityChange)">
+                {{ entry.quantityChange > 0 ? '+' : '' }}{{ entry.quantityChange }}
+              </td>
+              <td>{{ entry.reason }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div *ngIf="!loading && history.length === 0" class="inventory-alert inventory-alert-info">
+        No history records found for this product.
       </div>
     </div>
   </div>
-  
+</div>
