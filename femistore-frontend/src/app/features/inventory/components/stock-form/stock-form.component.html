@@ -1,0 +1,72 @@
+<div class="container mt-4">
+    <div class="card">
+      <div class="card-header">
+        <h3>{{ isEditMode ? 'Edit Stock' : 'Add New Stock' }}</h3>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading" class="text-center my-3">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+  
+        <div *ngIf="error" class="alert alert-danger">
+          {{ error }}
+        </div>
+  
+        <form [formGroup]="stockForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+          <div class="mb-3">
+            <label for="productId" class="form-label">Product</label>
+            <select id="productId" formControlName="productId" class="form-select" 
+                    [ngClass]="{ 'is-invalid': submitted && f['productId'].errors }">
+              <option value="">Select Product</option>
+              <option *ngFor="let product of products" [value]="product.id">{{ product.name }}</option>
+            </select>
+            <div *ngIf="submitted && f['productId'].errors" class="invalid-feedback">
+              <div *ngIf="f['productId'].errors['required']">Product is required</div>
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="stockDisponible" class="form-label">Available Stock</label>
+            <input type="number" id="stockDisponible" formControlName="stockDisponible" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f['stockDisponible'].errors }">
+            <div *ngIf="submitted && f['stockDisponible'].errors" class="invalid-feedback">
+              <div *ngIf="f['stockDisponible'].errors['required']">Available stock is required</div>
+              <div *ngIf="f['stockDisponible'].errors['min']">Available stock must be at least 0</div>
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="stock_minimum" class="form-label">Minimum Stock</label>
+            <input type="number" id="stock_minimum" formControlName="stock_minimum" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f['stock_minimum'].errors }">
+            <div *ngIf="submitted && f['stock_minimum'].errors" class="invalid-feedback">
+              <div *ngIf="f['stock_minimum'].errors['required']">Minimum stock is required</div>
+              <div *ngIf="f['stock_minimum'].errors['min']">Minimum stock must be at least 0</div>
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label for="fournisseur_id" class="form-label">Supplier</label>
+            <select id="fournisseur_id" formControlName="fournisseur_id" class="form-select"
+                    [ngClass]="{ 'is-invalid': submitted && f['fournisseur_id'].errors }">
+              <option value="">Select Supplier</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.id">{{ supplier.name }}</option>
+            </select>
+            <div *ngIf="submitted && f['fournisseur_id'].errors" class="invalid-feedback">
+              <div *ngIf="f['fournisseur_id'].errors['required']">Supplier is required</div>
+            </div>
+          </div>
+  
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" routerLink="/inventory">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="loading">
+              {{ isEditMode ? 'Update' : 'Save' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

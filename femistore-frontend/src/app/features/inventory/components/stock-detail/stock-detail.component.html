@@ -1,0 +1,88 @@
+<div class="container mt-4">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>Stock Details</h3>
+        <button class="btn btn-secondary" (click)="goBack()">Back to List</button>
+      </div>
+      
+      <div class="card-body">
+        <div *ngIf="loading" class="text-center my-3">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+  
+        <div *ngIf="error" class="alert alert-danger">
+          {{ error }}
+        </div>
+  
+        <div *ngIf="stock && !loading">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h4>{{ stock.productName }}</h4>
+              <p class="text-muted">Product ID: {{ stock.productId }}</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+              <span class="badge" [ngClass]="isLowStock() ? 'bg-danger' : 'bg-success'">
+                {{ isLowStock() ? 'Low Stock' : 'In Stock' }}
+              </span>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <h5>Stock Information</h5>
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <th>Available Stock:</th>
+                      <td>{{ stock.stockDisponible }}</td>
+                    </tr>
+                    <tr>
+                      <th>Minimum Stock:</th>
+                      <td>{{ stock.stock_minimum }}</td>
+                    </tr>
+                    <tr>
+                      <th>Supplier:</th>
+                      <td>{{ stock.supplierName }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <h5>Stock Status</h5>
+                <div class="progress mb-2">
+                  <div class="progress-bar" role="progressbar" 
+                       [ngClass]="isLowStock() ? 'bg-danger' : 'bg-success'"
+                       [style.width.%]="(stock.stockDisponible / (stock.stock_minimum * 2)) * 100">
+                    {{ stock.stockDisponible }}
+                  </div>
+                </div>
+                <small class="text-muted">Minimum threshold: {{ stock.stock_minimum }}</small>
+              </div>
+  
+              <div *ngIf="stockTrend" class="mb-3">
+                <h5>Stock Analysis</h5>
+                <div class="card">
+                  <div class="card-body">
+                    <p><strong>Trend:</strong> <span class="badge" [ngClass]="stockTrend.trend === 'croissant' ? 'bg-success' : (stockTrend.trend === 'décroissant' ? 'bg-danger' : 'bg-warning')">{{ stockTrend.trend }}</span></p>
+                    <p><strong>Suggested Stock:</strong> {{ stockTrend.suggestedStock }}</p>
+                    <p *ngIf="predictedDemand"><strong>Predicted Demand (7 days):</strong> {{ predictedDemand }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-warning" (click)="editStock()">Edit Stock</button>
+            <button class="btn btn-info" (click)="viewStockHistory()">View History</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

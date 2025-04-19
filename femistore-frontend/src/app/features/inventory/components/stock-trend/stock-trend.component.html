@@ -1,0 +1,113 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3>Stock Trend Analysis</h3>
+      <button class="btn btn-secondary" (click)="goBack()">Back to Details</button>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center my-3">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <div *ngIf="stockTrend && !loading">
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <h4>Product ID: {{ stockTrend.productId }}</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card mb-3">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Stock Trend</h5>
+              </div>
+              <div class="card-body">
+                <p><strong>Current Trend:</strong> 
+                  <span class="badge" [ngClass]="stockTrend.trend === 'increasing' ? 'bg-success' : (stockTrend.trend === 'decreasing' ? 'bg-danger' : 'bg-warning')">
+                    {{ stockTrend.trend }}
+                  </span>
+                </p>
+                <p><strong>Current Stock:</strong> {{ stockTrend.stockDisponible }}</p>
+                <p><strong>Minimum Stock:</strong> {{ stockTrend.stockMinimum }}</p>
+                <p><strong>Suggested Stock Level:</strong> {{ stockTrend.suggestedStock }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="card mb-3">
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Demand Forecast</h5>
+              </div>
+              <div class="card-body">
+                <p><strong>Predicted Demand (7 days):</strong> {{ predictedDemand | number:'1.0-2' }}</p>
+                
+                <div *ngIf="stockTrend.stockDisponible !== undefined && predictedDemand !== undefined">
+                  <p><strong>Stock Coverage:</strong> 
+                    <span [ngClass]="stockTrend.stockDisponible >= predictedDemand ? 'text-success' : 'text-danger'">
+                      {{ stockTrend.stockDisponible >= predictedDemand ? 'Sufficient' : 'Insufficient' }}
+                    </span>
+                  </p>
+                  
+                  <div class="progress mb-2">
+                    <div class="progress-bar" role="progressbar" 
+                         [ngClass]="stockTrend.stockDisponible >= predictedDemand ? 'bg-success' : 'bg-danger'"
+                         [style.width.%]="(stockTrend.stockDisponible / (predictedDemand || 1)) * 100">
+                      {{ ((stockTrend.stockDisponible / (predictedDemand || 1)) * 100) | number:'1.0-0' }}%
+                    </div>
+                  </div>
+                  
+                  <p *ngIf="stockTrend.stockDisponible < predictedDemand" class="text-danger">
+                    <strong>Warning:</strong> Current stock is insufficient to meet predicted demand.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Recommendations</h5>
+              </div>
+              <div class="card-body">
+                <ul class="list-group">
+                  <li class="list-group-item" *ngIf="stockTrend.stockDisponible !== undefined && stockTrend.stockMinimum !== undefined && stockTrend.stockDisponible < stockTrend.stockMinimum">
+                    <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                    <strong>Critical:</strong> Stock is below minimum threshold. Immediate replenishment required.
+                  </li>
+                  <li class="list-group-item" *ngIf="predictedDemand !== undefined && stockTrend.stockDisponible !== undefined && stockTrend.stockMinimum !== undefined && stockTrend.stockDisponible < predictedDemand && stockTrend.stockDisponible >= stockTrend.stockMinimum">
+                    <i class="bi bi-exclamation-circle-fill text-warning me-2"></i>
+                    <strong>Warning:</strong> Stock may not meet predicted demand. Consider replenishment.
+                  </li>
+                  <li class="list-group-item" *ngIf="stockTrend.trend && stockTrend.trend === 'decreasing'">
+                    <i class="bi bi-graph-down-arrow text-info me-2"></i>
+                    <strong>Trend Alert:</strong> Decreasing trend detected. Monitor closely.
+                  </li>
+                  <li class="list-group-item" *ngIf="predictedDemand !== undefined && stockTrend.stockDisponible !== undefined && stockTrend.stockMinimum !== undefined && stockTrend.stockDisponible >= predictedDemand && stockTrend.stockDisponible >= stockTrend.stockMinimum">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <strong>Good:</strong> Current stock levels are sufficient.
+                  </li>
+                  <li class="list-group-item">
+                    <i class="bi bi-arrow-repeat text-primary me-2"></i>
+                    <strong>Recommendation:</strong> Maintain stock at {{ stockTrend.suggestedStock }} units.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
