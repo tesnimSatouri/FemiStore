@@ -6,13 +6,7 @@
       <mat-icon>home</mat-icon> Home
     </a>
   
-    <a mat-button routerLink="/users/register" *ngIf="!isLoggedIn">
-      <mat-icon>person_add</mat-icon> Inscription
-    </a>
   
-    <a mat-button routerLink="/users/login" *ngIf="!isLoggedIn">
-      <mat-icon>login</mat-icon> Connexion
-    </a>
   
     <a mat-button routerLink="/inventory" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
       <mat-icon>inventory_2</mat-icon> Inventory
@@ -29,7 +23,13 @@
     <a mat-button routerLink="/users/users" *ngIf="isLoggedIn">
       <mat-icon>group</mat-icon> Utilisateurs
     </a>
-  
+    <a mat-button routerLink="/users/register" *ngIf="!isLoggedIn">
+        <mat-icon>person_add</mat-icon> Inscription
+      </a>
+    
+      <a mat-button routerLink="/users/login" *ngIf="!isLoggedIn">
+        <mat-icon>login</mat-icon> Connexion
+      </a>
     <button mat-button (click)="logout()" *ngIf="isLoggedIn">
       <mat-icon>logout</mat-icon> Déconnexion
     </button>

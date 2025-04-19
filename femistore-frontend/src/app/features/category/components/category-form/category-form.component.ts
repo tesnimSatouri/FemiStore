@@ -84,7 +84,7 @@ export class CategoryFormComponent implements OnInit {
 
     if (this.categoryId) {
       this.categoryService.updateCategory(this.categoryId, category).subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => this.router.navigate(['/categoris']),
         error: (err: HttpErrorResponse) => {
           console.error('Error updating category:', err);
           this.errorMessage = 'Error updating category. Please try again.';
@@ -102,6 +102,6 @@ export class CategoryFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/categoris']);
   }
 }
