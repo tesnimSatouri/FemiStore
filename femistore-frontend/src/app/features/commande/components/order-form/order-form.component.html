@@ -1,0 +1,34 @@
+<h2>{{ isEditMode ? 'Modifier' : 'Add' }} Command</h2>
+
+<form (ngSubmit)="saveOrder()">
+
+  <label>Email Client :</label>
+  <input type="email" [(ngModel)]="order.email" name="email" required>
+
+  <label>User ID :</label>
+  <input type="number" [(ngModel)]="order.userId" name="userId" required>
+
+  <h3>Products :</h3>
+
+  <button type="button" (click)="addOrderItem()">+ Add Product</button>
+
+  <div class="product-group" *ngFor="let item of order.orderItems; let i = index">
+
+    <label>Product ID :</label>
+    <input type="number" [(ngModel)]="item.productId" name="productId{{i}}" required>
+
+    <label>Quantity :</label>
+    <input type="number" [(ngModel)]="item.quantite" name="quantite{{i}}" required>
+
+    <label>Price :</label>
+    <input type="number" [(ngModel)]="item.prixUnitaire" name="prixUnitaire{{i}}" required>
+
+    <button type="button" (click)="removeOrderItem(i)" style="background-color: #9e9e9e;">Delete Product</button>
+
+  </div>
+
+  <div class="actions">
+    <button type="submit">{{ isEditMode ? 'Modifier' : 'Add' }}</button>
+  </div>
+
+</form>
