@@ -25,7 +25,6 @@
 
     <!-- === PRODUCT SPECIFIC VIEW (inchangé) === -->
     <div *ngIf="displayedProductId" class="results-container product-specific-view">
-      <h3>Results for Product #{{ displayedProductId }}</h3>
       <app-product-reviews [productIdInput]="displayedProductId"></app-product-reviews>
     </div>
 
