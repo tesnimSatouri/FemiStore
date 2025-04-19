@@ -1,0 +1,28 @@
+<div *ngIf="!avisList || avisList.length === 0">
+  <!-- Ajoutez la classe ici -->
+  <p class="no-avis-message">Aucun avis à afficher pour le moment.</p>
+</div>
+
+<!-- Ajoutez la classe ici -->
+<ul *ngIf="avisList && avisList.length > 0" class="avis-list-container">
+  <!-- La classe avis-item est déjà présente, c'est bien -->
+  <li *ngFor="let avis of avisList" class="avis-item">
+    <div class="avis-header">
+      <!-- Les spans internes héritent du style, pas besoin de classe sauf si style spécifique -->
+      <span>Produit ID: {{ avis.productId }} | Utilisateur ID: {{ avis.userId }}</span>
+      <!-- La classe avis-note est déjà présente, c'est bien -->
+      <span class="avis-note">Note: {{ avis.note }}/5</span>
+    </div>
+    <!-- La classe avis-comment est déjà présente, c'est bien -->
+    <p class="avis-comment">{{ avis.commentaire }}</p>
+    <div class="avis-footer">
+      <!-- La classe avis-date est déjà présente, c'est bien -->
+      <span class="avis-date">{{ avis.date | date:'dd/MM/yyyy' }}</span>
+      <!-- Ajoutez un div avec la classe .avis-actions autour des boutons -->
+      <div class="avis-actions">
+        <!-- Ajoutez les classes button-edit et button-delete -->
+        <button (click)="onDelete(avis.id)" class="button-delete">Supprimer</button>
+      </div>
+    </div>
+  </li>
+</ul>

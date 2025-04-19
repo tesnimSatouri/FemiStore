@@ -1,0 +1,121 @@
+<div *ngIf="productId" class="avis-section-container">
+  <h2>Reviews for Product #{{ productId }}</h2> <!-- Traduit -->
+
+  <!-- Average Rating -->
+  <div *ngIf="(averageRating$ | async) as avgRate; else loadingAvg" class="average-rating-container">
+    <p>Average rating: <strong>{{ avgRate !== null ? (avgRate | number:'1.1-2') + ' / 5' : 'N/A' }}</strong></p> <!-- Traduit -->
+  </div>
+  <ng-template #loadingAvg>
+    <p class="loading-message">Loading average rating...</p> <!-- Traduit -->
+  </ng-template>
+
+  <hr>
+
+  <h3>List of Reviews</h3> <!-- Traduit -->
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <label for="noteFilter">Filter by rating:</label> <!-- Traduit -->
+    <select id="noteFilter" (change)="applyFilter($any($event.target).value)" [ngModel]="currentFilterNote === null ? 'null' : currentFilterNote">
+       <!-- Using [ngValue]="null" is preferred if possible, otherwise use a string 'null' -->
+       <option value="null">All ratings</option> <!-- Traduit -->
+       <option value="5">5 stars</option> <!-- Traduit -->
+       <option value="4">4 stars</option> <!-- Traduit -->
+       <option value="3">3 stars</option> <!-- Traduit -->
+       <option value="2">2 stars</option> <!-- Traduit -->
+       <option value="1">1 star</option> <!-- Traduit -->
+    </select>
+    <!-- Add other filters or sorting options here if needed -->
+        <!-- NEW: Sort Selector -->
+    <label for="sortFilter" style="margin-left: 15px;">Sort by:</label> <!-- Traduit -->
+    <select id="sortFilter" (change)="applySort($any($event.target).value)" [ngModel]="currentSort">
+        <option value="date,desc">Date (Newest)</option> <!-- Traduit -->
+        <option value="date,asc">Date (Oldest)</option> <!-- Traduit -->
+        <option value="note,desc">Rating (Highest)</option> <!-- Traduit -->
+        <option value="note,asc">Rating (Lowest)</option> <!-- Traduit -->
+        <!-- Add other relevant options -->
+    </select>
+  </div>
+
+
+  <!-- Loading Indicator / Error -->
+  <div *ngIf="isLoading" class="loading-message">Loading reviews...</div> <!-- Traduit -->
+  <div *ngIf="loadError && !isLoading" class="error-message-box">{{ loadError }}</div> <!-- Variable content must be English from component -->
+
+  <!-- List of reviews (uses current page) -->
+  <!-- Uses data from reviewsPage$ BehaviorSubject -->
+  <ng-container *ngIf="(reviewsPage$ | async) as reviewsPage; else noReviewsOrLoading">
+      <app-avis-list
+         *ngIf="!isLoading && reviewsPage.content.length > 0"
+         [avisList]="reviewsPage.content"
+         (deleteRequest)="handleDeleteRequest($event)"
+         (editRequest)="handleEditRequest($event)">
+      </app-avis-list>
+
+       <!-- Message if no reviews match the filter -->
+      <div *ngIf="!isLoading && reviewsPage.content.length === 0 && reviewsPage.totalElements > 0 && currentFilterNote !== null">
+           <p class="no-avis-message">No reviews match your filter.</p> <!-- Traduit -->
+      </div>
+      <!-- Message if no reviews at all for this product -->
+       <!-- <div *ngIf="!isLoading && reviewsPage.content.length === 0 && reviewsPage.totalElements === 0 && currentFilterNote === null">
+            <p class="no-avis-message">Be the first to leave a review!</p> --> <!-- Traduit (dans commentaire) -->
+       <!-- </div> -->
+
+
+       <!-- Pagination Controls -->
+       <div *ngIf="!isLoading && reviewsPage.totalPages > 1" class="pagination-controls">
+          <span>Page {{ reviewsPage.number + 1 }} of {{ reviewsPage.totalPages }} ({{ reviewsPage.totalElements }} reviews)</span> <!-- Traduit -->
+          <div>
+              <button (click)="goToPage(0)" [disabled]="reviewsPage.first">
+                  << First <!-- Traduit -->
+              </button>
+              <button (click)="previousPage()" [disabled]="reviewsPage.first">
+                  < Previous <!-- Traduit -->
+              </button>
+              <!-- Optional: Display page numbers -->
+              <!-- <span> ... </span> -->
+              <button (click)="nextPage()" [disabled]="reviewsPage.last">
+                  Next > <!-- Traduit -->
+              </button>
+               <button (click)="goToPage(reviewsPage.totalPages - 1)" [disabled]="reviewsPage.last">
+                   Last >> <!-- Traduit -->
+               </button>
+          </div>
+       </div>
+  </ng-container>
+
+   <!-- Alternative template during initial load or if reviewsPage is null -->
+   <ng-template #noReviewsOrLoading>
+        <div *ngIf="!isLoading && !loadError">
+            <!-- This case shouldn't happen often if the initial call succeeds -->
+            <!-- <p class="no-avis-message">No reviews to display.</p> --> <!-- Traduit (dans commentaire) -->
+        </div>
+   </ng-template>
+
+
+  <!-- Add Review Button -->
+  <!-- <div *ngIf="!showAddForm && !avisToEdit" style="margin-top: 20px; text-align: center;">
+      <button (click)="displayAddForm()" class="button-add-review">Add your review</button> --> <!-- Traduit (dans commentaire) -->
+  <!-- </div> -->
+
+  <!-- Add/Edit Form -->
+  <div *ngIf="showAddForm || avisToEdit">
+      <hr>
+      <app-avis-form
+         [productId]="productId"
+         [avisToEdit]="avisToEdit"
+         (avisSubmit)="handleAvisSubmit($event)">
+       </app-avis-form>
+      <div *ngIf="showAddForm && !avisToEdit" class="form-actions form-actions-cancel">
+        <button type="button" (click)="hideForm()" class="button-secondary">Cancel</button> <!-- Traduit -->
+      </div>
+       <hr>
+  </div>
+
+</div>
+
+<!-- Missing Product ID -->
+<div *ngIf="!productId && !isLoading" class="no-product-id-container">
+  <p class="loading-message">{{ loadError ? loadError : 'Loading or missing product ID...' }}</p> <!-- Traduit (texte conditionnel) -->
+   <!-- Note: loadError variable content must be English from component -->
+</div>

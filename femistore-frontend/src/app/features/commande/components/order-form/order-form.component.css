@@ -1,0 +1,58 @@
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+  }
+  
+  form {
+    max-width: 600px;
+    margin: auto;
+    background-color: #f9f9f9;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #444;
+  }
+  
+  input {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    background-color: #e91e63;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-top: 10px;
+    margin-right: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+
+  
+  hr {
+    margin: 20px 0;
+  }
+  
+  .product-group {
+    margin-bottom: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+  }
+  
+  .actions {
+    text-align: right;
+  }
+  

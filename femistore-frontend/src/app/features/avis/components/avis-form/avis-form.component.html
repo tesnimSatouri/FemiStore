@@ -1,0 +1,51 @@
+<h3>{{ isEditMode ? 'Modifier l\'avis' : 'Ajouter un nouvel avis' }}</h3>
+<!-- Ajoutez la classe au formulaire -->
+<form [formGroup]="avisForm" (ngSubmit)="onSubmit()" class="avis-form-container">
+  <!-- Champ caché pour l'ID en mode édition -->
+  <input type="hidden" formControlName="id">
+
+  <!-- Ajoutez la classe .form-group à chaque div de champ -->
+  <div class="form-group">
+    <label for="userId">ID Utilisateur:</label>
+    <input type="number" id="userId" formControlName="userId">
+    <!-- Ajoutez la classe .error-message à la div d'erreur -->
+    <div *ngIf="avisForm.controls['userId'].invalid && avisForm.controls['userId'].touched" class="error-message">
+      User ID requis.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="productId">ID Produit:</label>
+    <input type="number" id="productId" formControlName="productId" [readonly]="productId !== undefined">
+    <div *ngIf="avisForm.controls['productId'].invalid && avisForm.controls['productId'].touched" class="error-message">
+      Product ID requis.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="note">Note (1-5):</label>
+    <input type="number" id="note" formControlName="note" min="1" max="5">
+    <div *ngIf="avisForm.controls['note'].invalid && avisForm.controls['note'].touched" class="error-message">
+      Note requise (entre 1 et 5).
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="commentaire">Commentaire:</label>
+    <textarea id="commentaire" formControlName="commentaire" rows="4"></textarea>
+    <div *ngIf="avisForm.controls['commentaire'].invalid && avisForm.controls['commentaire'].touched" class="error-message">
+      Commentaire requis.
+    </div>
+  </div>
+
+  <!-- Ajoutez la classe .form-actions autour des boutons -->
+  <div class="form-actions">
+    <button type="submit" [disabled]="avisForm.invalid">
+      {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+    </button>
+    <!-- Ajoutez la classe .button-secondary au bouton Annuler -->
+    <button type="button" (click)="resetForm()" *ngIf="isEditMode" class="button-secondary">
+      Annuler l'édition
+    </button>
+  </div>
+</form>

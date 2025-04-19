@@ -1,0 +1,145 @@
+/* Assurez-vous que les variables de couleur sont accessibles ici */
+/* Elles peuvent être définies dans :host, :root, ou héritées */
+:host { /* Ou :root si dans un fichier global */
+  --pink-primary: #E91E63;
+  --pink-light: #FCE4EC;
+  --text-dark: #333;
+  --text-light: #666;
+  --border-color-light: #eee; /* Bordure plus légère pour les items */
+  --background-color: #fff;
+  --button-text-color: #fff;
+  --secondary-button-bg: #f4f4f4;
+  --secondary-button-text: #555;
+  --secondary-button-border: #ddd;
+  --delete-button-bg: #f8f8f8; /* Fond neutre pour supprimer */
+  --delete-button-text: var(--error-color, #D32F2F); /* Utilise la variable erreur si dispo, sinon rouge */
+  --delete-button-border: #e0e0e0;
+}
+
+/* Style pour le message "Aucun avis" */
+.no-avis-message { /* Ajoutez cette classe au <p> dans le *ngIf vide */
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--text-light);
+  font-style: italic;
+  background-color: var(--pink-light); /* Fond rose pâle */
+  border-radius: 8px;
+  border: 1px dashed var(--pink-primary); /* Bordure pointillée rose */
+  margin: 20px 0; /* Espace autour */
+}
+
+/* Conteneur de la liste (ul) */
+.avis-list-container { /* Ajoutez cette classe à la balise <ul> */
+  list-style: none; /* Supprime les puces */
+  padding: 0;
+  margin: 0; /* Supprime la marge par défaut */
+}
+
+/* Style pour chaque élément d'avis (li) */
+.avis-item {
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color-light); /* Bordure légère */
+  border-left: 4px solid var(--pink-primary); /* Bordure gauche rose pour l'accent */
+  border-radius: 5px;
+  padding: 15px 20px;
+  margin-bottom: 15px; /* Espace entre les avis */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06); /* Ombre discrète */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: box-shadow 0.3s ease;
+}
+
+.avis-item:hover {
+   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.09); /* Ombre un peu plus prononcée au survol */
+}
+
+/* En-tête de l'avis (IDs, Note) */
+.avis-header {
+  display: flex;
+  justify-content: space-between; /* ID à gauche, Note à droite */
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  color: var(--text-light);
+  flex-wrap: wrap; /* Permet le retour à la ligne si manque de place */
+  gap: 10px; /* Espace si retour à la ligne */
+}
+
+/* Note dans l'en-tête */
+.avis-note {
+  font-weight: bold;
+  color: var(--pink-primary); /* Note en rose */
+  font-size: 1.2em; /* Met en valeur la note */
+  white-space: nowrap; /* Evite que "Note: X/5" se casse */
+}
+
+/* Commentaire de l'avis */
+.avis-comment {
+  margin-top: 8px;
+  margin-bottom: 15px;
+  color: var(--text-dark);
+  line-height: 1.6; /* Bonne lisibilité */
+  font-size: 1em;
+  /* white-space: pre-wrap; */ /* Optionnel: conserve les sauts de ligne du commentaire */
+}
+
+/* Pied de l'avis (Date, Boutons) */
+.avis-footer {
+  display: flex;
+  justify-content: space-between; /* Date à gauche, boutons à droite */
+  align-items: center;
+  margin-top: 15px;
+  border-top: 1px solid var(--border-color-light); /* Séparateur léger */
+  padding-top: 10px;
+  flex-wrap: wrap; /* Permet le retour à la ligne */
+  gap: 10px; /* Espace en cas de retour à la ligne */
+}
+
+/* Date de l'avis */
+.avis-date {
+  font-size: 0.85em;
+  color: var(--text-light);
+}
+
+/* Conteneur des boutons d'action */
+.avis-actions { /* Ajoutez cette classe au div contenant les boutons */
+  display: flex;
+  gap: 10px; /* Espace entre les boutons */
+}
+
+/* Style de base des boutons d'action (plus petits) */
+.avis-footer button {
+  padding: 5px 10px; /* Plus petits que les boutons de formulaire */
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Bouton Modifier */
+.avis-footer button.button-edit { /* Ajoutez la classe .button-edit */
+  background-color: var(--pink-primary);
+  color: var(--button-text-color);
+  border: 1px solid var(--pink-primary);
+}
+
+.avis-footer button.button-edit:hover {
+  background-color: #C2185B; /* Rose plus foncé */
+  border-color: #C2185B;
+}
+
+/* Bouton Supprimer */
+.avis-footer button.button-delete { /* Ajoutez la classe .button-delete */
+  background-color: var(--delete-button-bg);
+  color: var(--delete-button-text);
+  border: 1px solid var(--delete-button-border);
+}
+
+.avis-footer button.button-delete:hover {
+  background-color: #ffebee; /* Fond très léger rouge/rose pâle */
+  border-color: var(--delete-button-text);
+  color: #B71C1C; /* Rouge plus foncé au survol */
+}

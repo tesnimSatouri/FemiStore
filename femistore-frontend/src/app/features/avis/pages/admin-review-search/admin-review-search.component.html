@@ -1,0 +1,115 @@
+<div class="admin-review-search-container">
+    <h2>Review Management</h2>
+
+    <!-- Search Form (inchangé) -->
+    <div class="search-form">
+      <label for="productIdInput">Search by Product ID:</label>
+      <input
+        type="number"
+        id="productIdInput"
+        [(ngModel)]="productIdToSearch"
+        placeholder="Ex: 123"
+        min="1"
+        (keyup.enter)="searchReviews()"
+      >
+      <button (click)="searchReviews()" [disabled]="!productIdToSearch">Search</button>
+      <button type="button" class="button-secondary" (click)="clearSearch()" *ngIf="displayedProductId !== null">
+        Show All Reviews
+      </button>
+    </div>
+
+    <!-- Search error message (inchangé) -->
+    <div *ngIf="searchError" class="error-message-box">
+      {{ searchError }}
+    </div>
+
+    <!-- === PRODUCT SPECIFIC VIEW (inchangé) === -->
+    <div *ngIf="displayedProductId" class="results-container product-specific-view">
+      <app-product-reviews [productIdInput]="displayedProductId"></app-product-reviews>
+    </div>
+
+
+    <!-- === MODIFIÉ: GLOBAL VIEW (avec pagination) === -->
+    <div *ngIf="!displayedProductId" class="results-container all-reviews-view">
+
+        <!-- Titre modifié pour afficher le total depuis la page -->
+        <h3>
+           All Reviews
+           <span *ngIf="!isLoadingAll && allReviewsPage">({{ allReviewsPage.totalElements }})</span>
+           <span *ngIf="isLoadingAll">(Loading...)</span>
+        </h3>
+
+        <!-- Avertissement de pagination supprimé -->
+        <!-- <p class="pagination-warning" *ngIf="!isLoadingAll && ..."> ... </p> -->
+
+        <!-- Global loading error (inchangé) -->
+        <div *ngIf="loadAllError && !isLoadingAll" class="error-message-box">
+            {{ loadAllError }}
+        </div>
+
+        <!-- Global loading indicator (inchangé) -->
+        <div *ngIf="isLoadingAll" class="loading-message">
+            Loading all reviews...
+        </div>
+
+        <!-- Edit form (inchangé) -->
+        <div *ngIf="showEditFormForAllList" id="global-edit-form" class="global-edit-form-container">
+            <hr>
+            <h4>Edit Review ID {{ avisToEditInAllList?.id }}</h4>
+            <app-avis-form
+                [avisToEdit]="avisToEditInAllList"
+                (avisSubmit)="handleGlobalEditSubmit($event)">
+            </app-avis-form>
+            <div style="margin-top: 10px; text-align: right;">
+                 <button type="button" class="button-secondary" (click)="cancelGlobalEdit()">
+                     Cancel
+                 </button>
+            </div>
+            <hr>
+        </div>
+
+        <!-- MODIFIÉ: Affichage de la liste paginée -->
+        <div *ngIf="!isLoadingAll && !loadAllError && !showEditFormForAllList">
+            <app-avis-list
+                *ngIf="allReviewsPage && allReviewsPage.content.length > 0"
+                [avisList]="allReviewsPage.content" 
+                (deleteRequest)="handleAllDeleteRequest($event)"
+                (editRequest)="handleAllEditRequest($event)">
+            </app-avis-list>
+
+            <!-- MODIFIÉ: Message si aucun avis (basé sur totalElements) -->
+            <div *ngIf="allReviewsPage && allReviewsPage.totalElements === 0 && !isLoadingAll && !loadAllError" class="placeholder-message">
+                <p>No reviews found in the system.</p>
+            </div>
+        </div>
+
+        <!-- **** NOUVEAU: Contrôles de Pagination pour la liste globale **** -->
+        <!-- S'affiche seulement si on n'est pas en chargement ET qu'il y a plus d'une page -->
+        <div *ngIf="!isLoadingAll && allReviewsPage && allReviewsPage.totalPages > 1" class="pagination-controls" style="margin-top: 20px;"> <!-- Ajout marge pour séparation visuelle -->
+            <span> <!-- Informations sur la page actuelle et le total -->
+                Page {{ allReviewsPage.number + 1 }} of {{ allReviewsPage.totalPages }}
+                ({{ allReviewsPage.totalElements }} reviews total)
+            </span>
+            <div> <!-- Conteneur pour les boutons -->
+                <button (click)="goToGlobalPage(0)" [disabled]="allReviewsPage.first">
+                    << First
+                </button>
+                <button (click)="previousGlobalPage()" [disabled]="allReviewsPage.first">
+                    < Previous
+                </button>
+                <!-- Vous pouvez ajouter des numéros de page ici si nécessaire -->
+                <!-- Exemple simple: <span> {{ allReviewsPage.number + 1 }} </span> -->
+                <button (click)="nextGlobalPage()" [disabled]="allReviewsPage.last">
+                    Next >
+                </button>
+                 <button (click)="goToGlobalPage(allReviewsPage.totalPages - 1)" [disabled]="allReviewsPage.last">
+                     Last >>
+                 </button>
+            </div>
+         </div>
+         <!-- **** FIN NOUVEAUX CONTRÔLES DE PAGINATION **** -->
+
+    </div>
+    <!-- === FIN GLOBAL VIEW === -->
+
+</div>
