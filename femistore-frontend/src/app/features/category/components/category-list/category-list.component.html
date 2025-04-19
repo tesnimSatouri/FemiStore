@@ -1,58 +1,283 @@
-<div class="container mt-4">
-  <h2 class="page-title">{{ parentId ? 'Subcategories ✨' : 'Main Categories ✨' }}</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Include Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-4">
+    <h2 class="page-title">{{ parentId ? 'Subcategories ✨' : 'Main Categories ✨' }}</h2>
 
-  <!-- Search Input -->
-  <div class="search-section mb-3 d-flex align-items-center">
-    <input
-      type="text"
-      class="custom-input me-2"
-      placeholder="Enter category name"
-      [(ngModel)]="searchTerm"
-      (input)="onSearch()"
-    />
-    <button class="btn-accent" (click)="clearSearch()" *ngIf="searchTerm">Clear</button>
+    <!-- Search Input -->
+    <div class="search-section mb-3 d-flex align-items-center">
+      <input
+        type="text"
+        class="custom-input me-2"
+        placeholder="Enter category name"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+      />
+      <button class="btn-accent" (click)="clearSearch()" *ngIf="searchTerm">Clear</button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Category Table -->
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories">
+          <td>{{ category.name }}</td>
+          <td>{{ category.description }}</td>
+          <td class="actions text-center">
+            <a class="btn-primary me-1" [routerLink]="['/categoris/edit', category.id]">Edit</a>
+            <button class="btn-warn me-1" (click)="deleteCategory(category.id!)">Delete</button>
+            <a
+              class="btn-accent me-1"
+              *ngIf="!parentId"
+              [routerLink]="['/categoris/subcategories', category.id]">View Subcategories</a>
+            <a
+              class="btn-accent"
+              *ngIf="!parentId"
+              [routerLink]="['/categoris/add-subcategory', category.id]">Add Subcategory</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Action Buttons -->
+    <div class="mt-3 d-flex flex-wrap gap-2">
+      <a class="btn-primary" [routerLink]="['/categoris/add']">Add Main Category</a>
+      <a class="btn-accent" [routerLink]="['/external']">View External Categories</a>
+    </div>
   </div>
 
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="alert-danger">
-    {{ errorMessage }}
+  <!-- Icon footer with fashion elements -->
+  <div class="icon-footer">
+    <i class="fas fa-shoe-prints icon"></i> <!-- High heels -->
+    <i class="fas fa-tshirt icon"></i> <!-- Dress -->
+    <i class="fas fa-handbag icon"></i> <!-- Handbag -->
+    <i class="fas fa-gem icon"></i> <!-- Jewelry -->
+    <i class="fas fa-hat-wizard icon"></i> <!-- Hat -->
+    <i class="fas fa-glasses icon"></i> <!-- Sunglasses -->
+    <i class="fas fa-shoe-prints icon"></i>
+    <i class="fas fa-tshirt icon"></i>
+    <i class="fas fa-handbag icon"></i>
+    <i class="fas fa-gem icon"></i>
   </div>
 
-  <!-- Category Table -->
-  <table class="custom-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th class="text-center">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let category of categories">
-        <td>{{ category.name }}</td>
-        <td>{{ category.description }}</td>
-        <td class="actions text-center">
-          <a class="btn-primary me-1" [routerLink]="['/categoris/edit', category.id]">Edit</a>
-          <button class="btn-warn me-1" (click)="deleteCategory(category.id!)">Delete</button>
-          <a
-            class="btn-accent me-1"
-            *ngIf="!parentId"
-            [routerLink]="['/categoris/subcategories', category.id]">View Subcategories</a>
-          <a
-            class="btn-accent"
-            *ngIf="!parentId"
-            [routerLink]="['/categoris/add-subcategory', category.id]">Add Subcategory</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <style>
+    /* Body styling with white background and centering */
+    body {
+      margin: 0;
+      font-family: 'Lora', serif;
+      background-color: #ffffff; /* Pure white */
+      color: #4a4a4a;
+      position: relative;
+      min-height: 100vh; /* Full viewport height */
+      display: flex;
+      justify-content: center; /* Horizontal centering */
+      align-items: flex-start; /* Align to top */
+      overflow-x: hidden;
+    }
 
-  <!-- Pagination (custom) -->
+    /* Bottom gradient */
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(to top, rgba(248, 187, 208, 0.7), transparent); /* Baby pink gradient */
+      z-index: 1; /* Behind content, above icons */
+    }
 
+    /* Base CSS */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+      background: linear-gradient(135deg, #fff0f5 0%, #f5e6ff 100%);
+      border-radius: 20px;
+      box-shadow: 0 6px 25px rgba(255, 192, 203, 0.3);
+      border: 1px solid #ffe4e1;
+      font-family: 'Lora', serif;
+      position: relative;
+      z-index: 2; /* Above gradient */
+      margin-top: 40px;
+      margin-bottom: 220px; /* Ensure space for gradient and icons */
+    }
 
-  <!-- Action Buttons -->
-  <div class="mt-3 d-flex flex-wrap gap-2">
-    <a class="btn-primary" [routerLink]="['/categoris/add']">Add Main Category</a>
-    <a class="btn-accent" [routerLink]="['/external']">View External Categories</a>
-  </div>
-</div>
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      color: #ff6f91;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 3px rgba(255, 105, 145, 0.2);
+    }
+
+    .alert-danger {
+      background-color: #fff1f5;
+      color: #e91e63;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 25px;
+      border: 1px solid #ffccd5;
+      box-shadow: 0 2px 10px rgba(255, 105, 145, 0.1);
+    }
+
+    .custom-input {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 2px solid #ffabc1;
+      background: linear-gradient(135deg, #fff5f7 0%, #f9edff 100%);
+      color: #4a4a4a;
+      font-size: 1rem;
+    }
+
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(255, 192, 203, 0.1);
+    }
+
+    .custom-table th,
+    .custom-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .custom-table th {
+      background: #f5e6ff;
+      color: #ff6f91;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .actions {
+      white-space: nowrap;
+    }
+
+    .btn-primary,
+    .btn-warn,
+    .btn-accent {
+      font-family: 'Lora', serif;
+      padding: 8px 14px;
+      border-radius: 20px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ff8fab 0%, #ffccd5 100%);
+      color: white;
+    }
+
+    .btn-warn {
+      background: linear-gradient(135deg, #d39bff 0%, #f5e6ff 100%);
+      color: white;
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, #ffd6e0 0%, #f5e6ff 100%);
+      color: #6b1f3b;
+    }
+
+    .btn-primary:hover,
+    .btn-warn:hover,
+    .btn-accent:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 10px rgba(255, 105, 145, 0.2);
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mt-3 {
+      margin-top: 1rem;
+    }
+
+    .d-flex {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+
+    .me-1 {
+      margin-right: 0.5rem;
+    }
+
+    .me-2 {
+      margin-right: 1rem;
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem;
+    }
+
+    .gap-2 {
+      gap: 0.5rem;
+    }
+
+    .align-items-center {
+      align-items: center;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* Icon Footer Styling */
+    .icon-footer {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      z-index: 0; /* Behind content, below gradient */
+      padding: 0 20px;
+    }
+
+    .icon-footer .icon {
+      color: #f8bbd0; /* Baby pink */
+      font-size: 35px;
+      opacity: 0.85;
+      transition: transform 0.3s ease;
+    }
+
+    .icon-footer .icon:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</body>
+</html>

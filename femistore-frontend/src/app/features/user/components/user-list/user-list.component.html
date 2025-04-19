@@ -1,11 +1,160 @@
-<div class="container user-list-container mt-4">
-  <h2 class="user-list-title">Liste des Utilisateurs</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Include Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container user-list-container mt-4">
+    <h2 class="user-list-title">Liste des Utilisateurs</h2>
+    <ul class="user-list">
+      <li *ngFor="let user of users" class="user-item">
+        <span class="user-name">{{ user.name }}</span>
+        <span class="user-info">({{ user.email }})</span>
+        <span class="user-role">{{ user.role }}</span>
+      </li>
+    </ul>
+  </div>
 
-  <ul class="user-list">
-    <li *ngFor="let user of users" class="user-item">
-      <span class="user-name">{{ user.name }}</span>
-      <span class="user-info">({{ user.email }})</span>
-      <span class="user-role">{{ user.role }}</span>
-    </li>
-  </ul>
-</div>
+  <!-- Icon footer with fashion elements -->
+  <div class="icon-footer">
+    <i class="fas fa-shoe-prints icon"></i> <!-- High heels -->
+    <i class="fas fa-tshirt icon"></i> <!-- Dress -->
+    <i class="fas fa-handbag icon"></i> <!-- Handbag -->
+    <i class="fas fa-gem icon"></i> <!-- Jewelry -->
+    <i class="fas fa-hat-wizard icon"></i> <!-- Hat -->
+    <i class="fas fa-glasses icon"></i> <!-- Sunglasses -->
+    <i class="fas fa-shoe-prints icon"></i>
+    <i class="fas fa-tshirt icon"></i>
+    <i class="fas fa-handbag icon"></i>
+    <i class="fas fa-gem icon"></i>
+  </div>
+
+  <style>
+    /* Body styling with white background and centering */
+    body {
+      margin: 0;
+      font-family: 'Lora', serif;
+      background-color: #ffffff; /* Pure white */
+      color: #4a4a4a;
+      position: relative;
+      min-height: 100vh; /* Full viewport height */
+      display: flex;
+      justify-content: center; /* Horizontal centering */
+      align-items: flex-start; /* Align to top */
+      overflow-x: hidden;
+    }
+
+    /* Bottom gradient */
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(to top, rgba(248, 187, 208, 0.7), transparent); /* Baby pink gradient */
+      z-index: 1; /* Behind form, above icons */
+    }
+
+    /* User List Container Styling */
+    .user-list-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+      background: linear-gradient(135deg, #fff0f5 0%, #f5e6ff 100%);
+      border-radius: 20px;
+      box-shadow: 0 6px 25px rgba(255, 192, 203, 0.3);
+      border: 1px solid #ffe4e1;
+      font-family: 'Lora', serif;
+      position: relative;
+      z-index: 2; /* Above gradient */
+      margin-top: 40px;
+      margin-bottom: 220px; /* Ensure space for gradient and icons */
+    }
+
+    .user-list-title {
+      font-family: 'Playfair Display', serif;
+      color: #ff6f91;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 3px rgba(255, 105, 145, 0.2);
+      position: relative;
+    }
+
+    .user-list-title::after {
+      content: '👥';
+      position: absolute;
+      font-size: 1.5rem;
+      margin-left: 10px;
+      color: #ff6f91;
+    }
+
+    .user-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      background: #fff7fa;
+      border: 1px solid #ffe4e1;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 3px 10px rgba(255, 182, 193, 0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .user-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 5px 15px rgba(255, 182, 193, 0.2);
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #ff6f91;
+    }
+
+    .user-info {
+      font-style: italic;
+      color: #777;
+    }
+
+    .user-role {
+      font-weight: 500;
+      color: #b46bff;
+    }
+
+    /* Icon Footer Styling */
+    .icon-footer {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      z-index: 0; /* Behind form, below gradient */
+      padding: 0 20px;
+    }
+
+    .icon-footer .icon {
+      color: #f8bbd0; /* Baby pink */
+      font-size: 35px;
+      opacity: 0.85;
+      transition: transform 0.3s ease;
+    }
+
+    .icon-footer .icon:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</body>
+</html>

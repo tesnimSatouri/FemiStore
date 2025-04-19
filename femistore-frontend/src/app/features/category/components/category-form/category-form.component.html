@@ -1,58 +1,264 @@
-<div class="container mt-4">
-  <h2>{{ categoryId ? 'Edit Category' : 'Add Category' }}</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Include Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-4">
+    <h2>{{ categoryId ? 'Edit Category' : 'Add Category' }}</h2>
 
-  <div *ngIf="errorMessage" class="alert-danger">
-    {{ errorMessage }}
+    <div *ngIf="errorMessage" class="alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+      <!-- Name -->
+      <div class="form-group mb-3">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          class="custom-input"
+          formControlName="name"
+          placeholder="Enter category name"
+          required
+        />
+        <div class="error-msg" *ngIf="categoryForm.get('name')?.hasError('required')">
+          Name is required
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group mb-3">
+        <label for="description">Description</label>
+        <input
+          id="description"
+          class="custom-input"
+          formControlName="description"
+          placeholder="Enter description"
+          required
+        />
+        <div class="error-msg" *ngIf="categoryForm.get('description')?.hasError('required')">
+          Description is required
+        </div>
+      </div>
+
+      <!-- Parent Category -->
+      <div class="form-group mb-3">
+        <label for="parentId">Parent Category</label>
+        <select id="parentId" class="custom-select" formControlName="parentId">
+          <option [ngValue]="null">None</option>
+          <option *ngFor="let category of mainCategories" [ngValue]="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn-primary me-2" [disabled]="categoryForm.invalid">
+          {{ categoryId ? 'Update' : 'Add' }}
+        </button>
+        <button type="button" class="btn-warn" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
   </div>
 
-  <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
-    <!-- Name -->
-    <div class="form-group mb-3">
-      <label for="name">Name</label>
-      <input
-        id="name"
-        class="custom-input"
-        formControlName="name"
-        placeholder="Enter category name"
-        required
-      />
-      <div class="error-msg" *ngIf="categoryForm.get('name')?.hasError('required')">
-        Name is required
-      </div>
-    </div>
+  <!-- Icon footer with fashion elements -->
+  <div class="icon-footer">
+    <i class="fas fa-shoe-prints icon"></i> <!-- High heels -->
+    <i class="fas fa-tshirt icon"></i> <!-- Dress -->
+    <i class="fas fa-handbag icon"></i> <!-- Handbag -->
+    <i class="fas fa-gem icon"></i> <!-- Jewelry -->
+    <i class="fas fa-hat-wizard icon"></i> <!-- Hat -->
+    <i class="fas fa-glasses icon"></i> <!-- Sunglasses -->
+    <i class="fas fa-shoe-prints icon"></i>
+    <i class="fas fa-tshirt icon"></i>
+    <i class="fas fa-handbag icon"></i>
+    <i class="fas fa-gem icon"></i>
+  </div>
 
-    <!-- Description -->
-    <div class="form-group mb-3">
-      <label for="description">Description</label>
-      <input
-        id="description"
-        class="custom-input"
-        formControlName="description"
-        placeholder="Enter description"
-        required
-      />
-      <div class="error-msg" *ngIf="categoryForm.get('description')?.hasError('required')">
-        Description is required
-      </div>
-    </div>
+  <style>
+    /* Body styling with white background and centering */
+    body {
+      margin: 0;
+      font-family: 'Lora', serif;
+      background-color: #ffffff; /* Pure white */
+      color: #4a4a4a;
+      position: relative;
+      min-height: 100vh; /* Full viewport height */
+      display: flex;
+      justify-content: center; /* Horizontal centering */
+      align-items: flex-start; /* Align to top */
+      overflow-x: hidden;
+    }
 
-    <!-- Parent Category -->
-    <div class="form-group mb-3">
-      <label for="parentId">Parent Category</label>
-      <select id="parentId" class="custom-select" formControlName="parentId">
-        <option [ngValue]="null">None</option>
-        <option *ngFor="let category of mainCategories" [ngValue]="category.id">
-          {{ category.name }}
-        </option>
-      </select>
-    </div>
+    /* Bottom gradient */
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(to top, rgba(248, 187, 208, 0.7), transparent); /* Baby pink gradient */
+      z-index: 1; /* Behind form, above icons */
+    }
 
-    <!-- Buttons -->
-    <div class="d-flex justify-content-end">
-      <button type="submit" class="btn-primary me-2" [disabled]="categoryForm.invalid">
-        {{ categoryId ? 'Update' : 'Add' }}
-      </button>
-      <button type="button" class="btn-warn" (click)="cancel()">Cancel</button>
-    </div>
-  </form>
-</div>
+    /* Container Styling */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+      background: linear-gradient(135deg, #fff0f5 0%, #f5e6ff 100%);
+      border-radius: 20px;
+      box-shadow: 0 6px 25px rgba(255, 192, 203, 0.3);
+      border: 1px solid #ffe4e1;
+      font-family: 'Lora', serif;
+      position: relative;
+      z-index: 2; /* Above gradient */
+      margin-top: 40px;
+      margin-bottom: 220px; /* Ensure space for gradient and icons */
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      color: #ff6f91;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 3px rgba(255, 105, 145, 0.2);
+    }
+
+    .alert-danger {
+      background-color: #ffe4e1;
+      color: #c71585;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      color: #ff6f91;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .custom-input,
+    .custom-select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e1b8d3;
+      border-radius: 5px;
+      background-color: #fdf7fa;
+      font-size: 16px;
+      color: #333;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .custom-input:focus,
+    .custom-select:focus {
+      outline: none;
+      border-color: #c71585;
+      box-shadow: 0 0 8px rgba(199, 21, 133, 0.3);
+      background-color: #fff;
+    }
+
+    .error-msg {
+      color: #c71585;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .btn-primary {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #c71585, #db7093);
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(90deg, #db7093, #c71585);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .btn-warn {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #ff6f91, #ffe4e1);
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-warn:hover {
+      background: linear-gradient(90deg, #ffe4e1, #ff6f91);
+      transform: translateY(-2px);
+    }
+
+    .d-flex {
+      display: flex;
+    }
+
+    .justify-content-end {
+      justify-content: flex-end;
+    }
+
+    .me-2 {
+      margin-right: 10px;
+    }
+
+    /* Icon Footer Styling */
+    .icon-footer {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      z-index: 0; /* Behind form, below gradient */
+      padding: 0 20px;
+    }
+
+    .icon-footer .icon {
+      color: #f8bbd0; /* Baby pink */
+      font-size: 35px;
+      opacity: 0.85;
+      transition: transform 0.3s ease;
+    }
+
+    .icon-footer .icon:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</body>
+</html>
