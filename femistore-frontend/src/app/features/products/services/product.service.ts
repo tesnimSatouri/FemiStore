@@ -51,14 +51,25 @@ export class ProductService {
 
   updateProduct(id: number, product: Product, imageFile?: File): Observable<Product> {
     const formData = new FormData();
-    formData.append('product', JSON.stringify(product));
+    // Ensure all required fields are included in the product object
+    const productToSend = {
+        id: id,
+        name: product.name,
+        description: product.description || '',
+        price: product.price,
+        stock: product.stock,
+        discountPercentage: product.discountPercentage || 0,
+        imageUrl: product.imageUrl || '' // Include current imageUrl to avoid overwriting
+    };
+    formData.append('product', JSON.stringify(productToSend));
     if (imageFile) {
-      formData.append('image', imageFile);
+        formData.append('image', imageFile);
     }
+    console.log('Updating product with FormData:', formData); // Debug
     return this.http.put<Product>(`${this.apiUrl}/UpdateProduct/${id}`, formData).pipe(
-      catchError(this.handleError<Product>(`updateProduct id=${id}`))
+        catchError(this.handleError<Product>(`updateProduct id=${id}`))
     );
-  }
+}
 
   deleteProduct(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/RemoveProduct/${id}`).pipe(
