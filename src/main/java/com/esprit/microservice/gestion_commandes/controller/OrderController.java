@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/orders")
 public class OrderController {

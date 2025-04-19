@@ -1,0 +1,1350 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+.gitattributes
+.gitignore
+.mvn/wrapper/maven-wrapper.properties
+mvnw
+mvnw.cmd
+pom.xml
+README.md
+src/main/java/com/esprit/microservice/gestion_commandes/controller/OrderController.java
+src/main/java/com/esprit/microservice/gestion_commandes/entity/Order.java
+src/main/java/com/esprit/microservice/gestion_commandes/entity/OrderItem.java
+src/main/java/com/esprit/microservice/gestion_commandes/entity/OrderStatus.java
+src/main/java/com/esprit/microservice/gestion_commandes/GestionCommandesApplication.java
+src/main/java/com/esprit/microservice/gestion_commandes/repository/OrderItemRepository.java
+src/main/java/com/esprit/microservice/gestion_commandes/repository/OrderRepository.java
+src/main/java/com/esprit/microservice/gestion_commandes/service/EmailService.java
+src/main/java/com/esprit/microservice/gestion_commandes/service/OrderService.java
+src/main/resources/application.properties
+src/test/java/com/esprit/microservice/gestion_commandes/GestionCommandesApplicationTests.java
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".gitattributes">
+/mvnw text eol=lf
+*.cmd text eol=crlf
+</file>
+
+<file path=".gitignore">
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+</file>
+
+<file path=".mvn/wrapper/maven-wrapper.properties">
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+wrapperVersion=3.3.2
+distributionType=only-script
+distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.zip
+</file>
+
+<file path="mvnw">
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup batch script, version 3.3.2
+#
+# Optional ENV vars
+# -----------------
+#   JAVA_HOME - location of a JDK home dir, required when download maven via java source
+#   MVNW_REPOURL - repo url base for downloading maven distribution
+#   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading maven
+#   MVNW_VERBOSE - true: enable verbose log; debug: trace the mvnw script; others: silence the output
+# ----------------------------------------------------------------------------
+
+set -euf
+[ "${MVNW_VERBOSE-}" != debug ] || set -x
+
+# OS specific support.
+native_path() { printf %s\\n "$1"; }
+case "$(uname)" in
+CYGWIN* | MINGW*)
+  [ -z "${JAVA_HOME-}" ] || JAVA_HOME="$(cygpath --unix "$JAVA_HOME")"
+  native_path() { cygpath --path --windows "$1"; }
+  ;;
+esac
+
+# set JAVACMD and JAVACCMD
+set_java_home() {
+  # For Cygwin and MinGW, ensure paths are in Unix format before anything is touched
+  if [ -n "${JAVA_HOME-}" ]; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ]; then
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+      JAVACCMD="$JAVA_HOME/jre/sh/javac"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+      JAVACCMD="$JAVA_HOME/bin/javac"
+
+      if [ ! -x "$JAVACMD" ] || [ ! -x "$JAVACCMD" ]; then
+        echo "The JAVA_HOME environment variable is not defined correctly, so mvnw cannot run." >&2
+        echo "JAVA_HOME is set to \"$JAVA_HOME\", but \"\$JAVA_HOME/bin/java\" or \"\$JAVA_HOME/bin/javac\" does not exist." >&2
+        return 1
+      fi
+    fi
+  else
+    JAVACMD="$(
+      'set' +e
+      'unset' -f command 2>/dev/null
+      'command' -v java
+    )" || :
+    JAVACCMD="$(
+      'set' +e
+      'unset' -f command 2>/dev/null
+      'command' -v javac
+    )" || :
+
+    if [ ! -x "${JAVACMD-}" ] || [ ! -x "${JAVACCMD-}" ]; then
+      echo "The java/javac command does not exist in PATH nor is JAVA_HOME set, so mvnw cannot run." >&2
+      return 1
+    fi
+  fi
+}
+
+# hash string like Java String::hashCode
+hash_string() {
+  str="${1:-}" h=0
+  while [ -n "$str" ]; do
+    char="${str%"${str#?}"}"
+    h=$(((h * 31 + $(LC_CTYPE=C printf %d "'$char")) % 4294967296))
+    str="${str#?}"
+  done
+  printf %x\\n $h
+}
+
+verbose() { :; }
+[ "${MVNW_VERBOSE-}" != true ] || verbose() { printf %s\\n "${1-}"; }
+
+die() {
+  printf %s\\n "$1" >&2
+  exit 1
+}
+
+trim() {
+  # MWRAPPER-139:
+  #   Trims trailing and leading whitespace, carriage returns, tabs, and linefeeds.
+  #   Needed for removing poorly interpreted newline sequences when running in more
+  #   exotic environments such as mingw bash on Windows.
+  printf "%s" "${1}" | tr -d '[:space:]'
+}
+
+# parse distributionUrl and optional distributionSha256Sum, requires .mvn/wrapper/maven-wrapper.properties
+while IFS="=" read -r key value; do
+  case "${key-}" in
+  distributionUrl) distributionUrl=$(trim "${value-}") ;;
+  distributionSha256Sum) distributionSha256Sum=$(trim "${value-}") ;;
+  esac
+done <"${0%/*}/.mvn/wrapper/maven-wrapper.properties"
+[ -n "${distributionUrl-}" ] || die "cannot read distributionUrl property in ${0%/*}/.mvn/wrapper/maven-wrapper.properties"
+
+case "${distributionUrl##*/}" in
+maven-mvnd-*bin.*)
+  MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/
+  case "${PROCESSOR_ARCHITECTURE-}${PROCESSOR_ARCHITEW6432-}:$(uname -a)" in
+  *AMD64:CYGWIN* | *AMD64:MINGW*) distributionPlatform=windows-amd64 ;;
+  :Darwin*x86_64) distributionPlatform=darwin-amd64 ;;
+  :Darwin*arm64) distributionPlatform=darwin-aarch64 ;;
+  :Linux*x86_64*) distributionPlatform=linux-amd64 ;;
+  *)
+    echo "Cannot detect native platform for mvnd on $(uname)-$(uname -m), use pure java version" >&2
+    distributionPlatform=linux-amd64
+    ;;
+  esac
+  distributionUrl="${distributionUrl%-bin.*}-$distributionPlatform.zip"
+  ;;
+maven-mvnd-*) MVN_CMD=mvnd.sh _MVNW_REPO_PATTERN=/maven/mvnd/ ;;
+*) MVN_CMD="mvn${0##*/mvnw}" _MVNW_REPO_PATTERN=/org/apache/maven/ ;;
+esac
+
+# apply MVNW_REPOURL and calculate MAVEN_HOME
+# maven home pattern: ~/.m2/wrapper/dists/{apache-maven-<version>,maven-mvnd-<version>-<platform>}/<hash>
+[ -z "${MVNW_REPOURL-}" ] || distributionUrl="$MVNW_REPOURL$_MVNW_REPO_PATTERN${distributionUrl#*"$_MVNW_REPO_PATTERN"}"
+distributionUrlName="${distributionUrl##*/}"
+distributionUrlNameMain="${distributionUrlName%.*}"
+distributionUrlNameMain="${distributionUrlNameMain%-bin}"
+MAVEN_USER_HOME="${MAVEN_USER_HOME:-${HOME}/.m2}"
+MAVEN_HOME="${MAVEN_USER_HOME}/wrapper/dists/${distributionUrlNameMain-}/$(hash_string "$distributionUrl")"
+
+exec_maven() {
+  unset MVNW_VERBOSE MVNW_USERNAME MVNW_PASSWORD MVNW_REPOURL || :
+  exec "$MAVEN_HOME/bin/$MVN_CMD" "$@" || die "cannot exec $MAVEN_HOME/bin/$MVN_CMD"
+}
+
+if [ -d "$MAVEN_HOME" ]; then
+  verbose "found existing MAVEN_HOME at $MAVEN_HOME"
+  exec_maven "$@"
+fi
+
+case "${distributionUrl-}" in
+*?-bin.zip | *?maven-mvnd-?*-?*.zip) ;;
+*) die "distributionUrl is not valid, must match *-bin.zip or maven-mvnd-*.zip, but found '${distributionUrl-}'" ;;
+esac
+
+# prepare tmp dir
+if TMP_DOWNLOAD_DIR="$(mktemp -d)" && [ -d "$TMP_DOWNLOAD_DIR" ]; then
+  clean() { rm -rf -- "$TMP_DOWNLOAD_DIR"; }
+  trap clean HUP INT TERM EXIT
+else
+  die "cannot create temp dir"
+fi
+
+mkdir -p -- "${MAVEN_HOME%/*}"
+
+# Download and Install Apache Maven
+verbose "Couldn't find MAVEN_HOME, downloading and installing it ..."
+verbose "Downloading from: $distributionUrl"
+verbose "Downloading to: $TMP_DOWNLOAD_DIR/$distributionUrlName"
+
+# select .zip or .tar.gz
+if ! command -v unzip >/dev/null; then
+  distributionUrl="${distributionUrl%.zip}.tar.gz"
+  distributionUrlName="${distributionUrl##*/}"
+fi
+
+# verbose opt
+__MVNW_QUIET_WGET=--quiet __MVNW_QUIET_CURL=--silent __MVNW_QUIET_UNZIP=-q __MVNW_QUIET_TAR=''
+[ "${MVNW_VERBOSE-}" != true ] || __MVNW_QUIET_WGET='' __MVNW_QUIET_CURL='' __MVNW_QUIET_UNZIP='' __MVNW_QUIET_TAR=v
+
+# normalize http auth
+case "${MVNW_PASSWORD:+has-password}" in
+'') MVNW_USERNAME='' MVNW_PASSWORD='' ;;
+has-password) [ -n "${MVNW_USERNAME-}" ] || MVNW_USERNAME='' MVNW_PASSWORD='' ;;
+esac
+
+if [ -z "${MVNW_USERNAME-}" ] && command -v wget >/dev/null; then
+  verbose "Found wget ... using wget"
+  wget ${__MVNW_QUIET_WGET:+"$__MVNW_QUIET_WGET"} "$distributionUrl" -O "$TMP_DOWNLOAD_DIR/$distributionUrlName" || die "wget: Failed to fetch $distributionUrl"
+elif [ -z "${MVNW_USERNAME-}" ] && command -v curl >/dev/null; then
+  verbose "Found curl ... using curl"
+  curl ${__MVNW_QUIET_CURL:+"$__MVNW_QUIET_CURL"} -f -L -o "$TMP_DOWNLOAD_DIR/$distributionUrlName" "$distributionUrl" || die "curl: Failed to fetch $distributionUrl"
+elif set_java_home; then
+  verbose "Falling back to use Java to download"
+  javaSource="$TMP_DOWNLOAD_DIR/Downloader.java"
+  targetZip="$TMP_DOWNLOAD_DIR/$distributionUrlName"
+  cat >"$javaSource" <<-END
+	public class Downloader extends java.net.Authenticator
+	{
+	  protected java.net.PasswordAuthentication getPasswordAuthentication()
+	  {
+	    return new java.net.PasswordAuthentication( System.getenv( "MVNW_USERNAME" ), System.getenv( "MVNW_PASSWORD" ).toCharArray() );
+	  }
+	  public static void main( String[] args ) throws Exception
+	  {
+	    setDefault( new Downloader() );
+	    java.nio.file.Files.copy( java.net.URI.create( args[0] ).toURL().openStream(), java.nio.file.Paths.get( args[1] ).toAbsolutePath().normalize() );
+	  }
+	}
+	END
+  # For Cygwin/MinGW, switch paths to Windows format before running javac and java
+  verbose " - Compiling Downloader.java ..."
+  "$(native_path "$JAVACCMD")" "$(native_path "$javaSource")" || die "Failed to compile Downloader.java"
+  verbose " - Running Downloader.java ..."
+  "$(native_path "$JAVACMD")" -cp "$(native_path "$TMP_DOWNLOAD_DIR")" Downloader "$distributionUrl" "$(native_path "$targetZip")"
+fi
+
+# If specified, validate the SHA-256 sum of the Maven distribution zip file
+if [ -n "${distributionSha256Sum-}" ]; then
+  distributionSha256Result=false
+  if [ "$MVN_CMD" = mvnd.sh ]; then
+    echo "Checksum validation is not supported for maven-mvnd." >&2
+    echo "Please disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties." >&2
+    exit 1
+  elif command -v sha256sum >/dev/null; then
+    if echo "$distributionSha256Sum  $TMP_DOWNLOAD_DIR/$distributionUrlName" | sha256sum -c >/dev/null 2>&1; then
+      distributionSha256Result=true
+    fi
+  elif command -v shasum >/dev/null; then
+    if echo "$distributionSha256Sum  $TMP_DOWNLOAD_DIR/$distributionUrlName" | shasum -a 256 -c >/dev/null 2>&1; then
+      distributionSha256Result=true
+    fi
+  else
+    echo "Checksum validation was requested but neither 'sha256sum' or 'shasum' are available." >&2
+    echo "Please install either command, or disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties." >&2
+    exit 1
+  fi
+  if [ $distributionSha256Result = false ]; then
+    echo "Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised." >&2
+    echo "If you updated your Maven version, you need to update the specified distributionSha256Sum property." >&2
+    exit 1
+  fi
+fi
+
+# unzip and move
+if command -v unzip >/dev/null; then
+  unzip ${__MVNW_QUIET_UNZIP:+"$__MVNW_QUIET_UNZIP"} "$TMP_DOWNLOAD_DIR/$distributionUrlName" -d "$TMP_DOWNLOAD_DIR" || die "failed to unzip"
+else
+  tar xzf${__MVNW_QUIET_TAR:+"$__MVNW_QUIET_TAR"} "$TMP_DOWNLOAD_DIR/$distributionUrlName" -C "$TMP_DOWNLOAD_DIR" || die "failed to untar"
+fi
+printf %s\\n "$distributionUrl" >"$TMP_DOWNLOAD_DIR/$distributionUrlNameMain/mvnw.url"
+mv -- "$TMP_DOWNLOAD_DIR/$distributionUrlNameMain" "$MAVEN_HOME" || [ -d "$MAVEN_HOME" ] || die "fail to move MAVEN_HOME"
+
+clean || :
+exec_maven "$@"
+</file>
+
+<file path="mvnw.cmd">
+<# : batch portion
+@REM ----------------------------------------------------------------------------
+@REM Licensed to the Apache Software Foundation (ASF) under one
+@REM or more contributor license agreements.  See the NOTICE file
+@REM distributed with this work for additional information
+@REM regarding copyright ownership.  The ASF licenses this file
+@REM to you under the Apache License, Version 2.0 (the
+@REM "License"); you may not use this file except in compliance
+@REM with the License.  You may obtain a copy of the License at
+@REM
+@REM    http://www.apache.org/licenses/LICENSE-2.0
+@REM
+@REM Unless required by applicable law or agreed to in writing,
+@REM software distributed under the License is distributed on an
+@REM "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+@REM KIND, either express or implied.  See the License for the
+@REM specific language governing permissions and limitations
+@REM under the License.
+@REM ----------------------------------------------------------------------------
+
+@REM ----------------------------------------------------------------------------
+@REM Apache Maven Wrapper startup batch script, version 3.3.2
+@REM
+@REM Optional ENV vars
+@REM   MVNW_REPOURL - repo url base for downloading maven distribution
+@REM   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading maven
+@REM   MVNW_VERBOSE - true: enable verbose log; others: silence the output
+@REM ----------------------------------------------------------------------------
+
+@IF "%__MVNW_ARG0_NAME__%"=="" (SET __MVNW_ARG0_NAME__=%~nx0)
+@SET __MVNW_CMD__=
+@SET __MVNW_ERROR__=
+@SET __MVNW_PSMODULEP_SAVE=%PSModulePath%
+@SET PSModulePath=
+@FOR /F "usebackq tokens=1* delims==" %%A IN (`powershell -noprofile "& {$scriptDir='%~dp0'; $script='%__MVNW_ARG0_NAME__%'; icm -ScriptBlock ([Scriptblock]::Create((Get-Content -Raw '%~f0'))) -NoNewScope}"`) DO @(
+  IF "%%A"=="MVN_CMD" (set __MVNW_CMD__=%%B) ELSE IF "%%B"=="" (echo %%A) ELSE (echo %%A=%%B)
+)
+@SET PSModulePath=%__MVNW_PSMODULEP_SAVE%
+@SET __MVNW_PSMODULEP_SAVE=
+@SET __MVNW_ARG0_NAME__=
+@SET MVNW_USERNAME=
+@SET MVNW_PASSWORD=
+@IF NOT "%__MVNW_CMD__%"=="" (%__MVNW_CMD__% %*)
+@echo Cannot start maven from wrapper >&2 && exit /b 1
+@GOTO :EOF
+: end batch / begin powershell #>
+
+$ErrorActionPreference = "Stop"
+if ($env:MVNW_VERBOSE -eq "true") {
+  $VerbosePreference = "Continue"
+}
+
+# calculate distributionUrl, requires .mvn/wrapper/maven-wrapper.properties
+$distributionUrl = (Get-Content -Raw "$scriptDir/.mvn/wrapper/maven-wrapper.properties" | ConvertFrom-StringData).distributionUrl
+if (!$distributionUrl) {
+  Write-Error "cannot read distributionUrl property in $scriptDir/.mvn/wrapper/maven-wrapper.properties"
+}
+
+switch -wildcard -casesensitive ( $($distributionUrl -replace '^.*/','') ) {
+  "maven-mvnd-*" {
+    $USE_MVND = $true
+    $distributionUrl = $distributionUrl -replace '-bin\.[^.]*$',"-windows-amd64.zip"
+    $MVN_CMD = "mvnd.cmd"
+    break
+  }
+  default {
+    $USE_MVND = $false
+    $MVN_CMD = $script -replace '^mvnw','mvn'
+    break
+  }
+}
+
+# apply MVNW_REPOURL and calculate MAVEN_HOME
+# maven home pattern: ~/.m2/wrapper/dists/{apache-maven-<version>,maven-mvnd-<version>-<platform>}/<hash>
+if ($env:MVNW_REPOURL) {
+  $MVNW_REPO_PATTERN = if ($USE_MVND) { "/org/apache/maven/" } else { "/maven/mvnd/" }
+  $distributionUrl = "$env:MVNW_REPOURL$MVNW_REPO_PATTERN$($distributionUrl -replace '^.*'+$MVNW_REPO_PATTERN,'')"
+}
+$distributionUrlName = $distributionUrl -replace '^.*/',''
+$distributionUrlNameMain = $distributionUrlName -replace '\.[^.]*$','' -replace '-bin$',''
+$MAVEN_HOME_PARENT = "$HOME/.m2/wrapper/dists/$distributionUrlNameMain"
+if ($env:MAVEN_USER_HOME) {
+  $MAVEN_HOME_PARENT = "$env:MAVEN_USER_HOME/wrapper/dists/$distributionUrlNameMain"
+}
+$MAVEN_HOME_NAME = ([System.Security.Cryptography.MD5]::Create().ComputeHash([byte[]][char[]]$distributionUrl) | ForEach-Object {$_.ToString("x2")}) -join ''
+$MAVEN_HOME = "$MAVEN_HOME_PARENT/$MAVEN_HOME_NAME"
+
+if (Test-Path -Path "$MAVEN_HOME" -PathType Container) {
+  Write-Verbose "found existing MAVEN_HOME at $MAVEN_HOME"
+  Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
+  exit $?
+}
+
+if (! $distributionUrlNameMain -or ($distributionUrlName -eq $distributionUrlNameMain)) {
+  Write-Error "distributionUrl is not valid, must end with *-bin.zip, but found $distributionUrl"
+}
+
+# prepare tmp dir
+$TMP_DOWNLOAD_DIR_HOLDER = New-TemporaryFile
+$TMP_DOWNLOAD_DIR = New-Item -Itemtype Directory -Path "$TMP_DOWNLOAD_DIR_HOLDER.dir"
+$TMP_DOWNLOAD_DIR_HOLDER.Delete() | Out-Null
+trap {
+  if ($TMP_DOWNLOAD_DIR.Exists) {
+    try { Remove-Item $TMP_DOWNLOAD_DIR -Recurse -Force | Out-Null }
+    catch { Write-Warning "Cannot remove $TMP_DOWNLOAD_DIR" }
+  }
+}
+
+New-Item -Itemtype Directory -Path "$MAVEN_HOME_PARENT" -Force | Out-Null
+
+# Download and Install Apache Maven
+Write-Verbose "Couldn't find MAVEN_HOME, downloading and installing it ..."
+Write-Verbose "Downloading from: $distributionUrl"
+Write-Verbose "Downloading to: $TMP_DOWNLOAD_DIR/$distributionUrlName"
+
+$webclient = New-Object System.Net.WebClient
+if ($env:MVNW_USERNAME -and $env:MVNW_PASSWORD) {
+  $webclient.Credentials = New-Object System.Net.NetworkCredential($env:MVNW_USERNAME, $env:MVNW_PASSWORD)
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$webclient.DownloadFile($distributionUrl, "$TMP_DOWNLOAD_DIR/$distributionUrlName") | Out-Null
+
+# If specified, validate the SHA-256 sum of the Maven distribution zip file
+$distributionSha256Sum = (Get-Content -Raw "$scriptDir/.mvn/wrapper/maven-wrapper.properties" | ConvertFrom-StringData).distributionSha256Sum
+if ($distributionSha256Sum) {
+  if ($USE_MVND) {
+    Write-Error "Checksum validation is not supported for maven-mvnd. `nPlease disable validation by removing 'distributionSha256Sum' from your maven-wrapper.properties."
+  }
+  Import-Module $PSHOME\Modules\Microsoft.PowerShell.Utility -Function Get-FileHash
+  if ((Get-FileHash "$TMP_DOWNLOAD_DIR/$distributionUrlName" -Algorithm SHA256).Hash.ToLower() -ne $distributionSha256Sum) {
+    Write-Error "Error: Failed to validate Maven distribution SHA-256, your Maven distribution might be compromised. If you updated your Maven version, you need to update the specified distributionSha256Sum property."
+  }
+}
+
+# unzip and move
+Expand-Archive "$TMP_DOWNLOAD_DIR/$distributionUrlName" -DestinationPath "$TMP_DOWNLOAD_DIR" | Out-Null
+Rename-Item -Path "$TMP_DOWNLOAD_DIR/$distributionUrlNameMain" -NewName $MAVEN_HOME_NAME | Out-Null
+try {
+  Move-Item -Path "$TMP_DOWNLOAD_DIR/$MAVEN_HOME_NAME" -Destination $MAVEN_HOME_PARENT | Out-Null
+} catch {
+  if (! (Test-Path -Path "$MAVEN_HOME" -PathType Container)) {
+    Write-Error "fail to move MAVEN_HOME"
+  }
+} finally {
+  try { Remove-Item $TMP_DOWNLOAD_DIR -Recurse -Force | Out-Null }
+  catch { Write-Warning "Cannot remove $TMP_DOWNLOAD_DIR" }
+}
+
+Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/repository/OrderItemRepository.java">
+package com.esprit.microservice.gestion_commandes.repository;
+
+import com.esprit.microservice.gestion_commandes.entity.OrderItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
+}
+</file>
+
+<file path="src/test/java/com/esprit/microservice/gestion_commandes/GestionCommandesApplicationTests.java">
+package com.esprit.microservice.gestion_commandes;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class GestionCommandesApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
+</file>
+
+<file path="README.md">
+# femistore
+
+# 🛒 Gestion des Commandes - Microservice
+
+Microservice Spring Boot pour gérer les commandes, les articles commandés et les statuts dans une architecture orientée microservices.
+
+![Current Version](https://img.shields.io/badge/version-v1.0-blue)
+![GitHub contributors](https://img.shields.io/github/contributors/maryem001/femistore)
+![GitHub stars](https://img.shields.io/github/stars/maryem001/femistore)
+![GitHub top language](https://img.shields.io/github/languages/top/maryem001/femistore)
+
+&nbsp;&nbsp;&nbsp;**Coached by:** `Sarra Abidi`  
+&nbsp;&nbsp;&nbsp;**Created by:** `Meriem Touzri`
+
+## 👩‍💻 Auteur
+
+- **Nom d'utilisateur GitHub :** maryem001
+- **Nom du repository :** femistore
+## Table of Contents
+
+- [📖 Présentation du Projet](#📖-présentation-du-projet)
+- [👥 Membres de l'Équipe et Contributions](#👥-membres-de-léquipe-et-contributions)
+- [📁 Structure du Projet](#📁-structure-du-projet)
+- [✅ Fonctionnalités](#✅-fonctionnalités)
+- [🌐 API REST - OrderController](#🌐-api-rest---ordercontroller)
+- [🔧 Technologies utilisées](#🔧-technologies-utilisées)
+- [📬 Email de Confirmation](#📬-email-de-confirmation)
+- [📅 Tâches planifiées](#📅-tâches-planifiées)
+- [⚙️ Configuration (application.properties)](#⚙️-configuration-applicationproperties)
+- [🚀 Démarrer le projet](#🚀-démarrer-le-projet)
+- [📜 License](#📜-license)
+
+## 📁 Structure du projet
+
+```
+gestion_commandes/
+├── controller/
+│   └── OrderController.java
+├── entity/
+│   ├── Order.java
+│   ├── OrderItem.java
+│   └── OrderStatus.java
+├── repository/
+│   ├── OrderItemRepository.java
+│   └── OrderRepository.java
+├── service/
+│   ├── EmailService.java
+│   └── OrderService.java
+├── resources/
+│   └── application.properties
+└── GestionCommandesApplication.java
+```
+
+## ✅ Fonctionnalités
+
+### 🎯 OrderService
+
+- `getAllOrders()` : Récupérer toutes les commandes.
+- `createOrder()` : Créer une commande avec ses articles, calcule le prix total, envoie un email de confirmation.
+- `updateOrder()` : Mettre à jour une commande et recalculer son prix.
+- `deleteOrder()` : Supprimer une commande.
+- `getOrderStats()` : Statistiques globales (nombre, revenus, moyenne).
+- `getMostOrderedProducts()` : Top 5 des produits les plus commandés.
+- `updateOrderStatus()` : Mise à jour du statut (`PENDING`, `EXPIRED`, `DELIVERED`, `CANCELLED`...).
+- `getOrdersByStatus()` : Liste des commandes selon leur statut.
+- `getAbandonedOrders()` : Récupérer les commandes abandonnées.
+- `expireAbandonedOrders()` : Planificateur qui expire les commandes non finalisées.
+- `getOrdersByUserId()` : Récupère les commandes d’un utilisateur spécifique.
+
+### 🌐 OrderController
+
+- `GET /orders` : Toutes les commandes.
+- `POST /orders` : Créer une commande.
+- `PUT /orders/{id}` : Modifier une commande.
+- `DELETE /orders/{id}` : Supprimer une commande.
+- `GET /orders/stats` : Statistiques générales.
+- `GET /orders/top-products` : Top 5 produits.
+- `PATCH /orders/{id}/status` : Mise à jour du statut.
+- `GET /orders/status?status=PENDING` : Filtrer par statut.
+- `GET /orders/abandoned?minutes=30` : Commandes abandonnées depuis 30 min.
+- `GET /orders/user/{userId}` : Commandes d’un utilisateur.
+
+## 🔧 Technologies utilisées
+
+- Java 17
+- Spring Boot
+- Spring Data JPA
+- H2 Database
+- Spring Scheduling (tâches automatiques)
+- RESTful API
+
+## 📬 Email de Confirmation
+
+Lors de la création d’une commande, un email de confirmation est envoyé via le `EmailService`.
+
+## 📅 Tâches planifiées
+
+- Expiration automatique des commandes **PENDING** après 30 minutes d'inactivité (via `@Scheduled`).
+
+🚀 Démarrer le projet
+1. Cloner le dépôt : git clone https://github.com/maryem001/femistore.git
+2. Ouvrir le dossier gestion_commandes dans votre IDE (IntelliJ, VSCode...)
+
+3. Lancer l'application avec Spring Boot
+
+4. Accéder à la console H2 : http://localhost:8087/h2-console
+
+## License
+
+`Gestion Commandes` est un projet académique réalisé dans le cadre du module **Microservices** à ESPRIT sous licence AFL-3.0.
+
+> Ce microservice est conçu pour être intégré dans un système plus large de e-commerce avec d'autres services comme produit, paiement, utilisateur...
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/entity/OrderStatus.java">
+package com.esprit.microservice.gestion_commandes.entity;
+
+public enum OrderStatus {
+    PENDING,
+    EXPIRED,
+    DELIVERED,
+    CANCELLED
+}
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/service/EmailService.java">
+package com.esprit.microservice.gestion_commandes.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired; // Keep if needed, but constructor injection is used
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException; // Import Spring's MailException
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class EmailService {
+
+    // Create a Logger instance for this class
+    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
+
+    private final JavaMailSender mailSender;
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
+
+    // Constructor injection is good practice
+    @Autowired // Optional if this is the only constructor
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    public void sendOrderConfirmationEmail(String toEmail, Long orderId, double totalPrice) {
+        // Log entry into the method and the parameters received
+        log.info("Attempting to send order confirmation email. To: '{}', Order ID: {}, Total Price: {}",
+                toEmail, orderId, totalPrice);
+
+        // Validate recipient email (basic check)
+        if (toEmail == null || toEmail.trim().isEmpty()) {
+            log.warn("Cannot send order confirmation email: Recipient email address is null or empty. Order ID: {}", orderId);
+            return; // Stop processing if email is invalid
+        }
+
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(toEmail);
+            message.setSubject("Confirmation de votre commande - ID: " + orderId); // Include ID in subject for easier tracking
+            message.setText("Bonjour,\n\nVotre commande a été créée avec succès !\n\n"
+                    + "Numéro de commande : " + orderId + "\n"
+                    + "Montant total : " + String.format("%.2f", totalPrice) + " TND\n\n" // Format price
+                    + "Merci de votre confiance !");
+
+            // Ensure 'from' address is set
+            if (fromEmail == null || fromEmail.trim().isEmpty()) {
+                log.error("Cannot send email: 'spring.mail.username' (from address) is not configured correctly.");
+                // Optionally throw an exception or handle this configuration error appropriately
+                return;
+            }
+            message.setFrom(fromEmail);
+
+            log.debug("Sending email message object: {}", message); // Log message details at DEBUG level if needed
+
+            // Attempt to send the email
+            mailSender.send(message);
+
+            // Log success if no exception was thrown
+            log.info("Successfully sent order confirmation email to '{}' for Order ID: {}", toEmail, orderId);
+
+        } catch (MailException e) {
+            // Log specific Spring MailExceptions (authentication, connection issues, etc.)
+            log.error("Failed to send order confirmation email to '{}' for Order ID: {}. Error: {}",
+                    toEmail, orderId, e.getMessage(), e); // Include the exception for stack trace
+            // Depending on your application's needs, you might want to:
+            // - Re-throw the exception or a custom exception
+            // - Add the failed email task to a retry queue
+            // - Notify an admin
+        } catch (Exception e) {
+            // Catch any other unexpected exceptions during the process
+            log.error("An unexpected error occurred while preparing or sending the order confirmation email to '{}' for Order ID: {}. Error: {}",
+                    toEmail, orderId, e.getMessage(), e);
+        }
+    }
+}
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/entity/OrderItem.java">
+package com.esprit.microservice.gestion_commandes.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+@Entity
+public class OrderItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Long productId;
+    private int quantite;
+    private double prixUnitaire;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    @JsonIgnore // Empêche la récursion infinie lors du retour JSON
+    private Order order;
+
+    // Constructeurs
+    public OrderItem() {
+    }
+
+    public OrderItem(Long productId, int quantite, double prixUnitaire, Order order) {
+        this.productId = productId;
+        this.quantite = quantite;
+        this.prixUnitaire = prixUnitaire;
+        this.order = order;
+    }
+
+    // Getters et Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
+
+    public int getQuantite() { return quantite; }
+    public void setQuantite(int quantite) { this.quantite = quantite; }
+
+    public double getPrixUnitaire() { return prixUnitaire; }
+    public void setPrixUnitaire(double prixUnitaire) { this.prixUnitaire = prixUnitaire; }
+
+    public Order getOrder() { return order; }
+    public void setOrder(Order order) { this.order = order; }
+}
+</file>
+
+<file path="src/main/resources/application.properties">
+# Configuration du serveur
+server.port=8087
+spring.application.name=Order-Service
+#eureka registration
+eureka.client.register-with-eureka=true
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+eureka.client.enabled=true
+
+
+# H2
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2
+spring.h2.console.settings.web-allow-others=true
+# Datasource
+spring.datasource.url=jdbc:h2:mem:orders_db
+spring.datasource.username=sa
+spring.datasource.password=
+spring.datasource.driver-class-name=org.h2.Driver
+spring.jpa.hibernate.ddl-auto = create
+#email
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=mariemtouzri5@gmail.com
+spring.mail.password=kxaa drzy thsd qqey
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+</file>
+
+<file path="pom.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.4.2</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.esprit.microservice</groupId>
+	<artifactId>gestion_commandes</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>gestion_commandes</name>
+	<description>gestion_commandes</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>17</java.version>
+		<spring-cloud.version>2024.0.0</spring-cloud.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/GestionCommandesApplication.java">
+package com.esprit.microservice.gestion_commandes;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableScheduling
+public class GestionCommandesApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(GestionCommandesApplication.class, args);
+	}
+
+}
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/entity/Order.java">
+package com.esprit.microservice.gestion_commandes.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = "orders")
+public class Order {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Long userId;
+    private double totalPrice;
+
+    private LocalDate dateCommande; // Pour affichage classique
+    private LocalDateTime createdAt; // Pour gestion du temps réel
+
+    private String email;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus statut;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems;
+
+    // Initialisation automatique
+    @PrePersist
+    protected void onCreate() {
+        this.dateCommande = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
+        if (this.statut == null) {
+            this.statut = OrderStatus.PENDING;
+        }
+    }
+
+    //Constructeurs
+    public Order() {}
+
+    public Order(Long userId, double totalPrice, List<OrderItem> orderItems, String email) {
+        this.userId = userId;
+        this.totalPrice = totalPrice;
+        this.email = email; // Initialisation de l'email
+        this.dateCommande = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
+        this.statut = OrderStatus.PENDING;
+        this.orderItems = orderItems;
+    }
+
+    // 🔹 Getters / Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+
+    public double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
+
+    public LocalDate getDateCommande() { return dateCommande; }
+    public void setDateCommande(LocalDate dateCommande) { this.dateCommande = dateCommande; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public OrderStatus getStatut() { return statut; }
+    public void setStatut(OrderStatus statut) { this.statut = statut; }
+
+    public List<OrderItem> getOrderItems() { return orderItems; }
+    public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/repository/OrderRepository.java">
+package com.esprit.microservice.gestion_commandes.repository;
+
+import com.esprit.microservice.gestion_commandes.entity.Order;
+import com.esprit.microservice.gestion_commandes.entity.OrderStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    List<Order> findByStatut(OrderStatus status);
+    List<Order> findByStatutAndCreatedAtBefore(OrderStatus statut, LocalDateTime cutoffTime);
+    List<Order> findByUserId(Long userId);
+
+
+}
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/controller/OrderController.java">
+package com.esprit.microservice.gestion_commandes.controller;
+
+import com.esprit.microservice.gestion_commandes.entity.Order;
+import com.esprit.microservice.gestion_commandes.entity.OrderStatus;
+import com.esprit.microservice.gestion_commandes.service.OrderService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/orders")
+public class OrderController {
+
+    private final OrderService orderService;
+
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+
+    @PostMapping
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        try {
+            Order createdOrder = orderService.createOrder(order);
+            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // Mettre à jour une commande
+    @PutMapping("/{id}")
+    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order updatedOrder) {
+        try {
+            Order order = orderService.updateOrder(id, updatedOrder);
+            return ResponseEntity.ok(order);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Supprimer une commande
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteOrder(@PathVariable Long id) {
+        boolean deleted = orderService.deleteOrder(id);
+        if (deleted) {
+            return ResponseEntity.ok("Commande supprimée avec succès !");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée avec l'ID : " + id);
+        }
+    }
+    //stats
+    @GetMapping("/stats")
+    public Map<String, Object> getOrderStatistics() {
+        return orderService.getOrderStats();
+    }
+    //  obtenir les produits les plus commandés
+    @GetMapping("/top-products")
+    public Map<Long, Integer> getTopProducts() {
+        return orderService.getMostOrderedProducts();
+    }
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
+        try {
+            Order updatedOrder = orderService.updateOrderStatus(id, status);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/status")
+    public ResponseEntity<List<Order>> getOrdersByStatus(@RequestParam OrderStatus status) {
+        List<Order> orders = orderService.getOrdersByStatus(status);
+        return ResponseEntity.ok(orders);
+    }
+    @GetMapping("/abandoned")
+    public ResponseEntity<List<Order>> getAbandonedOrders(@RequestParam(defaultValue = "30") long minutes) {
+        List<Order> abandonedOrders = orderService.getAbandonedOrders(Duration.ofMinutes(minutes));
+        return ResponseEntity.ok(abandonedOrders);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Long userId) {
+        List<Order> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
+    }
+
+
+
+}
+</file>
+
+<file path="src/main/java/com/esprit/microservice/gestion_commandes/service/OrderService.java">
+package com.esprit.microservice.gestion_commandes.service;
+
+import com.esprit.microservice.gestion_commandes.entity.Order;
+import com.esprit.microservice.gestion_commandes.entity.OrderItem;
+import com.esprit.microservice.gestion_commandes.entity.OrderStatus;
+import com.esprit.microservice.gestion_commandes.repository.OrderRepository;
+import com.esprit.microservice.gestion_commandes.repository.OrderItemRepository;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final EmailService emailService;
+
+    // Injection de dépendance via constructeur
+    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, EmailService emailService) {
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
+        this.emailService = emailService;
+
+    }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Transactional
+    public Order createOrder(Order order) {
+        if (order == null || order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
+            throw new IllegalArgumentException("Une commande doit contenir au moins un article.");
+        }
+
+        // Associer chaque OrderItem à l'Order et calculer le prix total
+        double totalPrice = 0;
+        for (OrderItem item : order.getOrderItems()) {
+            item.setOrder(order);
+            totalPrice += item.getPrixUnitaire() * item.getQuantite();
+        }
+        order.setTotalPrice(totalPrice);
+        order.setStatut(OrderStatus.PENDING); // Statut par défaut
+
+        // Sauvegarde en cascade grâce à `CascadeType.ALL` sur OrderItems
+        Order savedOrder = orderRepository.save(order);
+
+        // Envoi de l'email de confirmation
+        emailService.sendOrderConfirmationEmail(order.getEmail(), savedOrder.getId(), savedOrder.getTotalPrice());
+
+        return savedOrder;
+
+    }
+
+    // Mettre à jour une commande existante
+    @Transactional
+    public Order updateOrder(Long id, Order updatedOrder) {
+        return orderRepository.findById(id).map(order -> {
+            order.setUserId(updatedOrder.getUserId());
+            order.setStatut(updatedOrder.getStatut());
+
+            // Mise à jour des articles associés
+            if (updatedOrder.getOrderItems() != null) {
+                order.getOrderItems().clear();
+                for (OrderItem item : updatedOrder.getOrderItems()) {
+                    item.setOrder(order);
+                    order.getOrderItems().add(item);
+                }
+            }
+
+            // Recalcul du prix total
+            double totalPrice = order.getOrderItems().stream()
+                    .mapToDouble(item -> item.getPrixUnitaire() * item.getQuantite())
+                    .sum();
+            order.setTotalPrice(totalPrice);
+
+            return orderRepository.save(order);
+        }).orElseThrow(() -> new RuntimeException("Commande non trouvée avec l'ID : " + id));
+    }
+
+    @Transactional
+    public boolean deleteOrder(Long id) {
+        if (orderRepository.existsById(id)) {
+            orderRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+    public Map<String, Object> getOrderStats() {
+        List<Order> orders = orderRepository.findAll();
+
+        double totalRevenue = orders.stream().mapToDouble(Order::getTotalPrice).sum();
+        double averageOrderValue = orders.isEmpty() ? 0 : totalRevenue / orders.size();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("nombreCommandes", orders.size());
+        stats.put("revenuTotal", totalRevenue);
+        stats.put("valeurMoyenneCommande", averageOrderValue);
+
+        return stats;
+    }
+    public Map<Long, Integer> getMostOrderedProducts() {
+        List<Order> orders = orderRepository.findAll();
+
+        Map<Long, Integer> productCount = new HashMap<>();
+
+        for (Order order : orders) {
+            for (OrderItem item : order.getOrderItems()) {
+                productCount.put(item.getProductId(),
+                        productCount.getOrDefault(item.getProductId(), 0) + item.getQuantite());
+            }
+        }
+
+        // Trier et garder les 5 produits les plus commandés
+        return productCount.entrySet().stream()
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                .limit(5)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public Order updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        return orderRepository.findById(orderId)
+                .map(order -> {
+                    order.setStatut(newStatus);
+                    return orderRepository.save(order);
+                })
+                .orElseThrow(() -> new RuntimeException("Commande non trouvée avec l'ID : " + orderId));
+    }
+    public List<Order> getOrdersByStatus(OrderStatus status) {
+        return orderRepository.findByStatut(status);
+    }
+
+    public List<Order> getAbandonedOrders(Duration delay) {
+        LocalDateTime cutoff = LocalDateTime.now().minus(delay);
+        return orderRepository.findByStatutAndCreatedAtBefore(OrderStatus.PENDING, cutoff);
+    }
+
+    @Scheduled(fixedRate = 3600000) // toutes les heures
+    @Transactional
+    public void expireAbandonedOrders() {
+        LocalDateTime cutoff = LocalDateTime.now().minusMinutes(30); // délai de 30 minutes
+        List<Order> abandonedOrders = orderRepository.findByStatutAndCreatedAtBefore(OrderStatus.PENDING, cutoff);
+
+        for (Order order : abandonedOrders) {
+            order.setStatut(OrderStatus.EXPIRED);
+            orderRepository.save(order);
+        }
+    }
+    public List<Order> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
+}
+</file>
+
+</files>
