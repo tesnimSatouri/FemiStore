@@ -3,6 +3,9 @@ package com.esprit.twin.gestion_avis.controller;
 import com.esprit.twin.gestion_avis.entity.Avis;
 import com.esprit.twin.gestion_avis.service.Avisservice;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +15,28 @@ import java.util.Map;
 @RestController
 @RequestMapping("/avis")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200") // Ajoutez cette ligne
 public class Aviscontroller {
     private final Avisservice avisservice;
 
+    // **** NOUVEL ENDPOINT POUR PAGINATION/FILTRAGE PAR PRODUIT ****
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<Page<Avis>> getReviewsForProduct(
+            @PathVariable Long productId,
+            @RequestParam(required = false) Integer note, // Filtre par note (optionnel)
+            @PageableDefault(size = 5, sort = "date") Pageable pageable) { // Valeurs par défaut: 5 par page, trié par date
+
+        if (productId == null) {
+            return ResponseEntity.badRequest().build(); // Ou gérer autrement
+        }
+        try {
+            Page<Avis> avisPage = avisservice.getReviewsForProduct(productId, note, pageable);
+            return ResponseEntity.ok(avisPage);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null); // Ou retourner un message d'erreur plus spécifique
+        }
+    }
+    // **** FIN NOUVEL ENDPOINT ****
     @GetMapping
     public List<Avis> getAllReviews() {
         return avisservice.getAllReviews();

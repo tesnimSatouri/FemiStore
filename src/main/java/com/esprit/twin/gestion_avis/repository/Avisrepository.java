@@ -1,6 +1,8 @@
 package com.esprit.twin.gestion_avis.repository;
 
 import com.esprit.twin.gestion_avis.entity.Avis;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +10,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface Avisrepository extends JpaRepository<Avis, Long> {
+    // Récupère les avis pour un produit spécifique, paginés
+    Page<Avis> findByProductId(Long productId, Pageable pageable);
+
+    // Récupère les avis pour un produit spécifique ET une note spécifique, paginés
+    Page<Avis> findByProductIdAndNote(Long productId, int note, Pageable pageable);
     @Query("SELECT AVG(r.note) FROM Avis r WHERE r.productId = ?1")
     Double findAverageRatingByProductId(Long productId);
     @Query("SELECT a FROM Avis a WHERE a.note >= :minNote AND a.note <= :maxNote")

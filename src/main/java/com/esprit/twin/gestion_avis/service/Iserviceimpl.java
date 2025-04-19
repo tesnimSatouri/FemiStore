@@ -2,6 +2,7 @@
 package com.esprit.twin.gestion_avis.service;
 
 import com.esprit.twin.gestion_avis.entity.Avis;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -18,4 +19,5 @@ public interface Iserviceimpl {
      Map<String, List<Avis>> categorizeReviewsByPositivity(int positivityThreshold);
      List<Avis> getReviewsWithHighestNote();
      List<Avis> getReviewsWithLowestNote();
+
 }

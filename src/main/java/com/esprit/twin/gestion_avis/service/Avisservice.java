@@ -5,6 +5,8 @@ import com.esprit.twin.gestion_avis.repository.Avisrepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
@@ -32,7 +34,24 @@ public class Avisservice implements Iserviceimpl {
     public List<Avis> getAllReviews() {
         return avisrepository.findAll();
     }
-
+    // **** NOUVELLE MÉTHODE POUR PAGINATION/FILTRAGE ****
+    public Page<Avis> getReviewsForProduct(Long productId, Integer note, Pageable pageable) {
+        if (productId == null) {
+            throw new IllegalArgumentException("Product ID cannot be null");
+        }
+        if (note != null) {
+            log.info("Fetching reviews for product ID {} with note {} - Page: {}, Size: {}", productId, note, pageable.getPageNumber(), pageable.getPageSize());
+            // Assurez-vous que la note est dans une plage valide si nécessaire (ex: 1-5)
+            if (note < 1 || note > 5) {
+                throw new IllegalArgumentException("Note filter must be between 1 and 5.");
+            }
+            return avisrepository.findByProductIdAndNote(productId, note, pageable);
+        } else {
+            log.info("Fetching reviews for product ID {} (all notes) - Page: {}, Size: {}", productId, pageable.getPageNumber(), pageable.getPageSize());
+            return avisrepository.findByProductId(productId, pageable);
+        }
+    }
+    // **** FIN NOUVELLE MÉTHODE ****
     @Override
     @Transactional
     // Signature originale

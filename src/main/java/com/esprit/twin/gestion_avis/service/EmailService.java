@@ -21,7 +21,7 @@ public class EmailService {
     @Value("${avis.alert.from-email}")
     private String fromEmail;
 
-    /**Envoie une alerte simple par e-mail concernant la baisse de la note moyenne.*/
+
     public void sendAverageRatingDropAlert(Long productId, Double oldAverage, double newAverage, double criticalThreshold, double significantDrop) {
 
         if (recipientEmail == null || recipientEmail.trim().isEmpty()) {
@@ -29,24 +29,37 @@ public class EmailService {
             return;
         }
 
-        String subject = String.format("Alerte : Baisse de la note moyenne pour le produit ID %d", productId);
+        // --- MODIFICATION : Sujet plus neutre ---
+        String subject = String.format("Alerte : Note moyenne produit ID %d - Attention requise", productId);
 
         StringBuilder messageText = new StringBuilder();
-        messageText.append(String.format("La note moyenne pour le produit ID %d a baissé.\n\n", productId));
+        // --- MODIFICATION : Introduction plus neutre ---
+        messageText.append(String.format("Attention : La note moyenne pour le produit ID %d a déclenché une alerte.\n\n", productId));
+
         messageText.append(String.format("Nouvelle note moyenne : %.2f\n", newAverage));
         if (oldAverage != null) {
             messageText.append(String.format("Ancienne note moyenne : %.2f\n", oldAverage));
-            messageText.append(String.format("Baisse : %.2f points\n", oldAverage - newAverage));
+            // --- MODIFICATION : Afficher la baisse seulement si elle est réelle et positive ---
+            double difference = oldAverage - newAverage;
+            if (difference > 0) { // N'afficher que si c'est une vraie baisse
+                messageText.append(String.format("Baisse : %.2f points\n", difference));
+            } else if (difference < 0) { // Optionnel : Indiquer l'augmentation
+                messageText.append(String.format("Augmentation : %.2f points\n", -difference)); // Afficher la valeur positive de l'augmentation
+            }
+            // Si difference == 0, on n'affiche rien sur la variation.
         } else {
             messageText.append("C'était le premier avis pour ce produit.\n");
         }
 
+        // La section "Raisons" reste la même, elle explique la vraie cause
         messageText.append("\nRaisons de cette alerte :\n");
         if (newAverage < criticalThreshold) {
             messageText.append(String.format("- La note moyenne (%.2f) est passée sous le seuil d'alerte critique de %.1f.\n", newAverage, criticalThreshold));
         }
+        // Vérifier la condition de baisse significative ici aussi pour l'affichage
         if (oldAverage != null && (oldAverage - newAverage) >= significantDrop) {
-            messageText.append(String.format("- Une baisse significative de %.2f points a été détectée (seuil de baisse : %.1f).\n", (oldAverage - newAverage), significantDrop));
+            // --- MODIFICATION : Message de baisse plus précis ---
+            messageText.append(String.format("- Une baisse de %.2f points a été détectée .\n", (oldAverage - newAverage)));
         }
 
         messageText.append("\nVeuillez examiner les derniers avis pour ce produit.");
@@ -55,7 +68,7 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
         message.setTo(recipientEmail);
-        message.setSubject(subject);
+        message.setSubject(subject); // Utilise le nouveau sujet
         message.setText(messageText.toString());
 
         try {
