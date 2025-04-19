@@ -1,21 +1,53 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Product } from '../models/product.model';
-import { environment } from '../../../../environments/environment'; // Import environment
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = `${environment.productServiceUrl}`; // Use productServiceUrl from environment
+  private apiUrl = `${environment.productServiceUrl}`; // http://localhost:8083/prd/product
 
   constructor(private http: HttpClient) { }
 
+  // Upload image and return the URL
+  uploadImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<string>(`${this.apiUrl}/uploadImage`, formData).pipe(
+      catchError(this.handleError<string>('uploadImage', ''))
+    );
+  }
+
   getAllProducts(): Observable<Product[]> {
+    console.log('Fetching products from:', `${this.apiUrl}/GetAllProducts`);
     return this.http.get<Product[]>(`${this.apiUrl}/GetAllProducts`).pipe(
-      catchError(this.handleError<Product[]>('getAllProducts', []))
+      catchError((error) => {
+        console.error('Error fetching products:', error);
+        return this.handleError<Product[]>('getAllProducts', [])(error);
+      })
+    );
+  }
+
+  getAllProductsInCurrency(currency: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/GetAllProductsInCurrency`, { params: { currency } }).pipe(
+      catchError(this.handleError<Product[]>('getAllProductsInCurrency', []))
+    );
+  }
+
+  searchProducts(params: { name?: string, minPrice?: number, maxPrice?: number, minStock?: number, useDiscountedPrice?: boolean }): Observable<Product[]> {
+    let httpParams = new HttpParams();
+    if (params.name) httpParams = httpParams.set('name', params.name);
+    if (params.minPrice !== undefined) httpParams = httpParams.set('minPrice', params.minPrice.toString());
+    if (params.maxPrice !== undefined) httpParams = httpParams.set('maxPrice', params.maxPrice.toString());
+    if (params.minStock !== undefined) httpParams = httpParams.set('minStock', params.minStock.toString());
+    if (params.useDiscountedPrice !== undefined) httpParams = httpParams.set('useDiscountedPrice', params.useDiscountedPrice.toString());
+    
+    return this.http.get<Product[]>(`${this.apiUrl}/search`, { params: httpParams }).pipe(
+      catchError(this.handleError<Product[]>('searchProducts', []))
     );
   }
 
@@ -25,15 +57,35 @@ export class ProductService {
     );
   }
 
-  addProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(`${this.apiUrl}/AddProduct`, product).pipe(
+  addProduct(product: Product, imageFile?: File): Observable<Product> {
+    const formData = new FormData();
+    formData.append('product', JSON.stringify(product));
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    return this.http.post<Product>(`${this.apiUrl}/AddProduct`, formData).pipe(
       catchError(this.handleError<Product>('addProduct'))
     );
   }
 
-  updateProduct(id: number, product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/UpdateProduct/${id}`, product).pipe(
-      catchError(this.handleError<Product>(`updateProduct id=${id}`))
+  updateProduct(id: number, product: Product, imageFile?: File): Observable<Product> {
+    const formData = new FormData();
+    const productToSend = {
+        id: id,
+        name: product.name,
+        description: product.description || '',
+        price: product.price,
+        stock: product.stock,
+        discountPercentage: product.discountPercentage || 0,
+        imageUrl: product.imageUrl || ''
+    };
+    formData.append('product', JSON.stringify(productToSend));
+    if (imageFile) {
+        formData.append('image', imageFile);
+    }
+    console.log('Updating product with FormData:', formData);
+    return this.http.put<Product>(`${this.apiUrl}/UpdateProduct/${id}`, formData).pipe(
+        catchError(this.handleError<Product>(`updateProduct id=${id}`))
     );
   }
 
@@ -43,7 +95,6 @@ export class ProductService {
     );
   }
 
-  // Error handling method
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(`${operation} failed: ${error.message}`);

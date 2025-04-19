@@ -1,27 +1,50 @@
 <div class="container mt-4">
     <h2>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
     <div class="card p-4">
-      <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" [(ngModel)]="product.name" required>
+      <div class="form-row">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name" [(ngModel)]="product.name" required>
+        </div>
       </div>
+      
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea class="form-control" id="description" [(ngModel)]="product.description"></textarea>
       </div>
-      <div class="mb-3">
-        <label for="price" class="form-label">Price</label>
-        <input type="number" class="form-control" id="price" [(ngModel)]="product.price" required>
+      
+      <div class="form-row">
+        <div class="mb-3">
+          <label for="price" class="form-label">Price</label>
+          <input type="number" class="form-control" id="price" [(ngModel)]="product.price" required step="0.01">
+        </div>
+        
+        <div class="mb-3">
+          <label for="stock" class="form-label">Stock</label>
+          <input type="number" class="form-control" id="stock" [(ngModel)]="product.stock" required>
+        </div>
+        
+        <div class="mb-3">
+          <label for="discountPercentage" class="form-label">Discount Percentage (%)</label>
+          <input type="number" class="form-control" id="discountPercentage" [(ngModel)]="product.discountPercentage" min="0" max="100">
+        </div>
       </div>
+      
       <div class="mb-3">
-        <label for="stock" class="form-label">Stock</label>
-        <input type="number" class="form-control" id="stock" [(ngModel)]="product.stock" required>
+        <label for="image" class="form-label">Product Image</label>
+        <input type="file" class="form-control" id="image" (change)="onImageSelected($event)" accept="image/*">
+        <div *ngIf="product.imageUrl" class="mt-2">
+          <img [src]="getImageUrl(product.imageUrl)" alt="Product Image" style="max-width: 200px; max-height: 200px;">
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="imageUrl" class="form-label">Image URL</label>
-        <input type="text" class="form-control" id="imageUrl" [(ngModel)]="product.imageUrl">
+      
+      <div class="button-container">
+        <button class="btn btn-primary" (click)="saveProduct()">
+          <i class="fas fa-save me-2"></i>{{ isEditMode ? 'Update' : 'Save' }} Product
+        </button>
+        <button class="btn btn-secondary" (click)="cancel()">
+          <i class="fas fa-times me-2"></i>Cancel
+        </button>
       </div>
-      <button class="btn btn-primary" (click)="saveProduct()">Save</button>
-      <button class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
     </div>
-</div>
+  </div>
