@@ -1,6 +1,11 @@
-<h2>Liste des Utilisateurs</h2>
-<ul>
-  <li *ngFor="let user of users">
-    {{ user.name }} ({{ user.email }}) - {{ user.role }}
-  </li>
-</ul>
+<div class="container user-list-container mt-4">
+  <h2 class="user-list-title">Liste des Utilisateurs</h2>
+
+  <ul class="user-list">
+    <li *ngFor="let user of users" class="user-item">
+      <span class="user-name">{{ user.name }}</span>
+      <span class="user-info">({{ user.email }})</span>
+      <span class="user-role">{{ user.role }}</span>
+    </li>
+  </ul>
+</div>
