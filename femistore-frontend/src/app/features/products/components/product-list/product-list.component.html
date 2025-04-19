@@ -42,36 +42,30 @@
             </div>
         </form>
     </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Discount (%)</th>
-                <th>Stock</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.id }}</td>
-                <td>
-                    <img *ngIf="product.imageUrl" [src]="getImageUrl(product.imageUrl)" alt="{{ product.name }}" style="max-width: 100px; max-height: 100px;">
-                    <span *ngIf="!product.imageUrl">No Image</span>
-                </td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description || 'N/A' }}</td>
-                <td>{{ product.price | currency:selectedCurrency:'symbol':'1.2-2' }}</td>
-                <td>{{ product.discountPercentage || 0 }}%</td>
-                <td>{{ product.stock }}</td>
-                <td>
-                    <button class="btn btn-sm btn-warning me-2" (click)="editProduct(product.id)">Edit</button>
+    
+    <!-- Product Grid (replacing the table) -->
+    <div class="product-grid">
+        <div class="product-card" *ngFor="let product of products">
+            <div class="product-id">ID: {{ product.id }}</div>
+            <div class="product-image">
+                <img *ngIf="product.imageUrl" [src]="getImageUrl(product.imageUrl)" alt="{{ product.name }}">
+                <span *ngIf="!product.imageUrl">No Image</span>
+            </div>
+            <div class="product-details">
+                <div class="product-name">{{ product.name }}</div>
+                <div class="product-description">{{ product.description || 'N/A' }}</div>
+                <div class="product-meta">
+                    <div class="product-price">{{ product.price | currency:selectedCurrency:'symbol':'1.2-2' }}</div>
+                    <div class="product-discount" *ngIf="product.discountPercentage && product.discountPercentage > 0">
+                        {{ product.discountPercentage }}% OFF
+                    </div>
+                </div>
+                <div class="product-stock">Stock: {{ product.stock }} units</div>
+                <div class="product-actions">
+                    <button class="btn btn-sm btn-warning" (click)="editProduct(product.id)">Edit</button>
                     <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

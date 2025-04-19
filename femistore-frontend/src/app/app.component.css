@@ -1,0 +1,193 @@
+/* Main container styling */
+.container-fluid {
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Navbar styling */
+  .navbar {
+    background-color: #e91e63 !important; /* Pink theme */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 12px 20px;
+  }
+  
+  /* Brand styling */
+  .navbar-brand {
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    color: white !important;
+    position: relative;
+    padding-left: 10px;
+  }
+  
+  .navbar-brand::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 2px;
+  }
+  
+  /* Navigation links */
+  .navbar-nav {
+    margin-left: 20px;
+  }
+  
+  .nav-item {
+    margin-right: 5px;
+  }
+  
+  .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .nav-link.active {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+  }
+  
+  /* Toggler button for mobile */
+  .navbar-toggler {
+    border: none;
+    padding: 8px;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25) !important;
+  }
+  
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  }
+  
+  /* Gradient background option */
+  .navbar.bg-gradient {
+    background: linear-gradient(90deg, #e91e63 0%, #c2185b 100%) !important;
+  }
+  
+  /* Add a subtle pattern to the navbar */
+  .navbar.bg-pattern {
+    background-color: #e91e63 !important;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  
+  /* Add a subtle border at the bottom of the navbar */
+  .navbar {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 991.98px) {
+    .navbar-collapse {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+    
+    .nav-item {
+      margin-bottom: 5px;
+    }
+  }
+  
+  /* Add a subtle animation to the active link */
+  .nav-link.active {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    transform: translateX(-100%);
+    animation: slideIn 0.3s forwards;
+  }
+  
+  @keyframes slideIn {
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  /* Router outlet container */
+  router-outlet + * {
+    display: block;
+    min-height: calc(100vh - 70px);
+  }
+/* Logo styling - reduced size */
+.navbar-logo {
+    height: 30px; /* Reduced from 40px */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  
+  /* Brand with logo styling */
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 20px; /* Slightly smaller font */
+    letter-spacing: 0.5px;
+    color: white !important;
+    padding: 0; /* Remove padding */
+  }
+  
+  /* Brand text styling */
+  .brand-text {
+    margin-left: 8px;
+  }
+  
+  /* For smaller screens */
+  @media (max-width: 576px) {
+    .navbar-logo {
+      height: 24px; /* Even smaller on mobile */
+    }
+  }
+  
+  /* Adjust navbar height */
+  .navbar {
+    background-color: #e91e63 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 8px 16px; /* Reduced padding */
+    min-height: 56px; /* Set a minimum height */
+  }
+  
+  /* If the logo is still too large, you can add this more aggressive styling */
+  .navbar-logo {
+    max-height: 30px !important;
+    max-width: 100px !important; /* Limit width as well */
+    object-fit: contain; /* Ensure the logo fits within dimensions */
+  }
+  
+  /* If you want to make the entire navbar more compact */
+  .container-fluid {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  .nav-link {
+    padding: 6px 12px !important; /* Smaller padding for nav links */
+  }
