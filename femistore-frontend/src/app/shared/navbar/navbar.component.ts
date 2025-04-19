@@ -1,20 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../features/user/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   isLoggedIn = false;
 
-  constructor() {
-    // Exemple : à remplacer par ton vrai service d'authentification
-    this.isLoggedIn = !!localStorage.getItem('token');
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    // S’abonner à l’état de connexion
+    this.authService.getLoggedInStatus().subscribe(status => {
+      this.isLoggedIn = status;
+    });
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    window.location.href = '/users/login'; // ou utiliser Router.navigate
+  logout(): void {
+    this.authService.logout();
+    window.location.href = '/users/login'; // ou utilise Router.navigate
   }
 }
