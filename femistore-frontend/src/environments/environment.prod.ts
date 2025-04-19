@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   apiUrl: "/api",
   categoryServiceUrl: "/api",
-  productServiceUrl: "/api",
+  productServiceUrl: "/prd",
   inventoryServiceUrl: "/api",
   userServiceUrl: "/api",
   reviewServiceUrl: "/api",
