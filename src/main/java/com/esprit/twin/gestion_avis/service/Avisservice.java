@@ -177,4 +177,13 @@ public class Avisservice implements Iserviceimpl {
     public List<Avis> getReviewsWithLowestNote() {
         return avisrepository.findReviewsWithMinNote();
     }
+    // **** NOUVELLE MÉTHODE POUR PAGINATION GLOBALE ****
+    @Override
+    public Page<Avis> getAllReviewsPaginated(Pageable pageable) {
+        log.info("Fetching all reviews (paginated) - Page: {}, Size: {}, Sort: {}",
+                pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        // Utilise la méthode findAll(Pageable) héritée de JpaRepository
+        return avisrepository.findAll(pageable);
+    }
+    // **** FIN NOUVELLE MÉTHODE ****
 }

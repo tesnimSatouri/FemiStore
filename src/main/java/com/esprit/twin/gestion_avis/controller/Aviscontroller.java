@@ -3,6 +3,7 @@ package com.esprit.twin.gestion_avis.controller;
 import com.esprit.twin.gestion_avis.entity.Avis;
 import com.esprit.twin.gestion_avis.service.Avisservice;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +17,8 @@ import java.util.Map;
 @RequestMapping("/avis")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200") // Ajoutez cette ligne
+@Slf4j // <-- ***** AJOUTER CETTE ANNOTATION *****
+
 public class Aviscontroller {
     private final Avisservice avisservice;
 
@@ -91,5 +94,23 @@ public class Aviscontroller {
         List<Avis> reviews = avisservice.getReviewsWithLowestNote();
         return ResponseEntity.ok(reviews);
     }
+    // **** NOUVEL ENDPOINT POUR PAGINATION GLOBALE ****
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Avis>> getAllReviewsPaginated(
+            // Injecte l'objet Pageable construit à partir des paramètres ?page=X&size=Y&sort=prop,dir
+            @PageableDefault(size = 10, sort = "date,desc") Pageable pageable) {
+        log.info("Request received for paginated reviews: Page={}, Size={}, Sort={}",
+                pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        try {
+            Page<Avis> avisPage = avisservice.getAllReviewsPaginated(pageable); // Appel de la nouvelle méthode du service
+            return ResponseEntity.ok(avisPage);
+        } catch (Exception e) {
+            // Log l'erreur côté serveur pour le débogage
+            log.error("Error fetching paginated reviews", e);
+            // Retourne une erreur 500 Internal Server Error
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    // **** FIN NOUVEL ENDPOINT ****
 
 }
