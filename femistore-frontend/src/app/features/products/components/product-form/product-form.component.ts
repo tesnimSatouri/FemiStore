@@ -90,9 +90,8 @@ export class ProductFormComponent implements OnInit {
   }
 
   getImageUrl(imagePath: string): string {
-    return imagePath
-      ? `${environment.productServiceUrl}/images/${imagePath}`
-      : 'assets/no-image.png';
+    const fileName = imagePath.replace(/^\/images\//, '');
+    return `${environment.productServiceUrl}/images/${fileName}`;
   }
 
   saveProduct(): void {

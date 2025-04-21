@@ -80,7 +80,16 @@ export class ProductListComponent implements OnInit {
   }
 
   getImageUrl(imagePath: string): string {
-    return `${environment.productServiceUrl}/images/${imagePath}`;
+    const fileName = imagePath.replace(/^\/images\//, '');
+    return `${environment.productServiceUrl.replace(/\/product$/, '')}/images/${fileName}`;
+  }
+
+  handleImageError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.style.display = 'none';
+    const spanElement = document.createElement('span');
+    spanElement.textContent = 'No Image';
+    imgElement.parentElement?.appendChild(spanElement);
   }
 
   editProduct(id?: number): void {
