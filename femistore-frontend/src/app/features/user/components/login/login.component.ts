@@ -16,6 +16,7 @@ export class LoginComponent {
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
         this.authService.setToken(response.token);
+        this.authService.setUser(response.user); // 👈 Sauvegarder l'utilisateur
         this.router.navigate(['/profile']);
       },
       error: (error) => {

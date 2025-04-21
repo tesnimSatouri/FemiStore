@@ -1,45 +1,51 @@
 <mat-toolbar>
-    <img src="../../assets/images/logofemistore.png" alt="FemiStore Logo" class="logo" style="height: 50px;">
-    <span class="spacer"></span>
-  
-    <a mat-button routerLink="/home">
-      <mat-icon>home</mat-icon> Home
-    </a>
-  
-    <a mat-button routerLink="/categoris/">
-      <mat-icon>Category</mat-icon> categoris
-    </a>
-  
-    <a mat-button routerLink="/inventory" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-      <mat-icon>inventory_2</mat-icon> Inventory
-    </a>
-  
-    <a mat-button routerLink="/products" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-      <mat-icon>shopping_bag</mat-icon> Products
-    </a>
-    <a mat-button routerLink="/commande" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-      <mat-icon>shopping_bag</mat-icon> Commands
-    </a>
-    <a mat-button routerLink="admin/reviews" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-      <mat-icon>feedback</mat-icon> Feedbacks
-    </a>
-  
-    <a mat-button routerLink="/users/profile" *ngIf="isLoggedIn">
-      <mat-icon>account_circle</mat-icon> Profil
-    </a>
-  
-    <a mat-button routerLink="/users/users" *ngIf="isLoggedIn">
-      <mat-icon>group</mat-icon> Utilisateurs
-    </a>
-    <a mat-button routerLink="/users/register" *ngIf="!isLoggedIn">
-        <mat-icon>person_add</mat-icon> Inscription
-      </a>
-    
-      <a mat-button routerLink="/users/login" *ngIf="!isLoggedIn">
-        <mat-icon>login</mat-icon> Connexion
-      </a>
-    <button mat-button (click)="logout()" *ngIf="isLoggedIn">
-      <mat-icon>logout</mat-icon> Déconnexion
-    </button>
-  </mat-toolbar>
-  
+  <img src="../../assets/images/logofemistore.png" alt="FemiStore Logo" class="logo" style="height: 50px;">
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/home">
+    <mat-icon>home</mat-icon> Home
+  </a>
+
+  <a mat-button routerLink="/categoris/">
+    <mat-icon>category</mat-icon> Categoris
+  </a>
+
+  <a mat-button routerLink="/inventory" routerLinkActive="active">
+    <mat-icon>inventory_2</mat-icon> Inventory
+  </a>
+
+  <a mat-button routerLink="/products" routerLinkActive="active">
+    <mat-icon>shopping_bag</mat-icon> Products
+  </a>
+
+  <a mat-button routerLink="/commande" routerLinkActive="active">
+    <mat-icon>shopping_cart</mat-icon> Commands
+  </a>
+
+  <a mat-button routerLink="/admin/reviews" routerLinkActive="active">
+    <mat-icon>feedback</mat-icon> Feedbacks
+  </a>
+
+  <!-- ✅ Bouton Profil visible si connecté -->
+  <a mat-button routerLink="/users/profile" *ngIf="isLoggedIn">
+    <mat-icon>account_circle</mat-icon> Profil
+  </a>
+
+  <!-- ✅ Bouton Utilisateurs visible seulement si Admin -->
+  <a mat-button routerLink="/users/users" *ngIf="isLoggedIn && isAdmin">
+    <mat-icon>group</mat-icon> Utilisateurs
+  </a>
+
+  <!-- ✅ Auth -->
+  <a mat-button routerLink="/users/register" *ngIf="!isLoggedIn">
+    <mat-icon>person_add</mat-icon> Inscription
+  </a>
+
+  <a mat-button routerLink="/users/login" *ngIf="!isLoggedIn">
+    <mat-icon>login</mat-icon> Connexion
+  </a>
+
+  <button mat-button (click)="logout()" *ngIf="isLoggedIn">
+    <mat-icon>logout</mat-icon> Déconnexion
+  </button>
+</mat-toolbar>

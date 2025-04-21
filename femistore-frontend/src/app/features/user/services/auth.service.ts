@@ -12,12 +12,12 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(user: User): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/register`, user);
+  register(user: User): Observable<{ token: string, user: User }> {
+    return this.http.post<{ token: string, user: User }>(`${this.apiUrl}/register`, user);
   }
 
-  login(credentials: { email: string; password: string }): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, credentials);
+  login(credentials: { email: string; password: string }): Observable<{ token: string, user: User }> {
+    return this.http.post<{ token: string, user: User }>(`${this.apiUrl}/login`, credentials);
   }
 
   setToken(token: string): void {
@@ -25,8 +25,22 @@ export class AuthService {
     this.loggedInSubject.next(true);
   }
 
+  setUser(user: User): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getLocalUser(): User | null {
+    const userJson = localStorage.getItem('user');
+    return userJson ? JSON.parse(userJson) : null;
+  }
+
+  getUserRole(): string | null {
+    const user = this.getLocalUser();
+    return user?.role || null;
   }
 
   isLoggedIn(): boolean {
@@ -35,6 +49,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     this.loggedInSubject.next(false);
   }
 
@@ -43,7 +58,6 @@ export class AuthService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  // Observable pour écouter les changements d’état
   getLoggedInStatus(): Observable<boolean> {
     return this.loggedInSubject.asObservable();
   }
