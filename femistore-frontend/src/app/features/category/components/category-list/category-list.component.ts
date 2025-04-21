@@ -24,6 +24,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   searchTerm = '';
   displayedColumns = ['name', 'description', 'actions'];
   userRole: string | null = null;
+  pageSizeOptions: number[] = [5, 10, 25, 50]; // Options for items per page
 
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
@@ -79,6 +80,11 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadCategories();
+  }
+
+  onPageSizeChange(): void {
+    this.currentPage = 0; // Reset to first page when page size changes
+    this.loadCategories(); // Reload categories with new page size
   }
 
   onSearch(): void {
