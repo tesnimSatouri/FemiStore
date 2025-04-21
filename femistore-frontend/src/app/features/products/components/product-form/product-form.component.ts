@@ -6,6 +6,10 @@ import { StockService } from '../../../inventory/services/stock.service';
 import { Product } from '../../models/product.model';
 import { Supplier } from '../../../inventory/models/stock.model';
 import { environment } from '../../../../../environments/environment';
+import { CategoryService } from '../../../category/services/category.service';
+import { Category } from '../../../category/models/category';
+import { Page } from '../../../category/models/page';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-form',
@@ -20,13 +24,17 @@ export class ProductFormComponent implements OnInit {
   loading = false;
   submitted = false;
   suppliers: Supplier[] = [];
+  mainCategories: Category[] = [];
+  errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
     private stockService: StockService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private categoryService: CategoryService,
+
   ) {
     this.productForm = this.fb.group({
       id: [null],
@@ -43,6 +51,15 @@ export class ProductFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.categoryService.getMainCategories(0, 100, 'name,asc').subscribe({
+      next: (pageData: Page<Category>) => {
+        this.mainCategories = pageData.content; // Extract categories from the Page object
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error loading main categories:', err);
+        this.errorMessage = 'Error loading main categories. Please try again.';
+      }
+    });
     this.loadSuppliers();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
