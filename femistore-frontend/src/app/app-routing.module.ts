@@ -2,9 +2,11 @@ import { NgModule } from "@angular/core"
 import { RouterModule, type Routes } from "@angular/router"
 import { AdminReviewSearchComponent } from "./features/avis/pages/admin-review-search/admin-review-search.component"
 import { ProductReviewsComponent } from "./features/avis/pages/product-reviews/product-reviews.component"
+import { HomeComponent } from "./home/home.component"
 
 const routes: Routes = [
-  { path: "", redirectTo: "/inventory", pathMatch: "full" },
+  { path: "", redirectTo: "/home", pathMatch: "full" },
+  {path:"home" , component: HomeComponent},
   {
     path: "inventory",
     loadChildren: () => import("./features/inventory/inventory.module").then((m) => m.InventoryModule),
@@ -18,7 +20,7 @@ const routes: Routes = [
   { path: 'products/:productId/reviews', component: ProductReviewsComponent },
   {path: 'admin/reviews', component: AdminReviewSearchComponent},
   
-  { path: "**", redirectTo: "/inventory" },
+  { path: "**", redirectTo: "/home" },
 ]
 
 @NgModule({

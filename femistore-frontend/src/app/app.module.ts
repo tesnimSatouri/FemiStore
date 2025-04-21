@@ -20,6 +20,7 @@ import { AvisListComponent } from "./features/avis/components/avis-list/avis-lis
 import { AvisFormComponent } from "./features/avis/components/avis-form/avis-form.component";
 import { ProductReviewsComponent } from "./features/avis/pages/product-reviews/product-reviews.component";
 import { AdminReviewSearchComponent } from "./features/avis/pages/admin-review-search/admin-review-search.component";
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [AppComponent, 
@@ -28,7 +29,8 @@ import { AdminReviewSearchComponent } from "./features/avis/pages/admin-review-s
     AvisListComponent,
     AvisFormComponent,
     ProductReviewsComponent,
-    AdminReviewSearchComponent],
+    AdminReviewSearchComponent,
+    HomeComponent],
   imports: [BrowserModule,
     HttpClientModule,
     FormsModule,
