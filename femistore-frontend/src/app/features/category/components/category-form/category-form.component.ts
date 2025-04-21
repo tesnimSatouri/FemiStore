@@ -92,7 +92,7 @@ export class CategoryFormComponent implements OnInit {
       });
     } else {
       this.categoryService.addCategory(category).subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => this.router.navigate(['/categoris']),
         error: (err: HttpErrorResponse) => {
           console.error('Error adding category:', err);
           this.errorMessage = 'Error adding category. Please try again.';

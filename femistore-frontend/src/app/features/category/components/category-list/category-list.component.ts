@@ -23,6 +23,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   searchTerm = '';
   displayedColumns = ['name', 'description', 'actions'];
+  userRole: string | null = null;
 
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
@@ -34,6 +35,9 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Retrieve user role from local storage
+    this.userRole = localStorage.getItem('user');
+
     this.route.paramMap.subscribe(params => {
       this.parentId = params.get('parentId') ? +params.get('parentId')! : null;
       this.loadCategories();

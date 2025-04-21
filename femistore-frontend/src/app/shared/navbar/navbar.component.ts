@@ -31,6 +31,7 @@ export class NavbarComponent implements OnInit {
       next: (user) => {
         this.user = user;
         this.isAdmin = user.role === 'Admin'; // ✅ adapte à 'Admin'
+        localStorage.setItem('user',user.role)
       },
       error: (error) => console.error('Erreur profil:', error)
     });
