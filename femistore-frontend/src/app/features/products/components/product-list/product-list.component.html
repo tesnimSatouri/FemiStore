@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <h2>Product List</h2>
   <div class="mb-3 d-flex justify-content-between">
-    <button class="btn btn-primary" (click)="navigateToAdd()">Add Product</button>
+    <button class="btn btn-primary" (click)="navigateToAdd()"  *ngIf="userRole === 'Admin'">Add Product</button>
     <div>
       <label for="currency" class="form-label me-2">Currency:</label>
       <select
@@ -115,13 +115,13 @@
           Low Stock Alert!
         </div>
         <div class="product-actions">
-          <button class="btn btn-sm btn-primary" (click)="navigateToDetail(product.id)">
+          <button class="btn btn-sm btn-primary" (click)="navigateToDetail(product.id)" *ngIf="userRole != 'Admin'">
             View
           </button>
-          <button class="btn btn-sm btn-warning" (click)="editProduct(product.id)">
+          <button class="btn btn-sm btn-warning" (click)="editProduct(product.id)" *ngIf="userRole === 'Admin'">
             Edit
           </button>
-          <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">
+          <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)" *ngIf="userRole === 'Admin'">
             Delete
           </button>
         </div>

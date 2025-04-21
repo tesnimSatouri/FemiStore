@@ -19,12 +19,16 @@ export class ProductListComponent implements OnInit {
     minStock: null as number | null,
     useDiscountedPrice: false,
   };
+  userRole: string | null = null;
+
   selectedCurrency = 'TND';
   currencies = ['TND', 'USD', 'EUR'];
 
   constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
+    this.userRole = localStorage.getItem('user');
+
     this.loadProducts();
   }
 

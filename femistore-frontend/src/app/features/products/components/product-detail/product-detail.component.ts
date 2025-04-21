@@ -15,6 +15,7 @@ export class ProductDetailComponent implements OnInit {
   product?: Product;
   loading = false;
   error = '';
+  userRole: string | null = null;
 
   constructor(
     private productService: ProductService,
@@ -23,6 +24,8 @@ export class ProductDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.userRole = localStorage.getItem('user');
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadProduct(+id);
