@@ -1,145 +1,278 @@
-/* Assurez-vous que les variables de couleur sont accessibles ici */
-/* Elles peuvent être définies dans :host, :root, ou héritées */
-:host { /* Ou :root si dans un fichier global */
-  --pink-primary: #E91E63;
-  --pink-light: #FCE4EC;
-  --text-dark: #333;
-  --text-light: #666;
-  --border-color-light: #eee; /* Bordure plus légère pour les items */
-  --background-color: #fff;
-  --button-text-color: #fff;
-  --secondary-button-bg: #f4f4f4;
-  --secondary-button-text: #555;
-  --secondary-button-border: #ddd;
-  --delete-button-bg: #f8f8f8; /* Fond neutre pour supprimer */
-  --delete-button-text: var(--error-color, #D32F2F); /* Utilise la variable erreur si dispo, sinon rouge */
-  --delete-button-border: #e0e0e0;
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #fce4ec 0%, #ffffff 50%, #e1bee7 100%);
+  font-family: 'Lora', serif;
+  overflow-x: hidden;
 }
 
-/* Style pour le message "Aucun avis" */
-.no-avis-message { /* Ajoutez cette classe au <p> dans le *ngIf vide */
-  padding: 30px 20px;
+.review-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.review-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 48px;
+  color: #d81b60;
   text-align: center;
-  color: var(--text-light);
-  font-style: italic;
-  background-color: var(--pink-light); /* Fond rose pâle */
-  border-radius: 8px;
-  border: 1px dashed var(--pink-primary); /* Bordure pointillée rose */
-  margin: 20px 0; /* Espace autour */
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(45deg, #f7c948, #d81b60);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: glow 2s ease-in-out infinite alternate;
 }
 
-/* Conteneur de la liste (ul) */
-.avis-list-container { /* Ajoutez cette classe à la balise <ul> */
-  list-style: none; /* Supprime les puces */
+@keyframes glow {
+  0% { text-shadow: 0 0 5px rgba(247, 201, 72, 0.5); }
+  100% { text-shadow: 0 0 15px rgba(216, 27, 96, 0.7); }
+}
+
+.no-avis-message {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  color: #d81b60;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(240, 98, 146, 0.3);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.avis-list-container {
+  list-style: none;
   padding: 0;
-  margin: 0; /* Supprime la marge par défaut */
+  margin: 0;
 }
 
-/* Style pour chaque élément d'avis (li) */
 .avis-item {
-  background-color: var(--background-color);
-  border: 1px solid var(--border-color-light); /* Bordure légère */
-  border-left: 4px solid var(--pink-primary); /* Bordure gauche rose pour l'accent */
-  border-radius: 5px;
-  padding: 15px 20px;
-  margin-bottom: 15px; /* Espace entre les avis */
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06); /* Ombre discrète */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: box-shadow 0.3s ease;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+  padding: 20px;
+  border: 1px solid rgba(225, 190, 231, 0.3);
+  animation: slideIn 0.5s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .avis-item:hover {
-   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.09); /* Ombre un peu plus prononcée au survol */
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(216, 27, 96, 0.2);
 }
 
-/* En-tête de l'avis (IDs, Note) */
+@keyframes slideIn {
+  0% { opacity: 0; transform: translateX(-20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
 .avis-header {
   display: flex;
-  justify-content: space-between; /* ID à gauche, Note à droite */
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  font-size: 0.9em;
-  color: var(--text-light);
-  flex-wrap: wrap; /* Permet le retour à la ligne si manque de place */
-  gap: 10px; /* Espace si retour à la ligne */
-}
-
-/* Note dans l'en-tête */
-.avis-note {
-  font-weight: bold;
-  color: var(--pink-primary); /* Note en rose */
-  font-size: 1.2em; /* Met en valeur la note */
-  white-space: nowrap; /* Evite que "Note: X/5" se casse */
-}
-
-/* Commentaire de l'avis */
-.avis-comment {
-  margin-top: 8px;
   margin-bottom: 15px;
-  color: var(--text-dark);
-  line-height: 1.6; /* Bonne lisibilité */
-  font-size: 1em;
-  /* white-space: pre-wrap; */ /* Optionnel: conserve les sauts de ligne du commentaire */
+  border-bottom: 1px solid rgba(240, 98, 146, 0.2);
+  padding-bottom: 10px;
 }
 
-/* Pied de l'avis (Date, Boutons) */
+.avis-header span {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  color: #555;
+}
+
+.avis-note {
+  position: relative;
+  font-size: 14px;
+  color: #f7c948;
+  padding: 5px 15px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #d81b60, #f06292);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.avis-note::before {
+  content: '★';
+  font-size: 16px;
+  color: #f7c948;
+  animation: twinkle 1.5s infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.avis-comment {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  color: #333;
+  margin: 15px 0;
+  line-height: 1.6;
+  background: rgba(248, 225, 233, 0.5);
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.avis-comment:hover {
+  background: rgba(248, 225, 233, 0.8);
+}
+
 .avis-footer {
   display: flex;
-  justify-content: space-between; /* Date à gauche, boutons à droite */
+  justify-content: space-between;
   align-items: center;
   margin-top: 15px;
-  border-top: 1px solid var(--border-color-light); /* Séparateur léger */
-  padding-top: 10px;
-  flex-wrap: wrap; /* Permet le retour à la ligne */
-  gap: 10px; /* Espace en cas de retour à la ligne */
 }
 
-/* Date de l'avis */
 .avis-date {
-  font-size: 0.85em;
-  color: var(--text-light);
+  font-family: 'Lora', serif;
+  font-size: 12px;
+  color: #d81b60;
+  font-style: italic;
 }
 
-/* Conteneur des boutons d'action */
-.avis-actions { /* Ajoutez cette classe au div contenant les boutons */
+.avis-actions {
   display: flex;
-  gap: 10px; /* Espace entre les boutons */
+  gap: 12px;
 }
 
-/* Style de base des boutons d'action (plus petits) */
-.avis-footer button {
-  padding: 5px 10px; /* Plus petits que les boutons de formulaire */
-  border-radius: 4px;
+.avis-actions button {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  border-radius: 25px;
+  padding: 8px 20px;
   border: none;
   cursor: pointer;
-  font-size: 0.85em;
-  font-weight: 500;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Bouton Modifier */
-.avis-footer button.button-edit { /* Ajoutez la classe .button-edit */
-  background-color: var(--pink-primary);
-  color: var(--button-text-color);
-  border: 1px solid var(--pink-primary);
+.button-edit {
+  background: linear-gradient(90deg, #f7c948, #f48fb1);
+  color: white;
 }
 
-.avis-footer button.button-edit:hover {
-  background-color: #C2185B; /* Rose plus foncé */
-  border-color: #C2185B;
+.button-edit:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(247, 201, 72, 0.5);
 }
 
-/* Bouton Supprimer */
-.avis-footer button.button-delete { /* Ajoutez la classe .button-delete */
-  background-color: var(--delete-button-bg);
-  color: var(--delete-button-text);
-  border: 1px solid var(--delete-button-border);
+.button-edit::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
 }
 
-.avis-footer button.button-delete:hover {
-  background-color: #ffebee; /* Fond très léger rouge/rose pâle */
-  border-color: var(--delete-button-text);
-  color: #B71C1C; /* Rouge plus foncé au survol */
+.button-edit:hover::after {
+  width: 200px;
+  height: 200px;
+}
+
+.button-delete {
+  background: linear-gradient(90deg, #ef5350, #d32f2f);
+  color: white;
+}
+
+.button-delete:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(239, 83, 80, 0.5);
+}
+
+.button-delete::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+}
+
+.button-delete:hover::after {
+  width: 200px;
+  height: 200px;
+}
+
+@media (max-width: 768px) {
+  .review-container {
+    padding: 15px;
+  }
+  .review-title {
+    font-size: 36px;
+  }
+  .no-avis-message {
+    font-size: 16px;
+    padding: 15px;
+  }
+  .avis-item {
+    padding: 15px;
+  }
+  .avis-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .avis-header span {
+    font-size: 12px;
+  }
+  .avis-note {
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+  .avis-comment {
+    font-size: 14px;
+  }
+  .avis-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .avis-date {
+    font-size: 10px;
+  }
+  .avis-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .avis-actions button {
+    font-size: 12px;
+    padding: 6px 15px;
+    width: 100%;
+  }
 }

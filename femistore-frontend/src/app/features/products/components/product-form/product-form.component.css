@@ -1,176 +1,176 @@
-/* Main container styling */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #ffffff, #fce4ec);
+  font-family: 'Lora', serif;
+}
+
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  /* Header styling */
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 40px;
+  color: #d81b60;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  background: linear-gradient(180deg, #ffffff, #f8e1e9);
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+.alert-danger {
+  background: #ef5350;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  color: #555;
+}
+
+.form-control, select.form-control {
+  border: 1px solid #f06292;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  background: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus, select.form-control:focus {
+  border-color: #d81b60;
+  box-shadow: 0 0 5px rgba(240, 98, 146, 0.3);
+  outline: none;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.validation-message {
+  color: #ef5350;
+  font-size: 12px;
+  margin-top: 5px;
+  font-family: 'Lora', serif;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-row > div {
+  flex: 1;
+  min-width: 200px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  border-radius: 8px;
+  padding: 10px 25px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #f06292, #f48fb1);
+  border: none;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #d81b60, #f06292);
+  transform: scale(1.05);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #e1bee7;
+  border: 1px solid #d81b60;
+  color: #d81b60;
+}
+
+.btn-secondary:hover {
+  background: #f8e1e9;
+  transform: scale(1.05);
+}
+
+input[type="file"] {
+  border: none;
+  padding: 10px 0;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  color: #555;
+}
+
+input[type="file"]::file-selector-button {
+  background: linear-gradient(90deg, #f06292, #f48fb1);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 15px;
+  color: white;
+  font-family: 'Lora', serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: linear-gradient(90deg, #d81b60, #f06292);
+}
+
+img {
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
   h2 {
-    color: #333;
-    font-size: 28px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #e91e63;
-    padding-bottom: 10px;
+    font-size: 30px;
   }
-  
-  /* Card styling */
   .card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    background-color: white;
-    transition: all 0.3s ease;
+    padding: 20px;
   }
-  
-  .card:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
   }
-  
-  /* Form group styling */
-  .mb-3 {
-    margin-bottom: 1.5rem !important;
+  .form-row > div {
+    min-width: 100%;
   }
-  
-  /* Label styling */
-  .form-label {
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
-    font-size: 15px;
-  }
-  
-  /* Input field styling */
-  .form-control {
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    padding: 12px;
-    transition: all 0.3s ease;
-    font-size: 15px;
-  }
-  
-  .form-control:focus {
-    border-color: #e91e63;
-    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.25);
-    outline: none;
-  }
-  
-  /* Textarea specific styling */
-  textarea.form-control {
-    min-height: 100px;
-    resize: vertical;
-  }
-  
-  /* Number input styling */
-  input[type="number"] {
-    padding-right: 5px;
-  }
-  
-  /* File input styling */
-  input[type="file"].form-control {
-    padding: 8px;
-    height: auto;
-  }
-  
-  /* Image preview styling */
-  .mt-2 {
-    margin-top: 1rem;
-  }
-  
-  .mt-2 img {
-    border-radius: 8px;
-    border: 1px solid #eee;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-  }
-  
-  .mt-2 img:hover {
-    transform: scale(1.02);
-  }
-  
-  /* Button styling */
   .btn {
-    padding: 10px 24px;
-    font-weight: 500;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    font-size: 16px;
-  }
-  
-  .btn-primary {
-    background-color: #e91e63;
-    border: none;
-  }
-  
-  .btn-primary:hover {
-    background-color: #c2185b;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-  
-  .btn-secondary {
-    background-color: #9e9e9e;
-    border: none;
-  }
-  
-  .btn-secondary:hover {
-    background-color: #757575;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-  
-  /* Required field indicator */
-  .form-label::after {
-    content: "*";
-    color: #e91e63;
-    margin-left: 4px;
-    display: none;
-  }
-  
-  input:required + .form-label::after,
-  textarea:required + .form-label::after {
-    display: inline;
-  }
-  
-  /* Form layout improvements */
-  @media (min-width: 768px) {
-    .form-row {
-      display: flex;
-      gap: 20px;
-    }
-    
-    .form-row .mb-3 {
-      flex: 1;
-    }
-  }
-  
-  /* Button container */
-  .button-container {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  /* Add a subtle background pattern */
-  body {
-    background-color: #f9f9f9;
-    background-image: linear-gradient(to right, rgba(233, 30, 99, 0.05) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(233, 30, 99, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-  
-  /* Form validation styling */
-  .form-control.ng-invalid.ng-touched {
-    border-color: #f44336;
-  }
-  
-  .form-control.ng-valid.ng-touched {
-    border-color: #4CAF50;
-  }
-  
-  .validation-message {
-    color: #f44336;
     font-size: 12px;
-    margin-top: 5px;
+    padding: 8px 20px;
   }
+}
