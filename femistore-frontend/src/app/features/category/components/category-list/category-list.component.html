@@ -41,16 +41,16 @@
           <td>{{ category.name }}</td>
           <td>{{ category.description }}</td>
           <td class="actions text-center">
-            <a class="btn-primary me-1" [routerLink]="['/categories/edit', category.id]" *ngIf="userRole === 'Admin'">Edit</a>
+            <a class="btn-primary me-1" [routerLink]="['/categoris/edit', category.id]" *ngIf="userRole === 'Admin'">Edit</a>
             <button class="btn-warn me-1" (click)="deleteCategory(category.id!)" *ngIf="userRole === 'Admin'">Delete</button>
             <a
               class="btn-accent me-1"
               *ngIf="!parentId"
-              [routerLink]="['/categories/subcategories', category.id]">View Subcategories</a>
+              [routerLink]="['/categoris/subcategories', category.id]">View Subcategories</a>
             <a
               class="btn-accent"
               *ngIf="!parentId && userRole === 'Admin'"
-              [routerLink]="['/categories/add-subcategory', category.id]">Add Subcategory</a>
+              [routerLink]="['/categoris/add-subcategory', category.id]">Add Subcategory</a>
           </td>
         </tr>
       </tbody>
@@ -83,8 +83,7 @@
 
     <!-- Action Buttons -->
     <div class="mt-3 d-flex flex-wrap gap-2">
-      <a class="btn-primary" [routerLink]="['/categories/add']" *ngIf="userRole === 'Admin'">Add Main Category</a>
-      <a class="btn-accent" [routerLink]="['/external']">View External Categories</a>
+      <a class="btn-primary" [routerLink]="['/categoris/add']" *ngIf="userRole === 'Admin'">Add Main Category</a>
     </div>
   </div>
 
