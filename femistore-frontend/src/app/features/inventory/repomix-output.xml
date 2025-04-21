@@ -1,0 +1,2143 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+components/low-stock-alert/low-stock-alert.component.html
+components/low-stock-alert/low-stock-alert.component.spec.ts
+components/low-stock-alert/low-stock-alert.component.ts
+components/stock-detail/stock-detail.component.html
+components/stock-detail/stock-detail.component.spec.ts
+components/stock-detail/stock-detail.component.ts
+components/stock-form/stock-form.component.html
+components/stock-form/stock-form.component.spec.ts
+components/stock-form/stock-form.component.ts
+components/stock-history/stock-history.component.css
+components/stock-history/stock-history.component.html
+components/stock-history/stock-history.component.spec.ts
+components/stock-history/stock-history.component.ts
+components/stock-list/stock-list.component.html
+components/stock-list/stock-list.component.spec.ts
+components/stock-list/stock-list.component.ts
+components/stock-trend/stock-trend.component.html
+components/stock-trend/stock-trend.component.spec.ts
+components/stock-trend/stock-trend.component.ts
+inventory-routing.module.ts
+inventory-theme.css
+inventory.module.ts
+models/stock.model.ts
+services/stock.service.spec.ts
+services/stock.service.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="components/low-stock-alert/low-stock-alert.component.html">
+<div *ngIf="showAlert && lowStockItems.length > 0 && !loading" class="inventory-alert inventory-alert-warning inventory-mb-3" role="alert">
+  <div class="inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+    <div>
+      <strong>Low Stock Alert!</strong> {{ lowStockItems.length }} product(s) are below minimum stock level.
+    </div>
+    <button type="button" class="btn-close" (click)="closeAlert()" aria-label="Close"></button>
+  </div>
+  
+  <div class="inventory-mt-3">
+    <ul class="list-group">
+      <li *ngFor="let item of lowStockItems" class="list-group-item list-group-item-danger inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+        {{ item.productName }}
+        <div>
+          <span class="inventory-badge inventory-badge-danger me-2">{{ item.stockDisponible }} / {{ item.stock_minimum }}</span>
+          <button class="inventory-btn inventory-btn-outline" (click)="viewStockDetails(item.productId!)">View</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+</file>
+
+<file path="components/low-stock-alert/low-stock-alert.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { LowStockAlertComponent } from './low-stock-alert.component';
+
+describe('LowStockAlertComponent', () => {
+  let component: LowStockAlertComponent;
+  let fixture: ComponentFixture<LowStockAlertComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [LowStockAlertComponent]
+    });
+    fixture = TestBed.createComponent(LowStockAlertComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/low-stock-alert/low-stock-alert.component.ts">
+import { Component, OnInit } from "@angular/core"
+import { Router } from "@angular/router"
+import { Stock } from "../../models/stock.model"
+import { StockService } from "../../services/stock.service"
+
+@Component({
+  selector: "app-low-stock-alert",
+  templateUrl: "./low-stock-alert.component.html",
+  styleUrls: ["./low-stock-alert.component.css"],
+})
+export class LowStockAlertComponent implements OnInit {
+  lowStockItems: Stock[] = []
+  loading = false
+  showAlert = true
+
+  constructor(
+    private stockService: StockService,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    this.loadLowStockItems()
+  }
+
+  loadLowStockItems(): void {
+    this.loading = true
+    this.stockService.getLowStockItems().subscribe({
+      next: (data) => {
+        this.lowStockItems = data
+        this.loading = false
+      },
+      error: (err) => {
+        console.error("Failed to load low stock items", err)
+        this.loading = false
+      },
+    })
+  }
+
+  closeAlert(): void {
+    this.showAlert = false
+  }
+
+  viewStockDetails(id: number): void {
+    this.router.navigate(["/inventory/detail", id])
+  }
+}
+</file>
+
+<file path="components/stock-detail/stock-detail.component.html">
+<div class="inventory-container inventory-mt-3">
+  <div class="inventory-card">
+    <div class="inventory-header inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+      <h2>Stock Details</h2>
+      <div>
+        <button class="inventory-btn inventory-btn-primary me-2" (click)="editStock()">Edit</button>
+        <button class="inventory-btn inventory-btn-info me-2" (click)="viewStockHistory()">History</button>
+        <button class="inventory-btn inventory-btn-secondary" (click)="goBack()">Back</button>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <div *ngIf="loading" class="inventory-text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      
+      <div *ngIf="error" class="inventory-alert inventory-alert-error">{{ error }}</div>
+      
+      <!-- Stock Details -->
+      <div *ngIf="stock" class="row">
+        <div class="col-md-6">
+          <div class="inventory-card inventory-mb-3">
+            <div class="inventory-header">
+              <h4>Basic Information</h4>
+            </div>
+            <div class="card-body">
+              <p><strong>Product:</strong> {{ stock.productName }}</p>
+              <p><strong>Supplier:</strong> {{ stock.supplierName }}</p>
+              <p>
+                <strong>Current Stock:</strong> 
+                <span [ngClass]="isLowStock() ? 'text-danger' : 'text-success'">
+                  {{ stock.stockDisponible }}
+                </span>
+              </p>
+              <p><strong>Minimum Stock:</strong> {{ stock.stock_minimum }}</p>
+              <div *ngIf="isLowStock()" class="inventory-alert inventory-alert-warning">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Low stock alert! Current stock is below minimum level.
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <!-- Demand Forecast Card -->
+          <div class="inventory-card inventory-mb-3">
+            <div class="inventory-header">
+              <h4>Demand Forecast</h4>
+            </div>
+            <div class="card-body">
+              <div *ngIf="predictedDemand !== undefined">
+                <p><strong>Predicted 7-Day Demand:</strong> {{ predictedDemand | number:'1.0-0' }}</p>
+                <p>
+                  <strong>Days of Inventory:</strong> 
+                  <span [ngClass]="getInventoryStatusClass()">
+                    {{ getDaysOfInventory() }} days
+                  </span>
+                </p>
+                <div class="progress inventory-mb-3">
+                  <div 
+                    class="progress-bar" 
+                    [ngClass]="{
+                      'bg-danger': getDaysOfInventory() <= 7,
+                      'bg-warning': getDaysOfInventory() > 7 && getDaysOfInventory() <= 14,
+                      'bg-success': getDaysOfInventory() > 14
+                    }"
+                    [style.width.%]="getDaysOfInventory() > 30 ? 100 : (getDaysOfInventory() / 30) * 100">
+                    {{ getDaysOfInventory() }} days
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="predictedDemand === undefined">
+                <p>Loading demand forecast...</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Process Sale Card -->
+          <div class="inventory-card">
+            <div class="inventory-header">
+              <h4>Process Sale</h4>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="saleForm" (ngSubmit)="processSale()">
+                <div class="inventory-form-group">
+                  <label for="quantity" class="inventory-form-label">Quantity</label>
+                  <input 
+                    type="number" 
+                    class="inventory-form-control" 
+                    id="quantity" 
+                    formControlName="quantity"
+                    [max]="stock?.stockDisponible || 1">
+                  <div *ngIf="saleForm.get('quantity')?.invalid && saleForm.get('quantity')?.touched" class="text-danger">
+                    <div *ngIf="saleForm.get('quantity')?.errors?.['required']">Quantity is required</div>
+                    <div *ngIf="saleForm.get('quantity')?.errors?.['min']">Quantity must be at least 1</div>
+                    <div *ngIf="saleForm.get('quantity')?.errors?.['max']">Quantity cannot exceed 1000</div>
+                  </div>
+                </div>
+                
+                <button 
+                  type="submit" 
+                  class="inventory-btn inventory-btn-success" 
+                  [disabled]="saleForm.invalid || loading || !stock || stock.stockDisponible === 0">
+                  Process Sale
+                </button>
+              </form>
+              
+              <div *ngIf="saleSuccess" class="inventory-alert inventory-alert-success inventory-mt-3">
+                Sale processed successfully!
+              </div>
+              
+              <div *ngIf="saleError" class="inventory-alert inventory-alert-error inventory-mt-3">
+                {{ saleError }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Stock Trend -->
+      <div *ngIf="stock && stockTrend" class="inventory-mt-3">
+        <div class="inventory-card">
+          <div class="inventory-header inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+            <h4>Stock Trend Analysis</h4>
+            <button class="inventory-btn inventory-btn-info" (click)="viewStockTrend(stock.productId)">View Full Analysis</button>
+          </div>
+          <div class="card-body">
+            <div *ngIf="trendLoading" class="inventory-text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            
+            <div *ngIf="!trendLoading" class="row">
+              <div class="col-md-4">
+                <div class="inventory-card">
+                  <div class="card-body inventory-text-center">
+                    <h5 class="card-title">Trend</h5>
+                    <span class="inventory-badge fs-6"
+                      [ngClass]="{
+                        'inventory-badge-danger': stockTrend.trend === 'décroissant',
+                        'inventory-badge-warning': stockTrend.trend === 'stable',
+                        'inventory-badge-success': stockTrend.trend === 'croissant'
+                      }">
+                      {{ stockTrend.trend === 'décroissant' ? 'Decreasing' : 
+                         stockTrend.trend === 'stable' ? 'Stable' : 
+                         stockTrend.trend === 'croissant' ? 'Increasing' : stockTrend.trend }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="inventory-card">
+                  <div class="card-body inventory-text-center">
+                    <h5 class="card-title">Suggested Stock</h5>
+                    <p class="fs-4">{{ stockTrend.suggestedStock }}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="inventory-card">
+                  <div class="card-body inventory-text-center">
+                    <h5 class="card-title">Predicted Demand</h5>
+                    <p class="fs-4">{{ stockTrend.predictedDemand | number:'1.0-0' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</file>
+
+<file path="components/stock-detail/stock-detail.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { StockDetailComponent } from './stock-detail.component';
+
+describe('StockDetailComponent', () => {
+  let component: StockDetailComponent;
+  let fixture: ComponentFixture<StockDetailComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [StockDetailComponent]
+    });
+    fixture = TestBed.createComponent(StockDetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/stock-detail/stock-detail.component.ts">
+import { Component, OnInit } from "@angular/core"
+import  { ActivatedRoute, Router } from "@angular/router"
+import { Stock, StockTrend } from "../../models/stock.model"
+import {  FormBuilder,  FormGroup, Validators } from "@angular/forms"
+import  { StockService } from "../../services/stock.service"
+
+@Component({
+  selector: "app-stock-detail",
+  templateUrl: "./stock-detail.component.html",
+  styleUrls: ["./stock-detail.component.css"],
+})
+export class StockDetailComponent implements OnInit {
+  stock?: Stock
+  stockTrend?: StockTrend
+  predictedDemand?: number
+  loading = false
+  trendLoading = false
+  error = ""
+  saleForm!: FormGroup
+  saleSuccess = false
+  saleError = ""
+
+  constructor(
+    private stockService: StockService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private fb: FormBuilder,
+  ) {}
+
+  ngOnInit(): void {
+    this.initSaleForm()
+    this.route.params.subscribe((params) => {
+      if (params["id"]) {
+        const productId = +params["id"]
+        this.loadStockDetails(productId)
+        this.loadStockTrend(productId)
+        this.loadDemandForecast(productId)
+      }
+    })
+  }
+
+  initSaleForm(): void {
+    this.saleForm = this.fb.group({
+      quantity: [1, [Validators.required, Validators.min(1), Validators.max(1000)]],
+    })
+  }
+
+  loadStockDetails(productId: number): void {
+    this.loading = true
+    this.stockService.getStockByProductId(productId).subscribe({
+      next: (data) => {
+        this.stock = data
+        this.loading = false
+      },
+      error: (err) => {
+        this.error = "Failed to load stock details"
+        console.error(err)
+        this.loading = false
+      },
+    })
+  }
+
+  loadStockTrend(productId: number): void {
+    this.trendLoading = true
+    this.stockService.getStockTrend(productId).subscribe({
+      next: (data) => {
+        this.stockTrend = data
+        this.trendLoading = false
+      },
+      error: (err) => {
+        console.error("Failed to load stock trend", err)
+        this.trendLoading = false
+      },
+    })
+  }
+
+  loadDemandForecast(productId: number): void {
+    this.stockService.getDemandForecast(productId).subscribe({
+      next: (data) => {
+        this.predictedDemand = data
+      },
+      error: (err) => {
+        console.error("Failed to load demand forecast", err)
+      },
+    })
+  }
+
+  isLowStock(): boolean {
+    return this.stock ? this.stock.stockDisponible <= this.stock.stock_minimum : false
+  }
+
+  // New method to process a sale
+  processSale(): void {
+    if (this.saleForm.invalid || !this.stock) {
+      return
+    }
+
+    const quantity = this.saleForm.value.quantity
+    this.saleSuccess = false
+    this.saleError = ""
+    this.loading = true
+
+    // First check if stock is sufficient (this will also reduce stock if sufficient)
+    this.stockService.isStockSufficient(this.stock.productId, quantity).subscribe({
+      next: (isSufficient) => {
+        if (isSufficient) {
+          // If sufficient, reload stock details to show updated quantity
+          this.saleSuccess = true
+          this.loadStockDetails(this.stock!.productId)
+        } else {
+          this.saleError = `Insufficient stock. Only ${this.stock!.stockDisponible} available.`
+          this.loading = false
+        }
+      },
+      error: (err) => {
+        this.saleError = "Error processing sale"
+        console.error(err)
+        this.loading = false
+      },
+    })
+  }
+
+  editStock(): void {
+    if (this.stock) {
+      this.router.navigate(["/inventory/edit", this.stock.productId])
+    }
+  }
+
+  viewStockHistory(): void {
+    if (this.stock) {
+      this.router.navigate(["/inventory/history", this.stock.productId])
+    }
+  }
+
+  goBack(): void {
+    this.router.navigate(["/inventory"])
+  }
+
+  // Helper method to calculate days of inventory based on predicted demand
+  getDaysOfInventory(): number {
+    if (!this.stock || !this.predictedDemand || this.predictedDemand === 0) {
+      return 0
+    }
+    // Predicted demand is for 7 days, so calculate daily demand
+    const dailyDemand = this.predictedDemand / 7
+    return dailyDemand > 0 ? Math.round(this.stock.stockDisponible / dailyDemand) : 0
+  }
+  viewStockTrend(id: number) {
+    this.router.navigate(['/inventory/trend', id]);
+  }
+  // Helper to get status class based on days of inventory
+  getInventoryStatusClass(): string {
+    const days = this.getDaysOfInventory()
+    if (days <= 7) return "text-danger"
+    if (days <= 14) return "text-warning"
+    return "text-success"
+  }
+}
+</file>
+
+<file path="components/stock-form/stock-form.component.html">
+<div class="inventory-container inventory-mt-3">
+  <div class="inventory-card">
+    <div class="inventory-header">
+      <h2>{{ isEditMode ? 'Edit Stock' : 'Add New Stock' }}</h2>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loading" class="inventory-text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="inventory-alert inventory-alert-error">{{ error }}</div>
+
+      <form [formGroup]="stockForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        <div class="inventory-form-group">
+          <label for="productId" class="inventory-form-label">Product</label>
+          <select
+            class="inventory-form-control"
+            id="productId"
+            formControlName="productId"
+            [attr.disabled]="isEditMode ? true : null"
+          >
+            <option value="">Select a product</option>
+            <option *ngFor="let product of products" [value]="product.id">
+              {{ product.name }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f['productId'].errors" class="text-danger">
+            <div *ngIf="f['productId'].errors['required']">Product is required</div>
+          </div>
+        </div>
+
+        <div class="inventory-form-group">
+          <label for="stockDisponible" class="inventory-form-label">Available Stock</label>
+          <input
+            type="number"
+            class="inventory-form-control"
+            id="stockDisponible"
+            formControlName="stockDisponible"
+            min="0"
+          />
+          <div *ngIf="submitted && f['stockDisponible'].errors" class="text-danger">
+            <div *ngIf="f['stockDisponible'].errors['required']">Available stock is required</div>
+            <div *ngIf="f['stockDisponible'].errors['min']">Available stock must be at least 0</div>
+          </div>
+        </div>
+
+        <div class="inventory-form-group">
+          <label for="stock_minimum" class="inventory-form-label">Minimum Stock</label>
+          <input
+            type="number"
+            class="inventory-form-control"
+            id="stock_minimum"
+            formControlName="stock_minimum"
+            min="0"
+            [attr.disabled]="isEditMode ? true : null"
+          />
+          <div *ngIf="submitted && f['stock_minimum'].errors" class="text-danger">
+            <div *ngIf="f['stock_minimum'].errors['required']">Minimum stock is required</div>
+            <div *ngIf="f['stock_minimum'].errors['min']">Minimum stock must be at least 0</div>
+          </div>
+        </div>
+
+        <div class="inventory-form-group">
+          <label for="fournisseur_id" class="inventory-form-label">Supplier</label>
+          <select
+            class="inventory-form-control"
+            id="fournisseur_id"
+            formControlName="fournisseur_id"
+            [attr.disabled]="isEditMode ? true : null"
+          >
+            <option value="">Select a supplier</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+              {{ supplier.name }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f['fournisseur_id'].errors" class="text-danger">
+            <div *ngIf="f['fournisseur_id'].errors['required']">Supplier is required</div>
+          </div>
+        </div>
+
+        <!-- Reason field for edit mode -->
+        <div class="inventory-form-group" *ngIf="isEditMode">
+          <label for="reason" class="inventory-form-label">Reason for Change</label>
+          <input
+            type="text"
+            class="inventory-form-control"
+            id="reason"
+            formControlName="reason"
+            placeholder="e.g., Restock, Inventory adjustment"
+          />
+          <div *ngIf="submitted && f['reason']?.errors" class="text-danger">
+            <div *ngIf="f['reason']?.errors?.['required']">Reason is required</div>
+            <div *ngIf="f['reason']?.errors?.['minlength']">Reason must be at least 3 characters</div>
+          </div>
+        </div>
+
+        <div class="inventory-d-flex inventory-justify-content-between">
+          <button type="submit" class="inventory-btn inventory-btn-primary" [disabled]="loading">
+            {{ isEditMode ? 'Update' : 'Save' }}
+          </button>
+          <button type="button" class="inventory-btn inventory-btn-secondary" (click)="navigateToInventory()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</file>
+
+<file path="components/stock-form/stock-form.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { StockFormComponent } from './stock-form.component';
+
+describe('StockFormComponent', () => {
+  let component: StockFormComponent;
+  let fixture: ComponentFixture<StockFormComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [StockFormComponent]
+    });
+    fixture = TestBed.createComponent(StockFormComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/stock-form/stock-form.component.ts">
+import { Component, OnInit } from "@angular/core"
+import { FormBuilder,  FormGroup, Validators } from "@angular/forms"
+import  { ActivatedRoute, Router } from "@angular/router"
+import  { Stock, Product, Supplier } from "../../models/stock.model"
+import { StockService } from "../../services/stock.service"
+
+@Component({
+  selector: "app-stock-form",
+  templateUrl: "./stock-form.component.html",
+  styleUrls: ["./stock-form.component.css"],
+})
+export class StockFormComponent implements OnInit {
+  stockForm!: FormGroup
+  isEditMode = false
+  productId?: number
+  stockId?: number
+  loading = false
+  error = ""
+  submitted = false
+  products: Product[] = []
+  suppliers: Supplier[] = []
+
+  constructor(
+    private fb: FormBuilder,
+    private stockService: StockService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm()
+    this.loadProducts()
+    this.loadSuppliers()
+
+    this.route.params.subscribe((params) => {
+      if (params["id"]) {
+        this.isEditMode = true
+        this.productId = +params["id"]
+        this.loadStockData(this.productId)
+      }
+    })
+  }
+
+  initForm(): void {
+    this.stockForm = this.fb.group({
+      productId: [{ value: "", disabled: this.isEditMode }, Validators.required],
+      stockDisponible: ["", [Validators.required, Validators.min(0)]],
+      stock_minimum: [{ value: "", disabled: this.isEditMode }, [Validators.required, Validators.min(0)]],
+      fournisseur_id: [{ value: "", disabled: this.isEditMode }, Validators.required],
+      reason: ["", this.isEditMode ? [Validators.required, Validators.minLength(3)] : []],
+    })
+  }
+
+  loadProducts(): void {
+    this.stockService.getProducts().subscribe({
+      next: (products) => {
+        this.products = products
+      },
+      error: (err) => {
+        console.error("Failed to load products", err)
+      },
+    })
+  }
+
+  loadSuppliers(): void {
+    this.stockService.getSuppliers().subscribe({
+      next: (suppliers) => {
+        this.suppliers = suppliers
+      },
+      error: (err) => {
+        console.error("Failed to load suppliers", err)
+      },
+    })
+  }
+
+  loadStockData(productId: number): void {
+    this.loading = true
+    this.stockService.getStockByProductId(productId).subscribe({
+      next: (stock) => {
+        this.stockId = stock.id_stock
+        this.stockForm.patchValue({
+          productId: stock.productId,
+          stockDisponible: stock.stockDisponible,
+          stock_minimum: stock.stock_minimum,
+          fournisseur_id: stock.fournisseur_id,
+        })
+        // Disable fields in edit mode
+        this.stockForm.get("productId")?.disable()
+        this.stockForm.get("stock_minimum")?.disable()
+        this.stockForm.get("fournisseur_id")?.disable()
+        this.error = ""
+        this.loading = false
+      },
+      error: (err) => {
+        this.error = "Failed to load stock data"
+        console.error(err)
+        this.loading = false
+      },
+    })
+  }
+
+  // Modify the onSubmit method to work with the existing backend
+  onSubmit(): void {
+    this.submitted = true
+
+    if (this.stockForm.invalid) {
+      return
+    }
+
+    this.loading = true
+
+    const stockData: Stock = {
+      ...this.stockForm.getRawValue(), // Use getRawValue to include disabled fields
+    }
+
+    if (this.isEditMode && this.productId) {
+      // For edit mode, just update the stock
+      // The backend will record the history internally
+      const newQuantity = stockData.stockDisponible
+
+      this.stockService.updateStock(this.productId, newQuantity).subscribe({
+        next: (updatedStock) => {
+          this.error = ""
+          this.loading = false
+          this.router.navigate(["/inventory"])
+        },
+        error: (err) => {
+          this.error = "Failed to update stock"
+          console.error(err)
+          this.loading = false
+        },
+      })
+    } else {
+      // For new stock, just add it
+      // The backend will record the initial history internally
+      this.stockService.addStock(stockData).subscribe({
+        next: () => {
+          this.error = ""
+          this.loading = false
+          this.router.navigate(["/inventory"])
+        },
+        error: (err) => {
+          this.error = "Failed to add stock"
+          console.error(err)
+          this.loading = false
+        },
+      })
+    }
+  }
+
+  get f() {
+    return this.stockForm.controls
+  }
+
+  getProductName(id: number): string {
+    const product = this.products.find((p) => p.id === id)
+    return product ? product.name : ""
+  }
+
+  navigateToInventory(): void {
+    // Logic to navigate to the inventory page
+    console.log('Navigating to inventory...');
+    this.router.navigate(["/inventory"]);
+  }
+
+  getSupplierName(id: number): string {
+    const supplier = this.suppliers.find((s) => s.id === id)
+    return supplier ? supplier.name : ""
+  }
+}
+</file>
+
+<file path="components/stock-history/stock-history.component.css">
+.badge {
+    font-size: 0.8rem;
+    padding: 0.35em 0.65em;
+  }
+  
+  .text-success {
+    color: #198754;
+  }
+  
+  .text-danger {
+    color: #dc3545;
+  }
+</file>
+
+<file path="components/stock-history/stock-history.component.html">
+<div class="inventory-container inventory-mt-3">
+  <div class="inventory-card">
+    <div class="inventory-header inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+      <h2>Stock History for {{ stock?.productName || 'Product' }}</h2>
+      <div>
+        <button class="inventory-btn inventory-btn-primary me-2" (click)="toggleAddForm()">
+          {{ showAddForm ? 'Cancel' : 'Add Entry' }}
+        </button>
+        <button class="inventory-btn inventory-btn-secondary" (click)="goBack()">Back</button>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <div *ngIf="loading" class="inventory-text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      
+      <div *ngIf="error" class="inventory-alert inventory-alert-error">{{ error }}</div>
+      
+      <!-- Add History Form -->
+      <div *ngIf="showAddForm" class="inventory-mb-3">
+        <div class="inventory-card">
+          <div class="inventory-header">Add Stock History Entry</div>
+          <div class="card-body">
+            <form [formGroup]="historyForm" (ngSubmit)="addHistoryEntry()">
+              <div class="inventory-form-group">
+                <label for="quantityChange" class="inventory-form-label">Quantity Change</label>
+                <input 
+                  type="number" 
+                  class="inventory-form-control" 
+                  id="quantityChange" 
+                  formControlName="quantityChange"
+                  placeholder="Enter positive value for additions, negative for removals">
+                <div *ngIf="historyForm.get('quantityChange')?.invalid && historyForm.get('quantityChange')?.touched" class="text-danger">
+                  Quantity change is required
+                </div>
+              </div>
+              
+              <div class="inventory-form-group">
+                <label for="reason" class="inventory-form-label">Reason</label>
+                <input 
+                  type="text" 
+                  class="inventory-form-control" 
+                  id="reason" 
+                  formControlName="reason"
+                  placeholder="e.g., Restock, Sale, Inventory adjustment">
+                <div *ngIf="historyForm.get('reason')?.invalid && historyForm.get('reason')?.touched" class="text-danger">
+                  Reason is required (3-100 characters)
+                </div>
+              </div>
+              
+              <button type="submit" class="inventory-btn inventory-btn-success" [disabled]="historyForm.invalid">Save Entry</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Stock Info Summary -->
+      <div *ngIf="stock" class="inventory-mb-3">
+        <div class="inventory-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Product:</strong> {{ stock.productName }}</p>
+                <p><strong>Supplier:</strong> {{ stock.supplierName }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Current Stock:</strong> {{ stock.stockDisponible }}</p>
+                <p><strong>Minimum Stock:</strong> {{ stock.stock_minimum }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- History Table -->
+      <div *ngIf="!loading && history.length > 0">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Quantity Change</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of history">
+              <td>{{ formatDate(entry.timestamp) }}</td>
+              <td [ngClass]="getQuantityChangeClass(entry.quantityChange)">
+                {{ entry.quantityChange > 0 ? '+' : '' }}{{ entry.quantityChange }}
+              </td>
+              <td>{{ entry.reason }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div *ngIf="!loading && history.length === 0" class="inventory-alert inventory-alert-info">
+        No history records found for this product.
+      </div>
+    </div>
+  </div>
+</div>
+</file>
+
+<file path="components/stock-history/stock-history.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { StockHistoryComponent } from './stock-history.component';
+
+describe('StockHistoryComponent', () => {
+  let component: StockHistoryComponent;
+  let fixture: ComponentFixture<StockHistoryComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [StockHistoryComponent]
+    });
+    fixture = TestBed.createComponent(StockHistoryComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/stock-history/stock-history.component.ts">
+import { Component,  OnInit } from "@angular/core"
+import  { ActivatedRoute, Router } from "@angular/router"
+import { Stock, StockHistory } from "../../models/stock.model"
+import { StockService } from "../../services/stock.service"
+import {  FormBuilder,  FormGroup, Validators } from "@angular/forms"
+
+@Component({
+  selector: "app-stock-history",
+  templateUrl: "./stock-history.component.html",
+  styleUrls: ["./stock-history.component.css"],
+})
+export class StockHistoryComponent implements OnInit {
+  productId!: number
+  stock?: Stock
+  history: StockHistory[] = []
+  loading = false
+  error = ""
+  historyForm!: FormGroup
+  showAddForm = false
+
+  constructor(
+    private stockService: StockService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private fb: FormBuilder,
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm()
+    this.route.params.subscribe((params) => {
+      if (params["id"]) {
+        this.productId = +params["id"]
+        this.loadStockDetails()
+        this.loadStockHistory()
+      }
+    })
+  }
+
+  initForm(): void {
+    this.historyForm = this.fb.group({
+      quantityChange: [0, [Validators.required, Validators.min(-1000), Validators.max(1000)]],
+      reason: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+    })
+  }
+
+  loadStockDetails(): void {
+    this.loading = true
+    this.stockService.getStockByProductId(this.productId).subscribe({
+      next: (data) => {
+        this.stock = data
+        this.loading = false
+      },
+      error: (err) => {
+        this.error = "Failed to load stock details"
+        console.error(err)
+        this.loading = false
+      },
+    })
+  }
+
+  loadStockHistory(): void {
+    this.loading = true
+    this.stockService.getStockHistory(this.productId).subscribe({
+      next: (data) => {
+        this.history = data
+        this.loading = false
+      },
+      error: (err) => {
+        this.error = "Failed to load stock history"
+        console.error(err)
+        this.loading = false
+      },
+    })
+  }
+
+  toggleAddForm(): void {
+    this.showAddForm = !this.showAddForm
+    if (this.showAddForm) {
+      this.historyForm.reset({
+        quantityChange: 0,
+        reason: "",
+      })
+    }
+  }
+
+  // Modify the addHistoryEntry method to work with the existing backend
+  addHistoryEntry(): void {
+    if (this.historyForm.invalid) {
+      return
+    }
+
+    const quantityChange = this.historyForm.value.quantityChange
+    const reason = this.historyForm.value.reason
+
+    // Instead of creating a history entry directly,
+    // we'll update the stock quantity which will trigger
+    // the backend to record history
+    this.loading = true
+
+    if (this.stock) {
+      const newQuantity = this.stock.stockDisponible + quantityChange
+
+      // Update stock with new quantity
+      this.stockService.updateStock(this.productId, newQuantity).subscribe({
+        next: (updatedStock) => {
+          this.stock = updatedStock
+          // Refresh history (mock data will be returned)
+          this.loadStockHistory()
+          this.toggleAddForm()
+          this.loading = false
+        },
+        error: (err) => {
+          this.error = "Failed to update stock quantity"
+          console.error(err)
+          this.loading = false
+        },
+      })
+    }
+  }
+
+  goBack(): void {
+    this.router.navigate(["/inventory/detail", this.productId])
+  }
+
+  // Helper method to format dates
+  formatDate(date: Date | string): string {
+    if (!date) return ""
+    const d = new Date(date)
+    return d.toLocaleString()
+  }
+
+  // Helper to get CSS class based on quantity change
+  getQuantityChangeClass(change: number): string {
+    return change > 0 ? "text-success" : change < 0 ? "text-danger" : ""
+  }
+}
+</file>
+
+<file path="components/stock-list/stock-list.component.html">
+<div class="inventory-container inventory-mt-3">
+  <div class="inventory-d-flex inventory-justify-content-between inventory-align-items-center inventory-mb-3">
+    <h2>Stock Management</h2>
+    <button class="inventory-btn inventory-btn-primary" routerLink="/inventory/add">Add New Stock</button>
+  </div>
+
+  <div class="row inventory-mb-3">
+    <div class="col-md-6">
+      <div class="input-group">
+        <input 
+          type="text" 
+          class="inventory-form-control" 
+          placeholder="Search by product or supplier..." 
+          [(ngModel)]="searchTerm"
+          (keyup)="searchStocks()"
+        >
+        <button class="inventory-btn inventory-btn-outline" type="button" (click)="searchStocks()">
+          <i class="bi bi-search"></i> Search
+        </button>
+      </div>
+    </div>
+    <div class="col-md-6 inventory-text-end">
+      <button class="inventory-btn inventory-btn-outline me-2" (click)="loadStocks()">
+        <i class="bi bi-arrow-clockwise"></i> Refresh
+      </button>
+    </div>
+  </div>
+
+  <app-low-stock-alert></app-low-stock-alert>
+
+  <div *ngIf="loading" class="inventory-text-center my-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="inventory-alert inventory-alert-error">
+    {{ error }}
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading && filteredStocks.length > 0">
+    <table class="inventory-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Product</th>
+          <th>Available Stock</th>
+          <th>Minimum Stock</th>
+          <th>Supplier</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of filteredStocks" [ngClass]="{'table-danger': isLowStock(stock)}">
+          <td>{{ stock.id_stock }}</td>
+          <td>{{ stock.productName }}</td>
+          <td>{{ stock.stockDisponible }}</td>
+          <td>{{ stock.stock_minimum }}</td>
+          <td>{{ stock.supplierName }}</td>
+          <td>
+            <span class="inventory-badge" [ngClass]="isLowStock(stock) ? 'inventory-badge-danger' : 'inventory-badge-success'">
+              {{ isLowStock(stock) ? 'Low Stock' : 'In Stock' }}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button class="inventory-btn inventory-btn-info me-1" (click)="viewStockDetails(stock.productId)">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="inventory-btn inventory-btn-warning me-1" (click)="editStock(stock.productId)">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="inventory-btn inventory-btn-danger me-1" (click)="deleteStock(stock.id_stock!)">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button class="inventory-btn inventory-btn-secondary" (click)="viewStockHistory(stock.productId)">
+                <i class="bi bi-clock-history"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && filteredStocks.length === 0" class="inventory-alert inventory-alert-info">
+    No stock items found. Please add a new stock item or adjust your search criteria.
+  </div>
+</div>
+</file>
+
+<file path="components/stock-list/stock-list.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { StockListComponent } from './stock-list.component';
+
+describe('StockListComponent', () => {
+  let component: StockListComponent;
+  let fixture: ComponentFixture<StockListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [StockListComponent]
+    });
+    fixture = TestBed.createComponent(StockListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/stock-list/stock-list.component.ts">
+import { Component, OnInit } from "@angular/core"; // Removed 'type' for OnInit
+import { Router } from "@angular/router"
+import { Stock } from "../../models/stock.model"
+import { StockService } from "../../services/stock.service"
+
+@Component({
+  selector: "app-stock-list",
+  templateUrl: "./stock-list.component.html",
+  styleUrls: ["./stock-list.component.css" ],
+})
+export class StockListComponent implements OnInit {
+  stocks: Stock[] = []
+  filteredStocks: Stock[] = []
+  loading = false
+  error = ""
+  searchTerm = ""
+
+  constructor(
+    private stockService: StockService,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    this.loadStocks()
+  }
+
+  loadStocks(): void {
+    this.loading = true
+    this.stockService.getStocks().subscribe({
+      next: (data) => {
+        this.stocks = data
+        this.filteredStocks = data
+        this.loading = false
+      },
+      error: (err) => {
+        this.error = "Failed to load stock data"
+        console.error(err)
+        this.loading = false
+      },
+    })
+  }
+
+  searchStocks(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredStocks = this.stocks
+      return
+    }
+
+    const term = this.searchTerm.toLowerCase()
+    this.filteredStocks = this.stocks.filter(
+      (stock) => stock.productName?.toLowerCase().includes(term) || stock.supplierName?.toLowerCase().includes(term),
+    )
+  }
+
+  viewStockDetails(productId: number): void {
+    this.router.navigate(["/inventory/detail", productId])
+  }
+
+  editStock(productId: number): void {
+    this.router.navigate(["/inventory/edit", productId])
+  }
+
+  deleteStock(id: number): void {
+    if (confirm("Are you sure you want to delete this stock item?")) {
+      this.stockService.deleteStock(id).subscribe({
+        next: (success) => {
+          if (success) {
+            this.loadStocks()
+          } else {
+            this.error = "Failed to delete stock item"
+          }
+        },
+        error: (err) => {
+          this.error = "Failed to delete stock item"
+          console.error(err)
+        },
+      })
+    }
+  }
+
+  viewStockHistory(productId: number): void {
+    this.router.navigate(["/inventory/history", productId])
+  }
+
+  isLowStock(stock: Stock): boolean {
+    return stock.stockDisponible <= stock.stock_minimum
+  }
+}
+</file>
+
+<file path="components/stock-trend/stock-trend.component.html">
+<div class="inventory-container inventory-mt-3">
+  <div class="inventory-card">
+    <div class="inventory-header inventory-d-flex inventory-justify-content-between inventory-align-items-center">
+      <h3>Stock Trend Analysis</h3>
+      <button class="inventory-btn inventory-btn-secondary" (click)="goBack()">Back to Details</button>
+    </div>
+
+    <div class="inventory-card-body">
+      <div *ngIf="loading" class="inventory-text-center inventory-mt-3 inventory-mb-3">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="inventory-alert inventory-alert-error">
+        {{ error }}
+      </div>
+
+      <div *ngIf="stockTrend && !loading">
+        <div class="inventory-d-flex inventory-mb-3">
+          <div class="col-md-12">
+            <h4>Product ID: {{ stockTrend.productId }}</h4>
+          </div>
+        </div>
+
+        <div class="inventory-d-flex">
+          <div class="col-md-6">
+            <div class="inventory-card inventory-mb-3">
+              <div class="inventory-header">
+                <h5>Stock Trend</h5>
+              </div>
+              <div class="inventory-card-body">
+                <p><strong>Current Trend:</strong>
+                  <span class="inventory-badge" [ngClass]="getTrendBadgeClass(stockTrend.trend)">
+                    {{ getTrendDisplay(stockTrend.trend) }}
+                  </span>
+                </p>
+                <p><strong>Current Stock:</strong> {{ stockTrend.stockDisponible }}</p>
+                <p><strong>Minimum Stock:</strong> {{ stockTrend.stockMinimum }}</p>
+                <p><strong>Suggested Stock Level:</strong> {{ stockTrend.suggestedStock }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="inventory-card inventory-mb-3">
+              <div class="inventory-header">
+                <h5>Demand Forecast</h5>
+              </div>
+              <div class="inventory-card-body">
+                <p><strong>Predicted Demand (7 days):</strong> {{ predictedDemand | number:'1.0-2' }}</p>
+
+                <div *ngIf="stockTrend.stockDisponible !== undefined && predictedDemand !== undefined">
+                  <p><strong>Stock Coverage:</strong>
+                    <span [ngClass]="stockTrend.stockDisponible >= predictedDemand ? 'inventory-text-success' : 'inventory-text-danger'">
+                      {{ stockTrend.stockDisponible >= predictedDemand ? 'Sufficient' : 'Insufficient' }}
+                    </span>
+                  </p>
+
+                  <div class="progress inventory-mb-3">
+                    <div class="progress-bar"
+                         [ngClass]="stockTrend.stockDisponible >= predictedDemand ? 'inventory-bg-success' : 'inventory-bg-danger'"
+                         [style.width.%]="(stockTrend.stockDisponible / (predictedDemand || 1)) * 100">
+                      {{ ((stockTrend.stockDisponible / (predictedDemand || 1)) * 100) | number:'1.0-0' }}%
+                    </div>
+                  </div>
+
+                  <p *ngIf="stockTrend.stockDisponible < predictedDemand" class="inventory-text-danger">
+                    <strong>Warning:</strong> Current stock is insufficient to meet predicted demand.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="inventory-d-flex inventory-mt-3">
+          <div class="col-md-12">
+            <div class="inventory-card">
+              <div class="inventory-header">
+                <h5>Recommendations</h5>
+              </div>
+              <div class="inventory-card-body">
+                <ul class="inventory-list-group">
+                  <li class="inventory-list-group-item" *ngIf="stockTrend.stockDisponible !== undefined && stockTrend.stockMinimum !== undefined && stockTrend.stockDisponible < stockTrend.stockMinimum">
+                    <i class="bi bi-exclamation-triangle-fill inventory-text-danger me-2"></i>
+                    <strong>Critical:</strong> Stock is below minimum threshold. Immediate replenishment required.
+                  </li>
+                  <li class="inventory-list-group-item" *ngIf="predictedDemand !== undefined && stockTrend.stockDisponible !== undefined && stockTrend.stockMinimum !== undefined && stockTrend.stockDisponible < predictedDemand && stockTrend.stockDisponible >= stockTrend.stockMinimum">
+                    <i class="bi bi-exclamation-circle-fill inventory-text-warning me-2"></i>
+                    <strong>Warning:</strong> Stock may not meet predicted demand. Consider replenishment.
+                  </li>
+                  <li class="inventory-list-group-item" *ngIf="stockTrend.trend === 'décroissant'">
+                    <i class="bi bi-graph-down-arrow inventory-text-info me-2"></i>
+                    <strong>Trend Alert:</strong> Decreasing trend detected. Monitor closely.
+                  </li>
+                  <li class="inventory-list-group-item" *ngIf="predictedDemand !== undefined && stockTrend.stockDisponible !== undefined && stockTrend.stockMinimum !== undefined && stockTrend.stockDisponible >= predictedDemand && stockTrend.stockDisponible >= stockTrend.stockMinimum">
+                    <i class="bi bi-check-circle-fill inventory-text-success me-2"></i>
+                    <strong>Good:</strong> Current stock levels are sufficient.
+                  </li>
+                  <li class="inventory-list-group-item">
+                    <i class="bi bi-arrow-repeat inventory-text-primary me-2"></i>
+                    <strong>Recommendation:</strong> Maintain stock at {{ stockTrend.suggestedStock }} units.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</file>
+
+<file path="components/stock-trend/stock-trend.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { StockTrendComponent } from './stock-trend.component';
+
+describe('StockTrendComponent', () => {
+  let component: StockTrendComponent;
+  let fixture: ComponentFixture<StockTrendComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [StockTrendComponent]
+    });
+    fixture = TestBed.createComponent(StockTrendComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/stock-trend/stock-trend.component.ts">
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { StockTrend } from '../../models/stock.model';
+import { StockService } from '../../services/stock.service';
+import { forkJoin } from 'rxjs';
+
+@Component({
+  selector: 'app-stock-trend',
+  templateUrl: './stock-trend.component.html',
+  styleUrls: ['./stock-trend.component.css'],
+})
+export class StockTrendComponent implements OnInit {
+  productId!: number;
+  stockTrend?: StockTrend;
+  predictedDemand?: number;
+  loading = false;
+  error = '';
+
+  constructor(
+    private  stockService: StockService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  private loadData(): void {
+    this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.productId = +params['id'];
+        this.loading = true;
+        forkJoin({
+          trend: this.stockService.getStockTrend(this.productId),
+          demand: this.stockService.getDemandForecast(this.productId),
+        }).subscribe({
+          next: ({ trend, demand }) => {
+            this.stockTrend = trend;
+            this.predictedDemand = demand;
+            this.loading = false;
+          },
+          error: (err) => {
+            this.error = 'Failed to load stock trend or demand forecast';
+            console.error(err);
+            this.loading = false;
+          },
+        });
+      }
+    });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/inventory/detail', this.productId]);
+  }
+
+  // Helper to translate backend trend values for display
+  getTrendDisplay(trend: string): string {
+    switch (trend) {
+      case 'décroissant':
+        return 'Decreasing';
+      case 'stable':
+        return 'Stable';
+      case 'croissant':
+        return 'Increasing';
+      default:
+        return trend;
+    }
+  }
+
+  // Helper to get badge class based on trend
+  getTrendBadgeClass(trend: string): string {
+    switch (trend) {
+      case 'décroissant':
+        return 'bg-danger';
+      case 'stable':
+        return 'bg-warning';
+      case 'croissant':
+        return 'bg-success';
+      default:
+        return 'bg-secondary';
+    }
+  }
+}
+</file>
+
+<file path="inventory-routing.module.ts">
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { StockListComponent } from "./components/stock-list/stock-list.component";
+import { StockFormComponent } from "./components/stock-form/stock-form.component";
+import { StockDetailComponent } from "./components/stock-detail/stock-detail.component";
+import { StockHistoryComponent } from "./components/stock-history/stock-history.component";
+import { StockTrendComponent } from "./components/stock-trend/stock-trend.component";
+
+const routes: Routes = [
+  { path: "", component: StockListComponent },
+  { path: "add", component: StockFormComponent },
+  { path: "edit/:id", component: StockFormComponent },
+  { path: "detail/:id", component: StockDetailComponent },
+  { path: "history/:id", component: StockHistoryComponent },
+  { path: "trend/:id", component: StockTrendComponent },
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class InventoryRoutingModule {}
+</file>
+
+<file path="inventory-theme.css">
+/* Inventory Theme - Scoped to inventory components only */
+:root {
+    --inventory-primary: #ff80ab;
+    --inventory-primary-light: #ffb2c9;
+    --inventory-primary-dark: #c94f7c;
+    --inventory-secondary: #f8bbd0;
+    --inventory-secondary-light: #ffeeff;
+    --inventory-secondary-dark: #c48b9f;
+    --inventory-accent: #ff008c;
+    --inventory-text-on-primary: #ffffff;
+    --inventory-text-on-secondary: #442c2e;
+    --inventory-error: #ff5252;
+    --inventory-success: #4caf50;
+    --inventory-warning: #ff9800;
+    --inventory-info: #f3219169;
+    --inventory-background: #fff9fb;
+    --inventory-card-bg: #fff0f5;
+    --inventory-border-radius: 12px;
+    --inventory-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --inventory-transition: all 0.3s ease;
+  }
+  
+  /* Cards and Containers */
+  .inventory-card {
+    background-color: var(--inventory-card-bg);
+    border-radius: var(--inventory-border-radius);
+    box-shadow: var(--inventory-box-shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: var(--inventory-transition);
+  }
+  
+  .inventory-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .inventory-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Headers */
+  .inventory-header {
+    color: var(--inventory-primary-dark);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .inventory-header::after,
+  .inventory-header::before {
+    content: "✨";
+    margin: 0 0.5rem;
+    color: var(--inventory-accent);
+  }
+  
+  /* Forms */
+  .inventory-form-control {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--inventory-text-on-secondary);
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid var(--inventory-secondary);
+    border-radius: var(--inventory-border-radius);
+    transition: var(--inventory-transition);
+  }
+  
+  .inventory-form-control:focus {
+    border-color: var(--inventory-primary);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(255, 128, 171, 0.25);
+  }
+  
+  .inventory-form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .inventory-form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  /* Buttons */
+  .inventory-btn {
+    display: inline-block;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: var(--inventory-border-radius);
+    transition: var(--inventory-transition);
+    cursor: pointer;
+  }
+  
+  .inventory-btn-primary {
+    color: var(--inventory-text-on-primary);
+    background-color: var(--inventory-primary);
+    border-color: var(--inventory-primary);
+  }
+  
+  .inventory-btn-primary:hover {
+    background-color: var(--inventory-primary-dark);
+    border-color: var(--inventory-primary-dark);
+  }
+  
+  .inventory-btn-secondary {
+    color: var(--inventory-text-on-secondary);
+    background-color: var(--inventory-secondary);
+    border-color: var(--inventory-secondary);
+  }
+  
+  .inventory-btn-secondary:hover {
+    background-color: var(--inventory-secondary-dark);
+    border-color: var(--inventory-secondary-dark);
+  }
+  
+  .inventory-btn-outline {
+    color: var(--inventory-primary);
+    background-color: transparent;
+    border-color: var(--inventory-primary);
+  }
+  
+  .inventory-btn-outline:hover {
+    color: var(--inventory-text-on-primary);
+    background-color: var(--inventory-primary);
+  }
+  
+  /* Tables */
+  .inventory-table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: var(--inventory-text-on-secondary);
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .inventory-table th,
+  .inventory-table td {
+    padding: 1rem;
+    vertical-align: top;
+    text-align: left;
+  }
+  
+  .inventory-table thead th {
+    vertical-align: bottom;
+    background-color: var(--inventory-primary-light);
+    color: var(--inventory-text-on-secondary);
+    font-weight: 600;
+  }
+  
+  .inventory-table thead th:first-child {
+    border-top-left-radius: var(--inventory-border-radius);
+  }
+  
+  .inventory-table thead th:last-child {
+    border-top-right-radius: var(--inventory-border-radius);
+  }
+  
+  .inventory-table tbody tr:nth-of-type(odd) {
+    background-color: rgba(248, 187, 208, 0.2);
+  }
+  
+  .inventory-table tbody tr:hover {
+    background-color: rgba(248, 187, 208, 0.4);
+  }
+  
+  /* Alerts */
+  .inventory-alert {
+    position: relative;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--inventory-border-radius);
+  }
+  
+  .inventory-alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  
+  .inventory-alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  
+  .inventory-alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+  }
+  
+  .inventory-alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+  }
+  
+  /* Badges */
+  .inventory-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 10px;
+    transition: var(--inventory-transition);
+  }
+  
+  .inventory-badge-primary {
+    color: var(--inventory-text-on-primary);
+    background-color: var(--inventory-primary);
+  }
+  
+  .inventory-badge-success {
+    color: white;
+    background-color: var(--inventory-success);
+  }
+  
+  .inventory-badge-warning {
+    color: white;
+    background-color: var(--inventory-warning);
+  }
+  
+  .inventory-badge-danger {
+    color: white;
+    background-color: var(--inventory-error);
+  }
+  
+  /* Utilities */
+  .inventory-text-center {
+    text-align: center;
+  }
+  
+  .inventory-d-flex {
+    display: flex;
+  }
+  
+  .inventory-justify-content-between {
+    justify-content: space-between;
+  }
+  
+  .inventory-align-items-center {
+    align-items: center;
+  }
+  
+  .inventory-mt-3 {
+    margin-top: 1.5rem;
+  }
+  
+  .inventory-mb-3 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .inventory-mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .inventory-container {
+      padding: 1rem;
+    }
+  
+    .inventory-table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+</file>
+
+<file path="inventory.module.ts">
+import { NgModule } from "@angular/core"
+import { CommonModule } from "@angular/common"
+import { FormsModule, ReactiveFormsModule } from "@angular/forms"
+import { HttpClientModule } from "@angular/common/http"
+
+import { InventoryRoutingModule } from "./inventory-routing.module"
+import { StockListComponent } from "./components/stock-list/stock-list.component"
+import { StockFormComponent } from "./components/stock-form/stock-form.component"
+import { StockDetailComponent } from "./components/stock-detail/stock-detail.component"
+import { LowStockAlertComponent } from "./components/low-stock-alert/low-stock-alert.component"
+import { StockHistoryComponent } from "./components/stock-history/stock-history.component"
+import { StockTrendComponent } from "./components/stock-trend/stock-trend.component"
+
+@NgModule({
+  declarations: [
+    StockListComponent,
+    StockFormComponent,
+    StockDetailComponent,
+    LowStockAlertComponent,
+    StockHistoryComponent,
+    StockTrendComponent,
+  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, InventoryRoutingModule],
+})
+export class InventoryModule {}
+</file>
+
+<file path="models/stock.model.ts">
+export interface Stock {
+  id_stock?: number; // Matches backend's id_stock
+  productId: number; // Matches backend's productId
+  stockDisponible: number; // Matches backend's stockDisponible
+  stock_minimum: number; // Matches backend's stock_minimum
+  fournisseur_id: number; // Matches backend's fournisseur_id
+  productName?: string; // For UI display
+  supplierName?: string; // For UI display
+}
+
+export interface StockHistory {
+  id?: number; // Matches backend's id (Long in backend, but number is fine for JS)
+  productId: number; // Matches backend's productId
+  quantityChange: number; // Matches backend's quantityChange
+  timestamp: string | Date; // Backend uses LocalDateTime; string or Date works for deserialization
+  reason: string; // Matches backend's reason
+}
+
+export interface StockTrend {
+  productId: number; // Not explicitly in backend response, but can be inferred
+  trend: string; // Matches backend's trend (e.g., "décroissant", "stable")
+  suggestedStock: number; // Matches backend's suggestedStock
+  predictedDemand: number; // Matches backend's predictedDemand
+  stockDisponible: number; // Matches backend's stockDisponible
+  stockMinimum: number; // Matches backend's stockMinimum
+}
+
+export interface Supplier {
+  id: number;
+  name: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  description?: string;
+  price?: number;
+  categoryId?: number;
+  imageUrl?: string;
+}
+</file>
+
+<file path="services/stock.service.spec.ts">
+import { TestBed } from '@angular/core/testing';
+
+import { StockService } from './stock.service';
+
+describe('StockService', () => {
+  let service: StockService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(StockService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});
+</file>
+
+<file path="services/stock.service.ts">
+import { Injectable } from "@angular/core"
+import {  HttpClient, HttpParams } from "@angular/common/http"
+import {  Observable, of } from "rxjs"
+import { catchError, map, tap } from "rxjs/operators"
+import { Stock, StockHistory, StockTrend } from "../models/stock.model"
+import { environment } from "../../../../environments/environment"
+
+@Injectable({
+  providedIn: "root",
+})
+export class StockService {
+  private apiUrl = `${environment.inventoryServiceUrl}/api/stock`
+
+  private mockProducts = [
+    { id: 1, name: "Robe Rouge" },
+    { id: 2, name: "Sac à main" },
+    { id: 3, name: "Collier Argent" },
+    { id: 4, name: "Chaussures Noires" },
+    { id: 5, name: "Bracelet Or" },
+  ]
+
+  private mockSuppliers = [
+    { id: 101, name: "Fashion Supplier" },
+    { id: 102, name: "Accessories Inc" },
+    { id: 103, name: "Footwear Ltd" },
+  ]
+
+  constructor(private http: HttpClient) {}
+
+  // Get all stock items
+  getStocks(): Observable<Stock[]> {
+    return this.http.get<Stock[]>(`${this.apiUrl}`).pipe(
+      map((stocks) => this.enrichStocksWithNames(stocks)),
+      catchError(this.handleError<Stock[]>("getStocks", [])),
+    )
+  }
+
+  // Get stock by product ID
+  getStockByProductId(productId: number): Observable<Stock> {
+    return this.http.get<Stock>(`${this.apiUrl}/${productId}`).pipe(
+      map((stock) => this.enrichStockWithNames(stock)),
+      catchError(this.handleError<Stock>(`getStock productId=${productId}`)),
+    )
+  }
+
+  // Alias for compatibility
+  getStockById(productId: number): Observable<Stock> {
+    return this.getStockByProductId(productId)
+  }
+
+  // Check if stock is sufficient
+  isStockSufficient(productId: number, quantity: number): Observable<boolean> {
+    const params = new HttpParams().set("quantity", quantity.toString())
+    return this.http.get<boolean>(`${this.apiUrl}/${productId}/check`, { params }).pipe(
+      tap((isSufficient) => {
+        console.log(
+          `Stock check for product ${productId}, quantity ${quantity}: ${isSufficient ? "Sufficient" : "Insufficient"}`,
+        )
+        // If sufficient, the backend will automatically reduce the stock and record history
+      }),
+      catchError(this.handleError<boolean>(`checkStock productId=${productId}`, false)),
+    )
+  }
+
+  // Add new stock
+  addStock(stock: Stock): Observable<Stock> {
+    return this.http.post<Stock>(`${this.apiUrl}`, stock).pipe(
+      map((stock) => this.enrichStockWithNames(stock)),
+      catchError(this.handleError<Stock>("addStock")),
+    )
+  }
+
+  // Update stock
+  updateStock(productId: number, quantity: number): Observable<Stock> {
+    const params = new HttpParams().set("quantity", quantity.toString())
+    return this.http.put<Stock>(`${this.apiUrl}/${productId}`, null, { params }).pipe(
+      map((stock) => this.enrichStockWithNames(stock)),
+      catchError(this.handleError<Stock>("updateStock")),
+    )
+  }
+
+  // Delete stock
+  deleteStock(id: number): Observable<boolean> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: "text" }).pipe(
+      map(() => true),
+      catchError(this.handleError<boolean>("deleteStock", false)),
+    )
+  }
+
+  // Get stock trend analysis
+  getStockTrend(productId: number): Observable<StockTrend> {
+    return this.http
+      .get<StockTrend>(`${this.apiUrl}/${productId}/trend`)
+      .pipe(catchError(this.handleError<StockTrend>(`getStockTrend productId=${productId}`)))
+  }
+
+  // Get demand forecast
+  getDemandForecast(productId: number): Observable<number> {
+    return this.http
+      .get<number>(`${this.apiUrl}/${productId}/demand-forecast`)
+      .pipe(catchError(this.handleError<number>(`getDemandForecast productId=${productId}`, 0)))
+  }
+
+  // Get low stock items
+  getLowStockItems(): Observable<Stock[]> {
+    return this.getStocks().pipe(
+      map((stocks) => stocks.filter((stock) => stock.stockDisponible <= stock.stock_minimum)),
+      catchError(this.handleError<Stock[]>("getLowStockItems", [])),
+    )
+  }
+
+  // Get stock history - Using mock data since there's no direct endpoint
+  getStockHistory(productId: number): Observable<StockHistory[]> {
+    console.log(`Getting mock history for product ${productId}`)
+    // Use mock data since there's no direct endpoint
+    const mockHistory: StockHistory[] = [
+      { id: 1, productId: productId, quantityChange: 2, timestamp: new Date(2024, 1, 15), reason: "Restock" },
+      { id: 2, productId: productId, quantityChange: -1, timestamp: new Date(2024, 1, 10), reason: "Order #1234" },
+      { id: 3, productId: productId, quantityChange: -2, timestamp: new Date(2024, 1, 5), reason: "Order #1235" },
+    ]
+    return of(mockHistory)
+  }
+
+  // Add stock history entry
+  addStockHistory(stockHistory: StockHistory): Observable<StockHistory> {
+    console.log("History will be recorded by backend during stock update")
+    // Just return the input as if it was successful
+    // The actual history recording happens in the backend's updateStock method
+    return of(stockHistory)
+  }
+
+  // Helpers to enrich stock data
+  private enrichStocksWithNames(stocks: Stock[]): Stock[] {
+    return stocks.map((stock) => this.enrichStockWithNames(stock))
+  }
+
+  private enrichStockWithNames(stock: Stock): Stock {
+    const product = this.mockProducts.find((p) => p.id === stock.productId)
+    const supplier = this.mockSuppliers.find((s) => s.id === stock.fournisseur_id)
+
+    return {
+      ...stock,
+      productName: product ? product.name : `Product ${stock.productId}`,
+      supplierName: supplier ? supplier.name : `Supplier ${stock.fournisseur_id}`,
+    }
+  }
+
+  // Error handler
+  private handleError<T>(operation = "operation", result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(`${operation} failed: ${error.message}`)
+      return of(result as T)
+    }
+  }
+
+  // Mock methods for products and suppliers
+  getProducts(): Observable<any[]> {
+    return of(this.mockProducts)
+  }
+
+  getSuppliers(): Observable<any[]> {
+    return of(this.mockSuppliers)
+  }
+}
+</file>
+
+</files>

@@ -1,3 +1,4 @@
+import { StockDetails } from './stock.model';
 export interface Product {
     id?: number;
     name: string;
@@ -6,4 +7,5 @@ export interface Product {
     stock: number;
     discountPercentage?: number;
     imageUrl?: string;
+    stockDetails?: StockDetails; // Add stock details
 }

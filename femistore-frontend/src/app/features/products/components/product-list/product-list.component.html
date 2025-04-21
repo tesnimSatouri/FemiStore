@@ -1,71 +1,131 @@
+<!-- src/app/products/components/product-list/product-list.component.html -->
 <div class="container mt-4">
     <h2>Product List</h2>
     <div class="mb-3 d-flex justify-content-between">
-        <button class="btn btn-primary" (click)="navigateToAdd()">Add Product</button>
-        <div>
-            <label for="currency" class="form-label me-2">Currency:</label>
-            <select id="currency" [(ngModel)]="selectedCurrency" (ngModelChange)="onCurrencyChange()" class="form-select d-inline-block w-auto">
-                <option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</option>
-            </select>
-        </div>
+      <button class="btn btn-primary" (click)="navigateToAdd()">Add Product</button>
+      <div>
+        <label for="currency" class="form-label me-2">Currency:</label>
+        <select
+          id="currency"
+          [(ngModel)]="selectedCurrency"
+          (ngModelChange)="onCurrencyChange()"
+          class="form-select d-inline-block w-auto"
+        >
+          <option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</option>
+        </select>
+      </div>
     </div>
     <div class="card p-3 mb-3">
-        <h4>Search Products</h4>
-        <form #searchForm="ngForm" (ngSubmit)="searchProducts()">
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" [(ngModel)]="searchParams.name" name="name">
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="minPrice" class="form-label">Min Price</label>
-                    <input type="number" class="form-control" id="minPrice" [(ngModel)]="searchParams.minPrice" name="minPrice" step="0.01">
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="maxPrice" class="form-label">Max Price</label>
-                    <input type="number" class="form-control" id="maxPrice" [(ngModel)]="searchParams.maxPrice" name="maxPrice" step="0.01">
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="minStock" class="form-label">Min Stock</label>
-                    <input type="number" class="form-control" id="minStock" [(ngModel)]="searchParams.minStock" name="minStock">
-                </div>
-                <div class="col-md-3 mb-3 d-flex align-items-end">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="useDiscountedPrice" [(ngModel)]="searchParams.useDiscountedPrice" name="useDiscountedPrice">
-                        <label class="form-check-label" for="useDiscountedPrice">Use Discounted Price</label>
-                    </div>
-                </div>
+      <h4>Search Products</h4>
+      <form #searchForm="ngForm" (ngSubmit)="searchProducts()">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="searchParams.name" name="name" />
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="minPrice" class="form-label">Min Price</label>
+            <input
+              type="number"
+              class="form-control"
+              id="minPrice"
+              [(ngModel)]="searchParams.minPrice"
+              name="minPrice"
+              step="0.01"
+            />
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="maxPrice" class="form-label">Max Price</label>
+            <input
+              type="number"
+              class="form-control"
+              id="maxPrice"
+              [(ngModel)]="searchParams.maxPrice"
+              name="maxPrice"
+              step="0.01"
+            />
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="minStock" class="form-label">Min Stock</label>
+            <input
+              type="number"
+              class="form-control"
+              id="minStock"
+              [(ngModel)]="searchParams.minStock"
+              name="minStock"
+            />
+          </div>
+          <div class="col-md-3 mb-3 d-flex align-items-end">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="useDiscountedPrice"
+                [(ngModel)]="searchParams.useDiscountedPrice"
+                name="useDiscountedPrice"
+              />
+              <label class="form-check-label" for="useDiscountedPrice">Use Discounted Price</label>
             </div>
-            <div class="d-flex">
-                <button type="submit" class="btn btn-primary me-2">Search</button>
-                <button type="button" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
-            </div>
-        </form>
-    </div>
-    
-    <!-- Product Grid (replacing the table) -->
-    <div class="product-grid">
-        <div class="product-card" *ngFor="let product of products">
-            <div class="product-id">ID: {{ product.id }}</div>
-            <div class="product-image">
-                <img *ngIf="product.imageUrl" [src]="getImageUrl(product.imageUrl)" alt="{{ product.name }}">
-                <span *ngIf="!product.imageUrl">No Image</span>
-            </div>
-            <div class="product-details">
-                <div class="product-name">{{ product.name }}</div>
-                <div class="product-description">{{ product.description || 'N/A' }}</div>
-                <div class="product-meta">
-                    <div class="product-price">{{ product.price | currency:selectedCurrency:'symbol':'1.2-2' }}</div>
-                    <div class="product-discount" *ngIf="product.discountPercentage && product.discountPercentage > 0">
-                        {{ product.discountPercentage }}% OFF
-                    </div>
-                </div>
-                <div class="product-stock">Stock: {{ product.stock }} units</div>
-                <div class="product-actions">
-                    <button class="btn btn-sm btn-warning" (click)="editProduct(product.id)">Edit</button>
-                    <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">Delete</button>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="d-flex">
+          <button type="submit" class="btn btn-primary me-2">Search</button>
+          <button type="button" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
+        </div>
+      </form>
     </div>
-</div>
+  
+    <div class="product-grid">
+      <div class="product-card" *ngFor="let product of products">
+        <div class="product-id">ID: {{ product.id }}</div>
+        <div class="product-image">
+          <img
+            *ngIf="product.imageUrl"
+            [src]="getImageUrl(product.imageUrl)"
+            alt="{{ product.name }}"
+          />
+          <span *ngIf="!product.imageUrl">No Image</span>
+        </div>
+        <div class="product-details">
+          <div class="product-name">{{ product.name }}</div>
+          <div class="product-description">{{ product.description || 'N/A' }}</div>
+          <div class="product-meta">
+            <div class="product-price">
+              {{ product.price | currency: selectedCurrency:'symbol':'1.2-2' }}
+            </div>
+            <div
+              class="product-discount"
+              *ngIf="product.discountPercentage && product.discountPercentage > 0"
+            >
+              {{ product.discountPercentage }}% OFF
+            </div>
+          </div>
+          <div class="product-stock">Stock: {{ product.stock }} units</div>
+          <div *ngIf="product.stockDetails" class="product-stock">
+            Available Stock: {{ product.stockDetails.stockDisponible }} /
+            Minimum: {{ product.stockDetails.stock_minimum }}
+          </div>
+          <div
+            *ngIf="
+              product.stockDetails &&
+              product.stockDetails.stockDisponible <= product.stockDetails.stock_minimum
+            "
+            class="text-danger"
+          >
+            Low Stock Alert!
+          </div>
+          <div class="product-actions">
+            <button class="btn btn-sm btn-primary" (click)="navigateToDetail(product.id)">
+              View
+            </button>
+            <button class="btn btn-sm btn-warning" (click)="editProduct(product.id)">
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

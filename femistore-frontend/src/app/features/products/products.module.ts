@@ -4,16 +4,20 @@ import { FormsModule } from '@angular/forms';
 import { ProductsRoutingModule } from './products-routing.module';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductFormComponent } from './components/product-form/product-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 
 @NgModule({
   declarations: [
     ProductListComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    ProductDetailComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
-    ProductsRoutingModule
+    ProductsRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class ProductsModule {}

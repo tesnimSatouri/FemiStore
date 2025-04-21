@@ -1,0 +1,1548 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+components/product-detail/product-detail.component.css
+components/product-detail/product-detail.component.html
+components/product-detail/product-detail.component.spec.ts
+components/product-detail/product-detail.component.ts
+components/product-form/product-form.component.css
+components/product-form/product-form.component.html
+components/product-form/product-form.component.spec.ts
+components/product-form/product-form.component.ts
+components/product-list/product-list.component.css
+components/product-list/product-list.component.html
+components/product-list/product-list.component.spec.ts
+components/product-list/product-list.component.ts
+models/product.model.ts
+models/stock.model.ts
+products-routing.module.ts
+products.module.ts
+services/product.service.spec.ts
+services/product.service.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="components/product-detail/product-detail.component.css">
+/* src/app/products/components/product-detail/product-detail.component.css */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-header {
+    background-color: #f8f9fa;
+  }
+  
+  .img-fluid {
+    border: 1px solid #eee;
+    border-radius: 8px;
+  }
+</file>
+
+<file path="components/product-detail/product-detail.component.html">
+<!-- src/app/products/components/product-detail/product-detail.component.html -->
+<div class="container mt-4">
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  
+    <div *ngIf="product" class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2>{{ product?.name }}</h2>
+        <div>
+          <button class="btn btn-warning me-2" (click)="editProduct()">Edit</button>
+          <button class="btn btn-secondary" (click)="goBack()">Back</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <img
+              [src]="getImageUrl(product?.imageUrl)"
+              alt="{{ product?.name }}"
+              class="img-fluid rounded"
+              style="max-height: 300px; object-fit: contain;"
+            />
+          </div>
+          <div class="col-md-6">
+            <p><strong>Description:</strong> {{ product?.description || 'N/A' }}</p>
+            <p><strong>Price:</strong> {{ product?.price || 'N/A' }}</p>
+            <p *ngIf="product.discountPercentage && product.discountPercentage > 0">
+              <strong>Discount:</strong> {{ product?.discountPercentage || 0 }}% OFF
+            </p>
+            <p><strong>Stock:</strong> {{ product?.stock || 'N/A' }} units</p>
+            <div *ngIf="product.stockDetails; else noStockDetails">
+              <h4>Stock Details</h4>
+              <p><strong>Available Stock:</strong> {{ product?.stockDetails?.stockDisponible || 'N/A' }}</p>
+              <p><strong>Minimum Stock:</strong> {{ product?.stockDetails?.stock_minimum ?? 'N/A' }}</p>
+              <p><strong>Supplier:</strong> {{ product?.stockDetails?.supplierName || 'N/A' }}</p>
+              <p
+                *ngIf="product.stockDetails?.stockDisponible && product.stockDetails?.stock_minimum && product.stockDetails.stockDisponible <= product.stockDetails.stock_minimum"
+                class="text-danger"
+              >
+                Low stock alert!
+              </p>
+            </div>
+            <ng-template #noStockDetails>
+              <p class="text-warning">Stock details unavailable</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</file>
+
+<file path="components/product-detail/product-detail.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ProductDetailComponent } from './product-detail.component';
+
+describe('ProductDetailComponent', () => {
+  let component: ProductDetailComponent;
+  let fixture: ComponentFixture<ProductDetailComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ProductDetailComponent]
+    });
+    fixture = TestBed.createComponent(ProductDetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/product-detail/product-detail.component.ts">
+// src/app/products/components/product-detail/product-detail.component.ts
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../../services/product.service';
+import { Product } from '../../models/product.model';
+import { StockDetails } from '../../models/stock.model';
+import { environment } from '../../../../../environments/environment';
+
+@Component({
+  selector: 'app-product-detail',
+  templateUrl: './product-detail.component.html',
+  styleUrls: ['./product-detail.component.css'],
+})
+export class ProductDetailComponent implements OnInit {
+  product?: Product;
+  loading = false;
+  error = '';
+
+  constructor(
+    private productService: ProductService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.loadProduct(+id);
+    }
+  }
+
+  loadProduct(id: number): void {
+    this.loading = true;
+    this.productService.getProductById(id).subscribe({
+      next: (data) => {
+        this.product = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load product details';
+        console.error(err);
+        this.loading = false;
+      },
+    });
+  }
+
+  getImageUrl(imagePath?: string): string {
+    return imagePath ? `${environment.productServiceUrl}/images/${imagePath}` : 'assets/no-image.png';
+  }
+
+  editProduct(): void {
+    if (this.product?.id) {
+      this.router.navigate(['/products/edit', this.product.id]);
+    }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/products']);
+  }
+}
+</file>
+
+<file path="components/product-form/product-form.component.css">
+/* Main container styling */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Header styling */
+  h2 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e91e63;
+    padding-bottom: 10px;
+  }
+  
+  /* Card styling */
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    background-color: white;
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+  
+  /* Form group styling */
+  .mb-3 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Label styling */
+  .form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+  
+  /* Input field styling */
+  .form-control {
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    padding: 12px;
+    transition: all 0.3s ease;
+    font-size: 15px;
+  }
+  
+  .form-control:focus {
+    border-color: #e91e63;
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.25);
+    outline: none;
+  }
+  
+  /* Textarea specific styling */
+  textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  /* Number input styling */
+  input[type="number"] {
+    padding-right: 5px;
+  }
+  
+  /* File input styling */
+  input[type="file"].form-control {
+    padding: 8px;
+    height: auto;
+  }
+  
+  /* Image preview styling */
+  .mt-2 {
+    margin-top: 1rem;
+  }
+  
+  .mt-2 img {
+    border-radius: 8px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .mt-2 img:hover {
+    transform: scale(1.02);
+  }
+  
+  /* Button styling */
+  .btn {
+    padding: 10px 24px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+  }
+  
+  .btn-primary {
+    background-color: #e91e63;
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: #c2185b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .btn-secondary {
+    background-color: #9e9e9e;
+    border: none;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #757575;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  /* Required field indicator */
+  .form-label::after {
+    content: "*";
+    color: #e91e63;
+    margin-left: 4px;
+    display: none;
+  }
+  
+  input:required + .form-label::after,
+  textarea:required + .form-label::after {
+    display: inline;
+  }
+  
+  /* Form layout improvements */
+  @media (min-width: 768px) {
+    .form-row {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .form-row .mb-3 {
+      flex: 1;
+    }
+  }
+  
+  /* Button container */
+  .button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  /* Add a subtle background pattern */
+  body {
+    background-color: #f9f9f9;
+    background-image: linear-gradient(to right, rgba(233, 30, 99, 0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(233, 30, 99, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  /* Form validation styling */
+  .form-control.ng-invalid.ng-touched {
+    border-color: #f44336;
+  }
+  
+  .form-control.ng-valid.ng-touched {
+    border-color: #4CAF50;
+  }
+  
+  .validation-message {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+</file>
+
+<file path="components/product-form/product-form.component.html">
+<div class="container mt-4">
+  <h2>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div class="card p-4">
+    <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+      <div class="form-row">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            formControlName="name"
+            required
+          />
+          <div *ngIf="submitted && f['name'].errors" class="validation-message">
+            <div *ngIf="f['name'].errors['required']">Name is required</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          id="description"
+          formControlName="description"
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="mb-3">
+          <label for="price" class="form-label">Price</label>
+          <input
+            type="number"
+            class="form-control"
+            id="price"
+            formControlName="price"
+            required
+            step="0.01"
+            min="0"
+          />
+          <div *ngIf="submitted && f['price'].errors" class="validation-message">
+            <div *ngIf="f['price'].errors['required']">Price is required</div>
+            <div *ngIf="f['price'].errors['min']">Price must be non-negative</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="stock" class="form-label">Stock</label>
+          <input
+            type="number"
+            class="form-control"
+            id="stock"
+            formControlName="stock"
+            required
+            min="0"
+          />
+          <div *ngIf="submitted && f['stock'].errors" class="validation-message">
+            <div *ngIf="f['stock'].errors['required']">Stock is required</div>
+            <div *ngIf="f['stock'].errors['min']">Stock must be non-negative</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="discountPercentage" class="form-label">Discount Percentage (%)</label>
+          <input
+            type="number"
+            class="form-control"
+            id="discountPercentage"
+            formControlName="discountPercentage"
+            min="0"
+            max="100"
+          />
+          <div *ngIf="submitted && f['discountPercentage'].errors" class="validation-message">
+            <div *ngIf="f['discountPercentage'].errors['min']">Discount must be non-negative</div>
+            <div *ngIf="f['discountPercentage'].errors['max']">Discount cannot exceed 100%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stock Fields (Disabled in Edit Mode) -->
+      <div *ngIf="!isEditMode">
+        <div class="form-row">
+          <div class="mb-3">
+            <label for="stockDisponible" class="form-label">Available Stock</label>
+            <input
+              type="number"
+              class="form-control"
+              id="stockDisponible"
+              formControlName="stockDisponible"
+              min="0"
+            />
+            <div *ngIf="submitted && f['stockDisponible'].errors" class="validation-message">
+              <div *ngIf="f['stockDisponible'].errors['required']">Available stock is required</div>
+              <div *ngIf="f['stockDisponible'].errors['min']">Available stock must be non-negative</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="stock_minimum" class="form-label">Minimum Stock</label>
+            <input
+              type="number"
+              class="form-control"
+              id="stock_minimum"
+              formControlName="stock_minimum"
+              min="0"
+            />
+            <div *ngIf="submitted && f['stock_minimum'].errors" class="validation-message">
+              <div *ngIf="f['stock_minimum'].errors['required']">Minimum stock is required</div>
+              <div *ngIf="f['stock_minimum'].errors['min']">Minimum stock must be non-negative</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="fournisseur_id" class="form-label">Supplier</label>
+            <select
+              class="form-control"
+              id="fournisseur_id"
+              formControlName="fournisseur_id"
+            >
+              <option value="">Select a supplier</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                {{ supplier.name }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f['fournisseur_id'].errors" class="validation-message">
+              <div *ngIf="f['fournisseur_id'].errors['required']">Supplier is required</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Product Image</label>
+        <input
+          type="file"
+          class="form-control"
+          id="image"
+          (change)="onImageSelected($event)"
+          accept="image/*"
+        />
+        <div *ngIf="productForm.get('imageUrl')?.value" class="mt-2">
+          <img
+            [src]="getImageUrl(productForm.get('imageUrl')?.value)"
+            alt="Product Image"
+            style="max-width: 200px; max-height: 200px;"
+          />
+        </div>
+      </div>
+
+      <div class="button-container">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="productForm.invalid || loading"
+        >
+          <i class="fas fa-save me-2"></i>{{ isEditMode ? 'Update' : 'Save' }} Product
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">
+          <i class="fas fa-times me-2"></i>Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+</file>
+
+<file path="components/product-form/product-form.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ProductFormComponent } from './product-form.component';
+
+describe('ProductFormComponent', () => {
+  let component: ProductFormComponent;
+  let fixture: ComponentFixture<ProductFormComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ProductFormComponent]
+    });
+    fixture = TestBed.createComponent(ProductFormComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/product-form/product-form.component.ts">
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../../services/product.service';
+import { StockService } from '../../../inventory/services/stock.service';
+import { Product } from '../../models/product.model';
+import { Supplier } from '../../../inventory/models/stock.model';
+import { environment } from '../../../../../environments/environment';
+
+@Component({
+  selector: 'app-product-form',
+  templateUrl: './product-form.component.html',
+  styleUrls: ['./product-form.component.css'],
+})
+export class ProductFormComponent implements OnInit {
+  productForm: FormGroup;
+  isEditMode = false;
+  imageFile?: File;
+  error = '';
+  loading = false;
+  submitted = false;
+  suppliers: Supplier[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private stockService: StockService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    this.productForm = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      description: [''],
+      price: [0, [Validators.required, Validators.min(0)]],
+      stock: [0, [Validators.required, Validators.min(0)]],
+      discountPercentage: [null, [Validators.min(0), Validators.max(100)]],
+      imageUrl: [''],
+      stockDisponible: ['', [Validators.required, Validators.min(0)]],
+      stock_minimum: ['', [Validators.required, Validators.min(0)]],
+      fournisseur_id: ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadSuppliers();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.productForm.get('stockDisponible')?.disable();
+      this.productForm.get('stock_minimum')?.disable();
+      this.productForm.get('fournisseur_id')?.disable();
+      this.productService.getProductById(+id).subscribe({
+        next: (data) => {
+          this.productForm.patchValue({
+            id: data.id,
+            name: data.name,
+            description: data.description || '',
+            price: data.price,
+            stock: data.stock,
+            discountPercentage: data.discountPercentage || null,
+            imageUrl: data.imageUrl || '',
+          });
+        },
+        error: (err) => {
+          this.error = 'Error fetching product';
+          console.error(err);
+        },
+      });
+    }
+  }
+
+  loadSuppliers(): void {
+    this.stockService.getSuppliers().subscribe({
+      next: (suppliers) => {
+        this.suppliers = suppliers;
+      },
+      error: (err) => {
+        console.error('Failed to load suppliers', err);
+        this.error = 'Failed to load suppliers';
+      },
+    });
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.imageFile = input.files[0];
+    }
+  }
+
+  getImageUrl(imagePath: string): string {
+    return imagePath
+      ? `${environment.productServiceUrl}/images/${imagePath}`
+      : 'assets/no-image.png';
+  }
+
+  saveProduct(): void {
+    this.submitted = true;
+    if (this.productForm.invalid) {
+      return;
+    }
+
+    this.loading = true;
+    const productData: Product = {
+      name: this.productForm.get('name')?.value,
+      description: this.productForm.get('description')?.value || undefined,
+      price: this.productForm.get('price')?.value,
+      stock: this.productForm.get('stock')?.value,
+      discountPercentage: this.productForm.get('discountPercentage')?.value || undefined,
+      imageUrl: this.productForm.get('imageUrl')?.value || undefined,
+    };
+
+    if (this.isEditMode && this.productForm.get('id')?.value) {
+      productData.id = this.productForm.get('id')?.value;
+      if (productData.id !== undefined) {
+        this.productService.updateProduct(productData.id, productData, this.imageFile).subscribe({
+          next: () => {
+            this.loading = false;
+            this.router.navigate(['/products']);
+          },
+          error: (err) => {
+            this.error = 'Error updating product';
+            console.error(err);
+            this.loading = false;
+          },
+        });
+      } else {
+        this.error = 'Product ID is undefined';
+        this.loading = false;
+      }
+    } else {
+      this.productService.addProduct(productData, this.imageFile).subscribe({
+          next: (newProduct) => {
+          if (newProduct.id === undefined) {
+            this.error = 'New product ID is undefined';
+            this.loading = false;
+            return;
+          }
+          const stockData = {
+            productId: newProduct.id,
+            stockDisponible: this.productForm.get('stockDisponible')?.value,
+            stock_minimum: this.productForm.get('stock_minimum')?.value,
+            fournisseur_id: this.productForm.get('fournisseur_id')?.value,
+          };
+          this.stockService.addStock(stockData).subscribe({
+            next: () => {
+              this.loading = false;
+              this.router.navigate(['/products']);
+            },
+            error: (err) => {
+              this.error = 'Error adding stock';
+              console.error(err);
+              this.loading = false;
+            },
+          });
+        },
+        error: (err) => {
+          this.error = 'Error adding product';
+          console.error(err);
+          this.loading = false;
+        },
+      });
+    }
+  }
+
+  cancel(): void {
+    this.router.navigate(['/products']);
+  }
+
+  get f() {
+    return this.productForm.controls;
+  }
+}
+</file>
+
+<file path="components/product-list/product-list.component.css">
+/* Main container styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Header styling */
+  h2 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e91e63;
+    padding-bottom: 10px;
+  }
+  
+  /* Top controls area */
+  .mb-3.d-flex.justify-content-between {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  /* Button styling */
+  .btn-primary {
+    background-color: #e91e63;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #c2185b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .btn-secondary {
+    background-color: #9e9e9e;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #757575;
+  }
+  
+  /* Search card styling */
+  .card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    background-color: #f8f9fa;
+  }
+  
+  .card h4 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  /* Form controls */
+  .form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #e91e63;
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.25);
+  }
+  
+  .form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  /* Fix for currency dropdown */
+  .form-select {
+    height: 42px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    appearance: auto; /* Restore browser's default appearance */
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: 12px;
+    padding-right: 20px;
+  }
+  
+  /* Product cards container */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  /* Individual product card */
+  .product-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    background-color: white;
+    position: relative;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  
+  .product-image {
+    height: 200px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .product-image img {
+    max-width: 100%;
+    max-height: 180px;
+    object-fit: contain;
+  }
+  
+  .product-details {
+    padding: 15px;
+  }
+  
+  .product-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  .product-description {
+    color: #757575;
+    font-size: 14px;
+    margin-bottom: 12px;
+    height: 40px;
+    overflow: hidden;
+  }
+  
+  .product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .product-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .product-discount {
+    background-color: #e91e63;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .product-stock {
+    color: #757575;
+    font-size: 14px;
+  }
+  
+  .product-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .btn-sm {
+    flex: 1;
+    padding: 8px 0;
+    font-size: 14px;
+    border-radius: 5px;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .btn-warning {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+  }
+  
+  .btn-warning:hover {
+    background-color: #f57c00;
+  }
+  
+  .btn-danger {
+    background-color: #f44336;
+    color: white;
+    border: none;
+  }
+  
+  .btn-danger:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Product ID badge */
+  .product-id {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(233, 30, 99, 0.7);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    
+    .row {
+      flex-direction: column;
+    }
+    
+    .col-md-3, .col-md-2 {
+      width: 100%;
+    }
+  }
+  
+  /* Navigation bar styling */
+  nav.navbar {
+    background-color: #e91e63 !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  nav.navbar a {
+    color: white !important;
+  }
+  
+  /* Fix for currency dropdown alignment */
+  .d-inline-block.w-auto {
+    display: inline-flex !important;
+    align-items: center;
+  }
+  
+  /* Additional styling for currency dropdown */
+/* Fix for currency dropdown - remove the duplicate arrow */
+select#currency {
+    appearance: auto; /* Use browser's default appearance */
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    background-image: none !important; /* Remove the custom background arrow */
+    padding-right: 10px !important;
+  }
+  
+  /* Ensure proper alignment of the currency dropdown */
+  .d-inline-block.w-auto {
+    display: inline-flex !important;
+    align-items: center;
+  }
+  
+  /* General select styling */
+  .form-select {
+    height: 42px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+  }
+</file>
+
+<file path="components/product-list/product-list.component.html">
+<!-- src/app/products/components/product-list/product-list.component.html -->
+<div class="container mt-4">
+    <h2>Product List</h2>
+    <div class="mb-3 d-flex justify-content-between">
+      <button class="btn btn-primary" (click)="navigateToAdd()">Add Product</button>
+      <div>
+        <label for="currency" class="form-label me-2">Currency:</label>
+        <select
+          id="currency"
+          [(ngModel)]="selectedCurrency"
+          (ngModelChange)="onCurrencyChange()"
+          class="form-select d-inline-block w-auto"
+        >
+          <option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="card p-3 mb-3">
+      <h4>Search Products</h4>
+      <form #searchForm="ngForm" (ngSubmit)="searchProducts()">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="searchParams.name" name="name" />
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="minPrice" class="form-label">Min Price</label>
+            <input
+              type="number"
+              class="form-control"
+              id="minPrice"
+              [(ngModel)]="searchParams.minPrice"
+              name="minPrice"
+              step="0.01"
+            />
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="maxPrice" class="form-label">Max Price</label>
+            <input
+              type="number"
+              class="form-control"
+              id="maxPrice"
+              [(ngModel)]="searchParams.maxPrice"
+              name="maxPrice"
+              step="0.01"
+            />
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="minStock" class="form-label">Min Stock</label>
+            <input
+              type="number"
+              class="form-control"
+              id="minStock"
+              [(ngModel)]="searchParams.minStock"
+              name="minStock"
+            />
+          </div>
+          <div class="col-md-3 mb-3 d-flex align-items-end">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="useDiscountedPrice"
+                [(ngModel)]="searchParams.useDiscountedPrice"
+                name="useDiscountedPrice"
+              />
+              <label class="form-check-label" for="useDiscountedPrice">Use Discounted Price</label>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <button type="submit" class="btn btn-primary me-2">Search</button>
+          <button type="button" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
+        </div>
+      </form>
+    </div>
+  
+    <div class="product-grid">
+      <div class="product-card" *ngFor="let product of products">
+        <div class="product-id">ID: {{ product.id }}</div>
+        <div class="product-image">
+          <img
+            *ngIf="product.imageUrl"
+            [src]="getImageUrl(product.imageUrl)"
+            alt="{{ product.name }}"
+          />
+          <span *ngIf="!product.imageUrl">No Image</span>
+        </div>
+        <div class="product-details">
+          <div class="product-name">{{ product.name }}</div>
+          <div class="product-description">{{ product.description || 'N/A' }}</div>
+          <div class="product-meta">
+            <div class="product-price">
+              {{ product.price | currency: selectedCurrency:'symbol':'1.2-2' }}
+            </div>
+            <div
+              class="product-discount"
+              *ngIf="product.discountPercentage && product.discountPercentage > 0"
+            >
+              {{ product.discountPercentage }}% OFF
+            </div>
+          </div>
+          <div class="product-stock">Stock: {{ product.stock }} units</div>
+          <div *ngIf="product.stockDetails" class="product-stock">
+            Available Stock: {{ product.stockDetails.stockDisponible }} /
+            Minimum: {{ product.stockDetails.stock_minimum }}
+          </div>
+          <div
+            *ngIf="
+              product.stockDetails &&
+              product.stockDetails.stockDisponible <= product.stockDetails.stock_minimum
+            "
+            class="text-danger"
+          >
+            Low Stock Alert!
+          </div>
+          <div class="product-actions">
+            <button class="btn btn-sm btn-primary" (click)="navigateToDetail(product.id)">
+              View
+            </button>
+            <button class="btn btn-sm btn-warning" (click)="editProduct(product.id)">
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</file>
+
+<file path="components/product-list/product-list.component.spec.ts">
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ProductListComponent } from './product-list.component';
+
+describe('ProductListComponent', () => {
+  let component: ProductListComponent;
+  let fixture: ComponentFixture<ProductListComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ProductListComponent]
+    });
+    fixture = TestBed.createComponent(ProductListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+</file>
+
+<file path="components/product-list/product-list.component.ts">
+// src/app/products/components/product-list/product-list.component.ts
+import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../../services/product.service';
+import { Product } from '../../models/product.model';
+import { Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
+
+@Component({
+  selector: 'app-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.css'],
+})
+export class ProductListComponent implements OnInit {
+  products: Product[] = [];
+  searchParams = {
+    name: '',
+    minPrice: null as number | null,
+    maxPrice: null as number | null,
+    minStock: null as number | null,
+    useDiscountedPrice: false,
+  };
+  selectedCurrency = 'TND';
+  currencies = ['TND', 'USD', 'EUR'];
+
+  constructor(private productService: ProductService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    if (
+      this.searchParams.name ||
+      this.searchParams.minPrice ||
+      this.searchParams.maxPrice ||
+      this.searchParams.minStock ||
+      this.searchParams.useDiscountedPrice
+    ) {
+      this.searchProducts();
+    } else {
+      this.productService.getAllProductsInCurrency(this.selectedCurrency).subscribe({
+        next: (data) => {
+          this.products = data;
+        },
+        error: (err) => console.error('Error fetching products:', err),
+      });
+    }
+  }
+
+  searchProducts(): void {
+    this.productService
+      .searchProducts({
+        name: this.searchParams.name || undefined,
+        minPrice: this.searchParams.minPrice ?? undefined,
+        maxPrice: this.searchParams.maxPrice ?? undefined,
+        minStock: this.searchParams.minStock ?? undefined,
+        useDiscountedPrice: this.searchParams.useDiscountedPrice,
+      })
+      .subscribe({
+        next: (data) => {
+          this.products = data;
+        },
+        error: (err) => console.error('Error searching products:', err),
+      });
+  }
+
+  onCurrencyChange(): void {
+    this.loadProducts();
+  }
+
+  clearSearch(): void {
+    this.searchParams = {
+      name: '',
+      minPrice: null,
+      maxPrice: null,
+      minStock: null,
+      useDiscountedPrice: false,
+    };
+    this.loadProducts();
+  }
+
+  getImageUrl(imagePath: string): string {
+    return `${environment.productServiceUrl}/images/${imagePath}`;
+  }
+
+  editProduct(id?: number): void {
+    if (id) {
+      this.router.navigate(['/products/edit', id]);
+    }
+  }
+
+  deleteProduct(id?: number): void {
+    if (id && confirm('Are you sure you want to delete this product?')) {
+      this.productService.deleteProduct(id).subscribe({
+        next: () => this.loadProducts(),
+        error: (err) => console.error('Error deleting product:', err),
+      });
+    }
+  }
+
+  navigateToAdd(): void {
+    this.router.navigate(['/products/add']);
+  }
+
+  navigateToDetail(id?: number): void {
+    if (id) {
+      this.router.navigate(['/products/detail', id]);
+    }
+  }
+}
+</file>
+
+<file path="models/product.model.ts">
+import { StockDetails } from './stock.model';
+export interface Product {
+    id?: number;
+    name: string;
+    description?: string;
+    price: number;
+    stock: number;
+    discountPercentage?: number;
+    imageUrl?: string;
+    stockDetails?: StockDetails; // Add stock details
+}
+</file>
+
+<file path="models/stock.model.ts">
+//modified by me
+export interface StockDetails {
+    id_stock?: number;
+    productId: number;
+    stockDisponible: number;
+    stock_minimum: number;
+    fournisseur_id: number;
+    productName?: string;
+    supplierName?: string;
+  }
+</file>
+
+<file path="products-routing.module.ts">
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductFormComponent } from './components/product-form/product-form.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+
+const routes: Routes = [
+  { path: '', component: ProductListComponent },
+  { path: 'add', component: ProductFormComponent },
+  { path: 'edit/:id', component: ProductFormComponent },
+  // { path: 'products', loadChildren: () => import('./products.module').then(m => m.ProductsModule) }
+  { path: 'detail/:id', component: ProductDetailComponent },
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class ProductsRoutingModule { }
+</file>
+
+<file path="products.module.ts">
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ProductsRoutingModule } from './products-routing.module';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductFormComponent } from './components/product-form/product-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+
+@NgModule({
+  declarations: [
+    ProductListComponent,
+    ProductFormComponent,
+    ProductDetailComponent
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ProductsRoutingModule,
+    ReactiveFormsModule
+  ]
+})
+export class ProductsModule {}
+</file>
+
+<file path="services/product.service.spec.ts">
+import { TestBed } from '@angular/core/testing';
+
+import { ProductService } from './product.service';
+
+describe('ProductService', () => {
+  let service: ProductService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(ProductService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});
+</file>
+
+<file path="services/product.service.ts">
+// src/app/products/services/product.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Product } from '../models/product.model';
+import { environment } from '../../../../environments/environment';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ProductService {
+  private apiUrl = `${environment.productServiceUrl}`; // http://localhost:8081/prd/product
+
+  constructor(private http: HttpClient) {}
+
+  getAllProducts(): Observable<Product[]> {
+    console.log('Fetching products from:', `${this.apiUrl}/GetAllProducts`);
+    return this.http.get<Product[]>(`${this.apiUrl}/GetAllProducts`).pipe(
+      catchError(this.handleError<Product[]>('getAllProducts', []))
+    );
+  }
+
+  getAllProductsInCurrency(currency: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/GetAllProductsInCurrency`, { params: { currency } }).pipe(
+      catchError(this.handleError<Product[]>('getAllProductsInCurrency', []))
+    );
+  }
+
+  searchProducts(params: {
+    name?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minStock?: number;
+    useDiscountedPrice?: boolean;
+  }): Observable<Product[]> {
+    let httpParams = new HttpParams();
+    if (params.name) httpParams = httpParams.set('name', params.name);
+    if (params.minPrice !== undefined) httpParams = httpParams.set('minPrice', params.minPrice.toString());
+    if (params.maxPrice !== undefined) httpParams = httpParams.set('maxPrice', params.maxPrice.toString());
+    if (params.minStock !== undefined) httpParams = httpParams.set('minStock', params.minStock.toString());
+    if (params.useDiscountedPrice !== undefined)
+      httpParams = httpParams.set('useDiscountedPrice', params.useDiscountedPrice.toString());
+
+    return this.http.get<Product[]>(`${this.apiUrl}/search`, { params: httpParams }).pipe(
+      catchError(this.handleError<Product[]>('searchProducts', []))
+    );
+  }
+
+  getProductById(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/GetById/${id}`).pipe(
+      catchError(this.handleError<Product>(`getProductById id=${id}`))
+    );
+  }
+
+  addProduct(product: Product, imageFile?: File): Observable<Product> {
+    const formData = new FormData();
+    const productToSend = {
+      id: product.id,
+      name: product.name,
+      description: product.description || '',
+      price: product.price,
+      stock: product.stock,
+      discountPercentage: product.discountPercentage || 0,
+      imageUrl: product.imageUrl || '',
+    };
+    formData.append('product', JSON.stringify(productToSend));
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    return this.http.post<Product>(`${this.apiUrl}/AddProduct`, formData).pipe(
+      catchError(this.handleError<Product>('addProduct'))
+    );
+  }
+
+  updateProduct(id: number, product: Product, imageFile?: File): Observable<Product> {
+    const formData = new FormData();
+    const productToSend = {
+      id: id,
+      name: product.name,
+      description: product.description || '',
+      price: product.price,
+      stock: product.stock,
+      discountPercentage: product.discountPercentage || 0,
+      imageUrl: product.imageUrl || '',
+    };
+    formData.append('product', JSON.stringify(productToSend));
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    return this.http.put<Product>(`${this.apiUrl}/UpdateProduct/${id}`, formData).pipe(
+      catchError(this.handleError<Product>(`updateProduct id=${id}`))
+    );
+  }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/RemoveProduct/${id}`).pipe(
+      catchError(this.handleError<void>(`deleteProduct id=${id}`))
+    );
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(`${operation} failed: ${error.message}`);
+      return of(result as T);
+    };
+  }
+}
+</file>
+
+</files>

@@ -1,0 +1,14 @@
+/* src/app/products/components/product-detail/product-detail.component.css */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-header {
+    background-color: #f8f9fa;
+  }
+  
+  .img-fluid {
+    border: 1px solid #eee;
+    border-radius: 8px;
+  }
